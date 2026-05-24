@@ -1,0 +1,204 @@
+{
+  "enemies": [
+    {
+      "id": "geodude",
+      "name": "Geodude",
+      "pokemon_type": "ROCK",
+      "max_hp": 18,
+      "is_wild": true,
+      "is_boss": false,
+      "xp_reward": 10,
+      "action_pool": [
+        {
+          "id": "tackle",
+          "name": "Tackle",
+          "is_attack": true,
+          "base_weight": 2,
+          "preferred_phase": "any",
+          "effects": [{ "type": "damage", "magnitude": 6 }]
+        },
+        {
+          "id": "defense_curl",
+          "name": "Defense Curl",
+          "is_attack": false,
+          "base_weight": 3,
+          "preferred_phase": "healthy",
+          "effects": [{ "type": "block", "magnitude": 5, "target": "self" }]
+        },
+        {
+          "id": "rock_throw",
+          "name": "Rock Throw",
+          "is_attack": true,
+          "base_weight": 3,
+          "preferred_phase": "mid",
+          "effects": [{ "type": "damage", "magnitude": 10 }]
+        },
+        {
+          "id": "magnitude",
+          "name": "Magnitude",
+          "is_attack": true,
+          "base_weight": 3,
+          "preferred_phase": "desperate",
+          "effects": [{ "type": "damage", "magnitude": 8, "ignore_block": true }]
+        }
+      ]
+    },
+    {
+      "id": "zubat",
+      "name": "Zubat",
+      "pokemon_type": "POISON",
+      "max_hp": 14,
+      "is_wild": true,
+      "is_boss": false,
+      "xp_reward": 8,
+      "action_pool": [
+        {
+          "id": "leech_life",
+          "name": "Leech Life",
+          "is_attack": true,
+          "base_weight": 2,
+          "preferred_phase": "any",
+          "effects": [
+            { "type": "damage", "magnitude": 5 },
+            { "type": "heal", "magnitude": 5, "target": "self" }
+          ]
+        },
+        {
+          "id": "supersonic",
+          "name": "Supersonic",
+          "is_attack": false,
+          "base_weight": 3,
+          "preferred_phase": "healthy",
+          "effects": [
+            { "type": "status", "status": "confuse", "duration": 2, "target": "enemy" }
+          ]
+        },
+        {
+          "id": "bite",
+          "name": "Bite",
+          "is_attack": true,
+          "base_weight": 3,
+          "preferred_phase": "mid",
+          "effects": [{ "type": "damage", "magnitude": 8 }]
+        },
+        {
+          "id": "string_shot",
+          "name": "String Shot",
+          "is_attack": false,
+          "base_weight": 2,
+          "preferred_phase": "healthy",
+          "effects": [
+            { "type": "apply_condition", "condition": "slow", "duration": 1, "target": "enemy" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "onix",
+      "name": "Onix",
+      "pokemon_type": "ROCK",
+      "max_hp": 30,
+      "is_wild": true,
+      "is_boss": false,
+      "xp_reward": 15,
+      "action_pool": [
+        {
+          "id": "rock_throw",
+          "name": "Rock Throw",
+          "is_attack": true,
+          "base_weight": 2,
+          "preferred_phase": "any",
+          "effects": [{ "type": "damage", "magnitude": 9 }]
+        },
+        {
+          "id": "harden",
+          "name": "Harden",
+          "is_attack": false,
+          "base_weight": 3,
+          "preferred_phase": "healthy",
+          "effects": [{ "type": "block", "magnitude": 7, "target": "self" }]
+        },
+        {
+          "id": "screech",
+          "name": "Screech",
+          "is_attack": false,
+          "base_weight": 2,
+          "preferred_phase": "healthy",
+          "effects": [
+            { "type": "apply_condition", "condition": "defenseless", "duration": 2, "target": "enemy" }
+          ]
+        },
+        {
+          "id": "tackle",
+          "name": "Tackle",
+          "is_attack": true,
+          "base_weight": 1,
+          "preferred_phase": "any",
+          "effects": [{ "type": "damage", "magnitude": 5 }]
+        },
+        {
+          "id": "rock_tomb",
+          "name": "Rock Tomb",
+          "is_attack": true,
+          "base_weight": 3,
+          "preferred_phase": "desperate",
+          "effects": [
+            { "type": "damage", "magnitude": 11 },
+            { "type": "apply_condition", "condition": "slow", "duration": 1, "target": "enemy" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "brock",
+      "name": "Brock",
+      "pokemon_type": "ROCK",
+      "max_hp": 45,
+      "is_wild": false,
+      "is_boss": true,
+      "xp_reward": 50,
+      "boss_pattern_loop_start": 2,
+      "boss_pattern": [
+        "rock_throw",
+        "screech",
+        "rock_slide",
+        "harden",
+        "defense_curl"
+      ],
+      "action_pool": [
+        {
+          "id": "rock_throw",
+          "name": "Rock Throw",
+          "is_attack": true,
+          "effects": [{ "type": "damage", "magnitude": 8 }]
+        },
+        {
+          "id": "screech",
+          "name": "Screech",
+          "is_attack": false,
+          "effects": [
+            { "type": "apply_condition", "condition": "defenseless", "duration": 2, "target": "enemy" }
+          ]
+        },
+        {
+          "id": "rock_slide",
+          "name": "Rock Slide",
+          "is_attack": true,
+          "effects": [{ "type": "damage", "magnitude": 15 }]
+        },
+        {
+          "id": "harden",
+          "name": "Harden",
+          "is_attack": false,
+          "effects": [{ "type": "block", "magnitude": 10, "target": "self" }]
+        },
+        {
+          "id": "defense_curl",
+          "name": "Defense Curl",
+          "is_attack": false,
+          "effects": [{ "type": "block", "magnitude": 6, "target": "self" }]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,313 @@
+{
+  "cards": [
+    {
+      "id": "growl",
+      "name": "Growl",
+      "pokemon": "Various",
+      "card_type": "status",
+      "pokemon_type": "NORMAL",
+      "cost": 1,
+      "power": 0,
+      "rarity": "starter",
+      "effects": [
+        { "type": "apply_condition", "condition": "intimidated", "duration": 2, "target": "enemy" }
+      ]
+    },
+    {
+      "id": "tackle",
+      "name": "Tackle",
+      "pokemon": "Various",
+      "card_type": "attack",
+      "pokemon_type": "NORMAL",
+      "cost": 1,
+      "power": 5,
+      "rarity": "starter",
+      "effects": [{ "type": "damage", "magnitude": 5 }]
+    },
+    {
+      "id": "vine_whip",
+      "name": "Vine Whip",
+      "pokemon": "Bulbasaur",
+      "card_type": "attack",
+      "pokemon_type": "GRASS",
+      "cost": 1,
+      "power": 8,
+      "rarity": "starter",
+      "effects": [{ "type": "damage", "magnitude": 8 }]
+    },
+    {
+      "id": "tail_whip",
+      "name": "Tail Whip",
+      "pokemon": "Squirtle",
+      "card_type": "status",
+      "pokemon_type": "NORMAL",
+      "cost": 1,
+      "power": 0,
+      "rarity": "starter",
+      "effects": [
+        { "type": "apply_condition", "condition": "distracted", "duration": 2, "target": "enemy" }
+      ]
+    },
+    {
+      "id": "water_gun",
+      "name": "Water Gun",
+      "pokemon": "Squirtle",
+      "card_type": "attack",
+      "pokemon_type": "WATER",
+      "cost": 1,
+      "power": 8,
+      "rarity": "starter",
+      "effects": [{ "type": "damage", "magnitude": 8 }]
+    },
+    {
+      "id": "scratch",
+      "name": "Scratch",
+      "pokemon": "Charmander",
+      "card_type": "attack",
+      "pokemon_type": "NORMAL",
+      "cost": 1,
+      "power": 5,
+      "rarity": "starter",
+      "effects": [{ "type": "damage", "magnitude": 5 }]
+    },
+    {
+      "id": "ember",
+      "name": "Ember",
+      "pokemon": "Charmander",
+      "card_type": "attack",
+      "pokemon_type": "FIRE",
+      "cost": 2,
+      "power": 10,
+      "rarity": "starter",
+      "effects": [{ "type": "damage", "magnitude": 10 }]
+    },
+    {
+      "id": "quick_attack",
+      "name": "Quick Attack",
+      "pokemon": "Rattata",
+      "card_type": "attack",
+      "pokemon_type": "NORMAL",
+      "cost": 0,
+      "power": 4,
+      "rarity": "common",
+      "evolves_to": "hyper_fang",
+      "effects": [{ "type": "damage", "magnitude": 4 }]
+    },
+    {
+      "id": "hyper_fang",
+      "name": "Hyper Fang",
+      "pokemon": "Raticate",
+      "card_type": "attack",
+      "pokemon_type": "NORMAL",
+      "cost": 2,
+      "power": 14,
+      "rarity": "uncommon",
+      "effects": [
+        { "type": "damage", "magnitude": 14 },
+        { "type": "status", "status": "sleep", "duration": 1, "target": "enemy" }
+      ]
+    },
+    {
+      "id": "harden",
+      "name": "Harden",
+      "pokemon": "Geodude",
+      "card_type": "support",
+      "pokemon_type": "NORMAL",
+      "cost": 1,
+      "power": 0,
+      "rarity": "common",
+      "effects": [{ "type": "block", "magnitude": 6, "target": "self" }]
+    },
+    {
+      "id": "recover",
+      "name": "Recover",
+      "pokemon": "Various",
+      "card_type": "support",
+      "pokemon_type": "NORMAL",
+      "cost": 2,
+      "power": 0,
+      "rarity": "uncommon",
+      "effects": [{ "type": "heal", "magnitude": 8, "target": "self" }]
+    },
+    {
+      "id": "poison_powder",
+      "name": "Poison Powder",
+      "pokemon": "Oddish",
+      "card_type": "status",
+      "pokemon_type": "POISON",
+      "cost": 1,
+      "power": 0,
+      "rarity": "common",
+      "self_evolve": true,
+      "tier": 1,
+      "evolves_to": "poison_powder_plus",
+      "effects": [
+        {
+          "type": "status",
+          "status": "poison",
+          "duration": 3,
+          "magnitude": 3,
+          "target": "enemy"
+        }
+      ]
+    },
+    {
+      "id": "poison_powder_plus",
+      "name": "Poison Powder+",
+      "pokemon": "Oddish",
+      "card_type": "status",
+      "pokemon_type": "POISON",
+      "cost": 1,
+      "power": 0,
+      "rarity": "uncommon",
+      "self_evolve": true,
+      "tier": 2,
+      "evolves_to": "poison_powder_plus_plus",
+      "effects": [
+        {
+          "type": "status",
+          "status": "poison",
+          "duration": 3,
+          "magnitude": 5,
+          "target": "enemy"
+        }
+      ]
+    },
+    {
+      "id": "poison_powder_plus_plus",
+      "name": "Poison Powder++",
+      "pokemon": "Oddish",
+      "card_type": "status",
+      "pokemon_type": "POISON",
+      "cost": 1,
+      "power": 0,
+      "rarity": "rare",
+      "self_evolve": true,
+      "tier": 3,
+      "effects": [
+        {
+          "type": "status",
+          "status": "poison",
+          "duration": 3,
+          "magnitude": 7,
+          "target": "enemy"
+        }
+      ]
+    },
+    {
+      "id": "sand_attack",
+      "name": "Sand Attack",
+      "pokemon": "Sandshrew",
+      "card_type": "status",
+      "pokemon_type": "NORMAL",
+      "cost": 1,
+      "power": 0,
+      "rarity": "common",
+      "effects": [
+        { "type": "apply_condition", "condition": "blinded", "target": "enemy" }
+      ]
+    },
+    {
+      "id": "body_slam",
+      "name": "Body Slam",
+      "pokemon": "Snorlax",
+      "card_type": "attack",
+      "pokemon_type": "NORMAL",
+      "cost": 2,
+      "power": 12,
+      "rarity": "uncommon",
+      "effects": [
+        { "type": "damage", "magnitude": 12 },
+        { "type": "status", "status": "paralyze", "duration": 1, "target": "enemy" }
+      ]
+    },
+    {
+      "id": "defense_curl",
+      "name": "Defense Curl",
+      "pokemon": "Geodude",
+      "card_type": "support",
+      "pokemon_type": "NORMAL",
+      "cost": 1,
+      "power": 0,
+      "rarity": "common",
+      "effects": [
+        { "type": "block", "magnitude": 4, "target": "self" },
+        { "type": "draw", "magnitude": 1, "target": "self" }
+      ]
+    },
+    {
+      "id": "bite",
+      "name": "Bite",
+      "pokemon": "Rattata",
+      "card_type": "attack",
+      "pokemon_type": "NORMAL",
+      "cost": 2,
+      "power": 11,
+      "rarity": "uncommon",
+      "effects": [{ "type": "damage", "magnitude": 11 }]
+    },
+    {
+      "id": "supersonic",
+      "name": "Supersonic",
+      "pokemon": "Zubat",
+      "card_type": "status",
+      "pokemon_type": "NORMAL",
+      "cost": 1,
+      "power": 0,
+      "rarity": "common",
+      "effects": [
+        { "type": "status", "status": "confuse", "duration": 2, "target": "enemy" }
+      ]
+    },
+    {
+      "id": "stun_spore",
+      "name": "Stun Spore",
+      "pokemon": "Oddish",
+      "card_type": "status",
+      "pokemon_type": "GRASS",
+      "cost": 1,
+      "power": 0,
+      "rarity": "common",
+      "effects": [
+        { "type": "status", "status": "paralyze", "duration": 2, "target": "enemy" }
+      ]
+    },
+    {
+      "id": "sleep_powder",
+      "name": "Sleep Powder",
+      "pokemon": "Oddish",
+      "card_type": "status",
+      "pokemon_type": "GRASS",
+      "cost": 2,
+      "power": 0,
+      "rarity": "uncommon",
+      "effects": [
+        { "type": "status", "status": "sleep", "duration": 1, "target": "enemy" }
+      ]
+    },
+    {
+      "id": "string_shot",
+      "name": "String Shot",
+      "pokemon": "Caterpie",
+      "card_type": "status",
+      "pokemon_type": "BUG",
+      "cost": 1,
+      "power": 0,
+      "rarity": "common",
+      "effects": [
+        { "type": "apply_condition", "condition": "slow", "duration": 1, "target": "enemy" }
+      ]
+    },
+    {
+      "id": "rock_slide",
+      "name": "Rock Slide",
+      "pokemon": "Brock",
+      "card_type": "attack",
+      "pokemon_type": "ROCK",
+      "cost": 3,
+      "power": 20,
+      "rarity": "signature",
+      "effects": [{ "type": "damage", "magnitude": 20 }]
+    }
+  ]
+}

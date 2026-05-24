@@ -1,0 +1,17 @@
+{
+  "bulbasaur": {
+    "id": "bulbasaur",
+    "name": "Bulbasaur",
+    "deck": ["growl", "growl", "tackle", "tackle", "vine_whip"]
+  },
+  "squirtle": {
+    "id": "squirtle",
+    "name": "Squirtle",
+    "deck": ["tackle", "tackle", "tail_whip", "tail_whip", "water_gun"]
+  },
+  "charmander": {
+    "id": "charmander",
+    "name": "Charmander",
+    "deck": ["growl", "growl", "scratch", "scratch", "ember"]
+  }
+}

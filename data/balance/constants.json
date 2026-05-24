@@ -1,0 +1,14 @@
+{
+  "player": {
+    "max_hp": 30,
+    "max_stamina": 3,
+    "hand_size": 3
+  },
+  "combat": {
+    "confuse_self_dmg": 3,
+    "min_damage": 0
+  },
+  "rewards": {
+    "draft_options": 3
+  }
+}
