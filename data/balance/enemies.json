@@ -150,6 +150,403 @@
       ]
     },
     {
+      "id": "pidgey",
+      "name": "Pidgey",
+      "pokemon_type": "NORMAL",
+      "max_hp": 12,
+      "is_wild": true,
+      "is_boss": false,
+      "xp_reward": 5,
+      "action_pool": [
+        {
+          "id": "tackle",
+          "name": "Tackle",
+          "is_attack": true,
+          "base_weight": 3,
+          "preferred_phase": "any",
+          "effects": [{ "type": "damage", "magnitude": 5 }]
+        },
+        {
+          "id": "gust",
+          "name": "Gust",
+          "is_attack": true,
+          "base_weight": 2,
+          "preferred_phase": "mid",
+          "effects": [{ "type": "damage", "magnitude": 6 }]
+        }
+      ]
+    },
+    {
+      "id": "rattata",
+      "name": "Rattata",
+      "pokemon_type": "NORMAL",
+      "max_hp": 10,
+      "is_wild": true,
+      "is_boss": false,
+      "xp_reward": 5,
+      "action_pool": [
+        {
+          "id": "tackle",
+          "name": "Tackle",
+          "is_attack": true,
+          "base_weight": 3,
+          "preferred_phase": "any",
+          "effects": [{ "type": "damage", "magnitude": 4 }]
+        },
+        {
+          "id": "tail_whip",
+          "name": "Tail Whip",
+          "is_attack": false,
+          "base_weight": 2,
+          "preferred_phase": "healthy",
+          "effects": [
+            { "type": "apply_condition", "condition": "distracted", "duration": 2, "target": "enemy" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "weedle",
+      "name": "Weedle",
+      "pokemon_type": "POISON",
+      "max_hp": 10,
+      "is_wild": true,
+      "is_boss": false,
+      "xp_reward": 5,
+      "action_pool": [
+        {
+          "id": "poison_sting",
+          "name": "Poison Sting",
+          "is_attack": true,
+          "base_weight": 3,
+          "preferred_phase": "any",
+          "effects": [
+            { "type": "damage", "magnitude": 4 },
+            { "type": "status", "status": "poison", "magnitude": 3, "duration": 3, "target": "enemy" }
+          ]
+        },
+        {
+          "id": "tackle",
+          "name": "Tackle",
+          "is_attack": true,
+          "base_weight": 2,
+          "preferred_phase": "any",
+          "effects": [{ "type": "damage", "magnitude": 3 }]
+        }
+      ]
+    },
+    {
+      "id": "nidoran_m",
+      "name": "Nidoran♂",
+      "pokemon_type": "POISON",
+      "max_hp": 14,
+      "is_wild": true,
+      "is_boss": false,
+      "xp_reward": 6,
+      "action_pool": [
+        {
+          "id": "poison_sting",
+          "name": "Poison Sting",
+          "is_attack": true,
+          "base_weight": 3,
+          "preferred_phase": "any",
+          "effects": [
+            { "type": "damage", "magnitude": 5 },
+            { "type": "status", "status": "poison", "magnitude": 4, "duration": 3, "target": "enemy" }
+          ]
+        },
+        {
+          "id": "tackle",
+          "name": "Tackle",
+          "is_attack": true,
+          "base_weight": 2,
+          "preferred_phase": "any",
+          "effects": [{ "type": "damage", "magnitude": 5 }]
+        }
+      ]
+    },
+    {
+      "id": "caterpie",
+      "name": "Caterpie",
+      "pokemon_type": "BUG",
+      "max_hp": 8,
+      "is_wild": true,
+      "is_boss": false,
+      "xp_reward": 5,
+      "action_pool": [
+        {
+          "id": "tackle",
+          "name": "Tackle",
+          "is_attack": true,
+          "base_weight": 2,
+          "preferred_phase": "any",
+          "effects": [{ "type": "damage", "magnitude": 3 }]
+        },
+        {
+          "id": "sleep_powder_wild",
+          "name": "Sleep Powder",
+          "is_attack": false,
+          "base_weight": 2,
+          "preferred_phase": "healthy",
+          "effects": [
+            { "type": "status", "status": "sleep", "duration": 1, "target": "enemy" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "metapod",
+      "name": "Metapod",
+      "pokemon_type": "BUG",
+      "max_hp": 14,
+      "is_wild": true,
+      "is_boss": false,
+      "xp_reward": 6,
+      "action_pool": [
+        {
+          "id": "harden",
+          "name": "Harden",
+          "is_attack": false,
+          "base_weight": 4,
+          "preferred_phase": "any",
+          "effects": [{ "type": "block", "magnitude": 6, "target": "self" }]
+        },
+        {
+          "id": "tackle",
+          "name": "Tackle",
+          "is_attack": true,
+          "base_weight": 1,
+          "preferred_phase": "desperate",
+          "effects": [{ "type": "damage", "magnitude": 4 }]
+        }
+      ]
+    },
+    {
+      "id": "kakuna",
+      "name": "Kakuna",
+      "pokemon_type": "BUG",
+      "max_hp": 10,
+      "is_wild": true,
+      "is_boss": false,
+      "xp_reward": 5,
+      "action_pool": [
+        {
+          "id": "poison_sting",
+          "name": "Poison Sting",
+          "is_attack": true,
+          "base_weight": 3,
+          "preferred_phase": "any",
+          "effects": [
+            { "type": "damage", "magnitude": 4 },
+            { "type": "status", "status": "poison", "magnitude": 3, "duration": 2, "target": "enemy" }
+          ]
+        },
+        {
+          "id": "harden",
+          "name": "Harden",
+          "is_attack": false,
+          "base_weight": 2,
+          "preferred_phase": "healthy",
+          "effects": [{ "type": "block", "magnitude": 4, "target": "self" }]
+        }
+      ]
+    },
+    {
+      "id": "rival_squirtle",
+      "name": "Rival (Squirtle)",
+      "pokemon_type": "WATER",
+      "max_hp": 28,
+      "is_wild": false,
+      "is_boss": false,
+      "xp_reward": 0,
+      "boss_pattern_loop_start": 1,
+      "boss_pattern": ["water_gun_rival", "growl", "quick_attack", "sand_attack"],
+      "action_pool": [
+        {
+          "id": "water_gun_rival",
+          "name": "Water Gun",
+          "is_attack": true,
+          "effects": [{ "type": "damage", "magnitude": 8 }]
+        },
+        {
+          "id": "growl",
+          "name": "Growl",
+          "is_attack": false,
+          "effects": [
+            { "type": "apply_condition", "condition": "intimidated", "duration": 2, "target": "enemy" }
+          ]
+        },
+        {
+          "id": "quick_attack",
+          "name": "Quick Attack",
+          "is_attack": true,
+          "effects": [{ "type": "damage", "magnitude": 5 }]
+        },
+        {
+          "id": "sand_attack",
+          "name": "Sand Attack",
+          "is_attack": false,
+          "effects": [
+            { "type": "apply_condition", "condition": "blinded", "duration": 2, "target": "enemy" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "rival_bulbasaur",
+      "name": "Rival (Bulbasaur)",
+      "pokemon_type": "GRASS",
+      "max_hp": 28,
+      "is_wild": false,
+      "is_boss": false,
+      "xp_reward": 0,
+      "boss_pattern_loop_start": 1,
+      "boss_pattern": ["vine_whip_rival", "growl", "quick_attack", "sand_attack"],
+      "action_pool": [
+        {
+          "id": "vine_whip_rival",
+          "name": "Vine Whip",
+          "is_attack": true,
+          "effects": [{ "type": "damage", "magnitude": 8 }]
+        },
+        {
+          "id": "growl",
+          "name": "Growl",
+          "is_attack": false,
+          "effects": [
+            { "type": "apply_condition", "condition": "intimidated", "duration": 2, "target": "enemy" }
+          ]
+        },
+        {
+          "id": "quick_attack",
+          "name": "Quick Attack",
+          "is_attack": true,
+          "effects": [{ "type": "damage", "magnitude": 5 }]
+        },
+        {
+          "id": "sand_attack",
+          "name": "Sand Attack",
+          "is_attack": false,
+          "effects": [
+            { "type": "apply_condition", "condition": "blinded", "duration": 2, "target": "enemy" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "rival_charmander",
+      "name": "Rival (Charmander)",
+      "pokemon_type": "FIRE",
+      "max_hp": 28,
+      "is_wild": false,
+      "is_boss": false,
+      "xp_reward": 0,
+      "boss_pattern_loop_start": 1,
+      "boss_pattern": ["ember_rival", "growl", "quick_attack", "sand_attack"],
+      "action_pool": [
+        {
+          "id": "ember_rival",
+          "name": "Ember",
+          "is_attack": true,
+          "effects": [{ "type": "damage", "magnitude": 8 }]
+        },
+        {
+          "id": "growl",
+          "name": "Growl",
+          "is_attack": false,
+          "effects": [
+            { "type": "apply_condition", "condition": "intimidated", "duration": 2, "target": "enemy" }
+          ]
+        },
+        {
+          "id": "quick_attack",
+          "name": "Quick Attack",
+          "is_attack": true,
+          "effects": [{ "type": "damage", "magnitude": 5 }]
+        },
+        {
+          "id": "sand_attack",
+          "name": "Sand Attack",
+          "is_attack": false,
+          "effects": [
+            { "type": "apply_condition", "condition": "blinded", "duration": 2, "target": "enemy" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bug_catcher_butterfree",
+      "name": "Bug Catcher",
+      "pokemon_type": "BUG",
+      "max_hp": 24,
+      "is_wild": false,
+      "is_boss": false,
+      "xp_reward": 0,
+      "boss_pattern_loop_start": 0,
+      "boss_pattern": ["sleep_powder_boss", "confusion_boss"],
+      "action_pool": [
+        {
+          "id": "sleep_powder_boss",
+          "name": "Sleep Powder",
+          "is_attack": false,
+          "effects": [
+            { "type": "status", "status": "sleep", "duration": 1, "target": "enemy" }
+          ]
+        },
+        {
+          "id": "confusion_boss",
+          "name": "Confusion",
+          "is_attack": true,
+          "effects": [
+            { "type": "damage", "magnitude": 8 },
+            { "type": "status", "status": "confuse", "duration": 2, "target": "enemy" }
+          ]
+        },
+        {
+          "id": "gust",
+          "name": "Gust",
+          "is_attack": true,
+          "effects": [{ "type": "damage", "magnitude": 6 }]
+        }
+      ]
+    },
+    {
+      "id": "bug_catcher_beedrill",
+      "name": "Bug Catcher",
+      "pokemon_type": "BUG",
+      "max_hp": 22,
+      "is_wild": false,
+      "is_boss": false,
+      "xp_reward": 0,
+      "boss_pattern_loop_start": 0,
+      "boss_pattern": ["fury_attack", "twineedle", "string_shot_boss"],
+      "action_pool": [
+        {
+          "id": "fury_attack",
+          "name": "Fury Attack",
+          "is_attack": true,
+          "effects": [{ "type": "damage", "magnitude": 4 }]
+        },
+        {
+          "id": "twineedle",
+          "name": "Twineedle",
+          "is_attack": true,
+          "effects": [
+            { "type": "damage", "magnitude": 6 },
+            { "type": "status", "status": "poison", "magnitude": 4, "duration": 2, "target": "enemy" }
+          ]
+        },
+        {
+          "id": "string_shot_boss",
+          "name": "String Shot",
+          "is_attack": false,
+          "effects": [
+            { "type": "apply_condition", "condition": "slow", "duration": 1, "target": "enemy" }
+          ]
+        }
+      ]
+    },
+    {
       "id": "brock",
       "name": "Brock",
       "pokemon_type": "ROCK",

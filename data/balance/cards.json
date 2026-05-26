@@ -30,10 +30,10 @@
       "pokemon": "Bulbasaur",
       "card_type": "attack",
       "pokemon_type": "GRASS",
-      "cost": 1,
-      "power": 8,
+      "cost": 2,
+      "power": 10,
       "rarity": "starter",
-      "effects": [{ "type": "damage", "magnitude": 8 }]
+      "effects": [{ "type": "damage", "magnitude": 10 }]
     },
     {
       "id": "tail_whip",
@@ -54,10 +54,10 @@
       "pokemon": "Squirtle",
       "card_type": "attack",
       "pokemon_type": "WATER",
-      "cost": 1,
-      "power": 8,
+      "cost": 2,
+      "power": 10,
       "rarity": "starter",
-      "effects": [{ "type": "damage", "magnitude": 8 }]
+      "effects": [{ "type": "damage", "magnitude": 10 }]
     },
     {
       "id": "scratch",
@@ -88,10 +88,10 @@
       "card_type": "attack",
       "pokemon_type": "NORMAL",
       "cost": 0,
-      "power": 4,
+      "power": 3,
       "rarity": "common",
       "evolves_to": "hyper_fang",
-      "effects": [{ "type": "damage", "magnitude": 4 }]
+      "effects": [{ "type": "damage", "magnitude": 3 }]
     },
     {
       "id": "hyper_fang",
@@ -99,7 +99,7 @@
       "pokemon": "Raticate",
       "card_type": "attack",
       "pokemon_type": "NORMAL",
-      "cost": 2,
+      "cost": 3,
       "power": 14,
       "rarity": "uncommon",
       "effects": [
@@ -213,7 +213,7 @@
       "pokemon": "Snorlax",
       "card_type": "attack",
       "pokemon_type": "NORMAL",
-      "cost": 2,
+      "cost": 3,
       "power": 12,
       "rarity": "uncommon",
       "effects": [

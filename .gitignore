@@ -10,7 +10,8 @@ build/
 venv/
 
 # Playtest logs (generated)
-runs/*.json
+runs/**
+!runs/.gitkeep
 
 # IDE / OS
 .idea/

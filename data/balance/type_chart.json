@@ -24,6 +24,21 @@
     { "attacker": "FIRE", "defender": "FIRE", "multiplier": 0.5 },
     { "attacker": "GRASS", "defender": "FLYING", "multiplier": 2.0 },
     { "attacker": "FIRE", "defender": "POISON", "multiplier": 2.0 },
-    { "attacker": "POISON", "defender": "FLYING", "multiplier": 2.0 }
+    { "attacker": "POISON", "defender": "FLYING", "multiplier": 2.0 },
+    { "attacker": "FIRE", "defender": "BUG", "multiplier": 2.0 },
+    { "attacker": "GRASS", "defender": "BUG", "multiplier": 2.0 },
+    { "attacker": "WATER", "defender": "BUG", "multiplier": 1.0 },
+    { "attacker": "ROCK", "defender": "BUG", "multiplier": 2.0 },
+    { "attacker": "FLYING", "defender": "BUG", "multiplier": 2.0 },
+    { "attacker": "BUG", "defender": "GRASS", "multiplier": 2.0 },
+    { "attacker": "BUG", "defender": "POISON", "multiplier": 0.5 },
+    { "attacker": "BUG", "defender": "FIRE", "multiplier": 0.5 },
+    { "attacker": "NORMAL", "defender": "BUG", "multiplier": 1.0 },
+    { "attacker": "NORMAL", "defender": "POISON", "multiplier": 1.0 },
+    { "attacker": "GROUND", "defender": "ROCK", "multiplier": 2.0 },
+    { "attacker": "ROCK", "defender": "GROUND", "multiplier": 0.5 },
+    { "attacker": "WATER", "defender": "GROUND", "multiplier": 2.0 },
+    { "attacker": "GRASS", "defender": "GROUND", "multiplier": 2.0 },
+    { "attacker": "GROUND", "defender": "FIRE", "multiplier": 2.0 }
   ]
 }

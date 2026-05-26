@@ -1,0 +1,73 @@
+{
+  "items": [
+    {
+      "id": "potion",
+      "name": "Potion",
+      "cost": 10,
+      "in_combat": true,
+      "shop_windows": [1, 2],
+      "effect": { "type": "heal", "magnitude": 10 }
+    },
+    {
+      "id": "super_potion",
+      "name": "Super Potion",
+      "cost": 18,
+      "in_combat": true,
+      "shop_windows": [1, 2],
+      "effect": { "type": "heal", "magnitude": 20 }
+    },
+    {
+      "id": "antidote",
+      "name": "Antidote",
+      "cost": 8,
+      "in_combat": true,
+      "shop_windows": [1, 2],
+      "effect": { "type": "cure_status", "status": "poison" }
+    },
+    {
+      "id": "awakening",
+      "name": "Awakening",
+      "cost": 8,
+      "in_combat": true,
+      "shop_windows": [1, 2],
+      "effect": { "type": "cure_status", "status": "sleep" }
+    },
+    {
+      "id": "full_heal",
+      "name": "Full Heal",
+      "cost": 20,
+      "in_combat": true,
+      "shop_windows": [1, 2],
+      "effect": { "type": "cure_all_statuses" }
+    },
+    {
+      "id": "revive",
+      "name": "Revive",
+      "cost": 40,
+      "in_combat": false,
+      "shop_windows": [1, 2],
+      "effect": { "type": "revive", "magnitude": 50 }
+    },
+    {
+      "id": "parlyz_heal",
+      "name": "Parlyz Heal",
+      "cost": 8,
+      "in_combat": true,
+      "shop_windows": [2],
+      "effect": { "type": "cure_status", "status": "paralyze" }
+    }
+  ],
+  "center": {
+    "cost": 30,
+    "max_hp_bonus": 3
+  },
+  "inventory": {
+    "max_slots": 3,
+    "max_per_item": 2
+  },
+  "gold": {
+    "wild_min": 3,
+    "wild_max": 6,
+    "mid_boss": 18
+  }
+}

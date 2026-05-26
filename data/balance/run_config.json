@@ -1,24 +1,35 @@
 {
-  "encounter_sequence": ["geodude", "zubat", "onix", "geodude", "brock"],
+  "pewter_encounter_sequence": ["geodude", "zubat", "onix", "geodude", "brock"],
   "evolution_catalyst_after_encounter": 2,
   "evolution": {
     "from": "quick_attack",
     "to": "hyper_fang"
   },
-  "reward_pool": [
-    "quick_attack",
-    "harden",
-    "recover",
-    "poison_powder",
-    "sand_attack",
-    "body_slam",
-    "defense_curl",
-    "bite",
-    "supersonic",
-    "stun_spore",
-    "sleep_powder",
-    "string_shot"
-  ],
+  "evolution_trigger": "post_rival",
   "signature_card": "rock_slide",
-  "badge_id": "boulder_badge"
+  "badge_id": "boulder_badge",
+  "economy_enabled": true,
+  "economy_shim_heal": false,
+  "stages": [
+    {
+      "id": "route_viridian",
+      "wild_pool": ["pidgey", "rattata", "weedle", "nidoran_m"],
+      "wild_count": 3,
+      "mid_boss": "rival_blue",
+      "mid_boss_variants": null,
+      "shop_after": true,
+      "shop_window": 1,
+      "reward_pool_key": "stage1"
+    },
+    {
+      "id": "viridian_forest",
+      "wild_pool": ["caterpie", "metapod", "kakuna", "weedle"],
+      "wild_count": 3,
+      "mid_boss": null,
+      "mid_boss_variants": ["bug_catcher_butterfree", "bug_catcher_beedrill"],
+      "shop_after": true,
+      "shop_window": 2,
+      "reward_pool_key": "stage2"
+    }
+  ]
 }

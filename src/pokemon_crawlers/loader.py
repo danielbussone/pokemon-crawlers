@@ -13,6 +13,7 @@ from pokemon_crawlers.models import (
     ConditionDefinition,
     ConditionId,
     Constants,
+    EconomyConfig,
     Effect,
     EffectTarget,
     EffectType,
@@ -20,9 +21,13 @@ from pokemon_crawlers.models import (
     EnemyDefinition,
     EvolutionConfig,
     GameBalance,
+    ItemDefinition,
+    ItemEffect,
+    ItemEffectType,
     PokemonType,
     Rarity,
     RunConfig,
+    StageDefinition,
     StarterDefinition,
     StatusType,
 )
@@ -44,12 +49,22 @@ def load_balance(balance_dir: Path) -> GameBalance:
     enemies = _load_enemies(_read_json(balance_dir / "enemies.json"))
     starters = _load_starters(_read_json(balance_dir / "starters.json"))
     badges = _load_badges(_read_json(balance_dir / "badges.json"))
-    run_config = _load_run_config(_read_json(balance_dir / "run_config.json"), cards, enemies, badges)
+    items_data = _read_json(balance_dir / "items.json")
+    items = _load_items(items_data)
+    economy = _load_economy(items_data)
+    stage_rewards = _load_stage_rewards(_read_json(balance_dir / "stage_rewards.json"), cards)
+    run_config = _load_run_config(
+        _read_json(balance_dir / "run_config.json"),
+        cards,
+        enemies,
+        badges,
+        stage_rewards,
+    )
 
     _validate_card_graph(cards)
     _validate_starters(starters, cards)
     _validate_enemies(enemies)
-    _validate_run_config(run_config, cards, enemies, badges)
+    _validate_run_config(run_config, cards, enemies, badges, stage_rewards)
 
     return GameBalance(
         constants=constants,
@@ -60,6 +75,9 @@ def load_balance(balance_dir: Path) -> GameBalance:
         starters=starters,
         badges=badges,
         run_config=run_config,
+        items=items,
+        economy=economy,
+        stage_rewards=stage_rewards,
     )
 
 
@@ -84,6 +102,7 @@ def _load_constants(data: dict[str, Any]) -> Constants:
         confuse_self_dmg=int(combat["confuse_self_dmg"]),
         min_damage=int(combat["min_damage"]),
         draft_options=int(rewards["draft_options"]),
+        starter_stab_draft_chance=float(rewards.get("starter_stab_draft_chance", 0.15)),
     )
 
 
@@ -230,23 +249,102 @@ def _load_badges(data: dict[str, Any]) -> dict[str, BadgeDefinition]:
     return badges
 
 
+def _load_items(data: dict[str, Any]) -> dict[str, ItemDefinition]:
+    items: dict[str, ItemDefinition] = {}
+    for raw in data.get("items", []):
+        item_id = raw["id"]
+        effect_raw = raw["effect"]
+        effect_type = ItemEffectType(effect_raw["type"])
+        status = StatusType(effect_raw["status"]) if effect_raw.get("status") else None
+        items[item_id] = ItemDefinition(
+            id=item_id,
+            name=raw["name"],
+            cost=int(raw["cost"]),
+            in_combat=bool(raw["in_combat"]),
+            shop_windows=tuple(int(w) for w in raw.get("shop_windows", [1, 2])),
+            effect=ItemEffect(
+                type=effect_type,
+                magnitude=int(effect_raw.get("magnitude", 0)),
+                status=status,
+            ),
+        )
+    return items
+
+
+def _load_economy(data: dict[str, Any]) -> EconomyConfig:
+    center = data.get("center", {})
+    inventory = data.get("inventory", {})
+    gold = data.get("gold", {})
+    return EconomyConfig(
+        center_cost=int(center.get("cost", 30)),
+        center_max_hp_bonus=int(center.get("max_hp_bonus", 3)),
+        inventory_max_slots=int(inventory.get("max_slots", 3)),
+        inventory_max_per_item=int(inventory.get("max_per_item", 2)),
+        gold_wild_min=int(gold.get("wild_min", 5)),
+        gold_wild_max=int(gold.get("wild_max", 10)),
+        gold_mid_boss=int(gold.get("mid_boss", 30)),
+    )
+
+
+def _load_stage_rewards(data: dict[str, Any], cards: dict[str, Card]) -> dict[str, tuple[str, ...]]:
+    pools: dict[str, tuple[str, ...]] = {}
+    for key, pool in data.items():
+        if key.startswith("_"):
+            continue
+        if not isinstance(pool, list):
+            continue
+        pools[key] = tuple(pool)
+        for card_id in pools[key]:
+            if card_id not in cards:
+                raise BalanceLoadError(
+                    f"stage_rewards '{key}' references unknown card '{card_id}'"
+                )
+    return pools
+
+
 def _load_run_config(
     data: dict[str, Any],
     cards: dict[str, Card],
     enemies: dict[str, EnemyDefinition],
     badges: dict[str, BadgeDefinition],
+    stage_rewards: dict[str, tuple[str, ...]],
 ) -> RunConfig:
     evolution_raw = data.get("evolution", {})
+    pewter_sequence = tuple(
+        data.get("pewter_encounter_sequence", data.get("encounter_sequence", []))
+    )
+    reward_pool = tuple(
+        data.get("reward_pool", stage_rewards.get("stage3", ()))
+    )
+    stages: list[StageDefinition] = []
+    for raw in data.get("stages", []):
+        variants = raw.get("mid_boss_variants")
+        stages.append(
+            StageDefinition(
+                id=raw["id"],
+                wild_pool=tuple(raw["wild_pool"]),
+                wild_count=int(raw["wild_count"]),
+                mid_boss=raw.get("mid_boss"),
+                mid_boss_variants=tuple(variants) if variants else None,
+                shop_after=bool(raw.get("shop_after", False)),
+                shop_window=int(raw.get("shop_window", 1)),
+                reward_pool_key=raw["reward_pool_key"],
+            )
+        )
     return RunConfig(
-        encounter_sequence=tuple(data["encounter_sequence"]),
-        reward_pool=tuple(data["reward_pool"]),
+        pewter_encounter_sequence=pewter_sequence,
+        reward_pool=reward_pool,
         evolution=EvolutionConfig(
             from_card=evolution_raw["from"],
             to_card=evolution_raw["to"],
-            after_encounter=int(data["evolution_catalyst_after_encounter"]),
+            after_encounter=int(data.get("evolution_catalyst_after_encounter", 2)),
         ),
+        evolution_trigger=str(data.get("evolution_trigger", "post_rival")),
         signature_card=data["signature_card"],
         badge_id=data["badge_id"],
+        economy_enabled=bool(data.get("economy_enabled", True)),
+        economy_shim_heal=bool(data.get("economy_shim_heal", False)),
+        stages=tuple(stages),
     )
 
 
@@ -301,18 +399,20 @@ def _validate_enemies(enemies: dict[str, EnemyDefinition]) -> None:
         pool_ids = {action.id for action in enemy.action_pool}
         if not pool_ids:
             raise BalanceLoadError(f"Enemy '{enemy.id}' has empty action_pool")
-        if enemy.is_boss:
-            if not enemy.boss_pattern:
-                raise BalanceLoadError(f"Boss '{enemy.id}' missing boss_pattern")
-            if enemy.boss_pattern_loop_start < 0 or enemy.boss_pattern_loop_start >= len(enemy.boss_pattern):
+        if enemy.boss_pattern:
+            if enemy.boss_pattern_loop_start < 0 or enemy.boss_pattern_loop_start >= len(
+                enemy.boss_pattern
+            ):
                 raise BalanceLoadError(
-                    f"Boss '{enemy.id}' boss_pattern_loop_start out of range"
+                    f"Enemy '{enemy.id}' boss_pattern_loop_start out of range"
                 )
             for action_id in enemy.boss_pattern:
                 if action_id not in pool_ids:
                     raise BalanceLoadError(
-                        f"Boss '{enemy.id}' pattern references unknown action '{action_id}'"
+                        f"Enemy '{enemy.id}' pattern references unknown action '{action_id}'"
                     )
+        if enemy.is_boss and not enemy.boss_pattern:
+            raise BalanceLoadError(f"Boss '{enemy.id}' missing boss_pattern")
 
 
 def _validate_run_config(
@@ -320,19 +420,46 @@ def _validate_run_config(
     cards: dict[str, Card],
     enemies: dict[str, EnemyDefinition],
     badges: dict[str, BadgeDefinition],
+    stage_rewards: dict[str, tuple[str, ...]],
 ) -> None:
-    if not run_config.encounter_sequence:
-        raise BalanceLoadError("run_config.encounter_sequence is empty")
-    for enemy_id in run_config.encounter_sequence:
+    if not run_config.pewter_encounter_sequence:
+        raise BalanceLoadError("run_config.pewter_encounter_sequence is empty")
+    for enemy_id in run_config.pewter_encounter_sequence:
         if enemy_id not in enemies:
             raise BalanceLoadError(
-                f"encounter_sequence references unknown enemy '{enemy_id}'"
+                f"pewter_encounter_sequence references unknown enemy '{enemy_id}'"
             )
     for card_id in run_config.reward_pool:
         if card_id not in cards:
             raise BalanceLoadError(
                 f"reward_pool references unknown card '{card_id}'"
             )
+    for stage in run_config.stages:
+        if stage.reward_pool_key not in stage_rewards:
+            raise BalanceLoadError(
+                f"stage '{stage.id}' reward_pool_key '{stage.reward_pool_key}' not found"
+            )
+        for enemy_id in stage.wild_pool:
+            if enemy_id not in enemies:
+                raise BalanceLoadError(
+                    f"stage '{stage.id}' wild_pool references unknown enemy '{enemy_id}'"
+                )
+        from pokemon_crawlers.rivals import RIVAL_SENTINEL
+
+        if (
+            stage.mid_boss
+            and stage.mid_boss not in enemies
+            and stage.mid_boss != RIVAL_SENTINEL
+        ):
+            raise BalanceLoadError(
+                f"stage '{stage.id}' mid_boss '{stage.mid_boss}' not found"
+            )
+        if stage.mid_boss_variants:
+            for enemy_id in stage.mid_boss_variants:
+                if enemy_id not in enemies:
+                    raise BalanceLoadError(
+                        f"stage '{stage.id}' mid_boss_variants references unknown '{enemy_id}'"
+                    )
     if run_config.signature_card not in cards:
         raise BalanceLoadError(
             f"signature_card '{run_config.signature_card}' not found"

@@ -24,7 +24,9 @@ def test_load_default_balance() -> None:
     balance = load_balance(BALANCE_DIR)
     assert balance.constants.player_max_hp == 30
     assert len(balance.cards) >= 20
-    assert len(balance.enemies) == 4
+    assert len(balance.enemies) >= 14
+    assert len(balance.items) >= 6
+    assert len(balance.run_config.stages) == 2
     assert len(balance.starters) == 3
     assert ConditionId.BLINDED in balance.conditions
 
@@ -33,6 +35,16 @@ def test_type_chart_water_vs_rock() -> None:
     balance = load_balance(BALANCE_DIR)
     key = (PokemonType.WATER, PokemonType.ROCK)
     assert balance.type_chart[key] == 2.0
+
+
+def test_type_chart_fire_vs_bug() -> None:
+    balance = load_balance(BALANCE_DIR)
+    assert balance.type_chart[(PokemonType.FIRE, PokemonType.BUG)] == 2.0
+
+
+def test_type_chart_fire_vs_rock_resist() -> None:
+    balance = load_balance(BALANCE_DIR)
+    assert balance.type_chart[(PokemonType.FIRE, PokemonType.ROCK)] == 0.5
 
 
 def test_starter_decks_reference_valid_cards() -> None:
@@ -58,9 +70,11 @@ def test_brock_has_screech_in_pattern() -> None:
 
 def test_run_config_encounter_sequence() -> None:
     balance = load_balance(BALANCE_DIR)
-    assert balance.run_config.encounter_sequence[-1] == "brock"
+    assert balance.run_config.pewter_encounter_sequence[-1] == "brock"
     assert "sand_attack" in balance.run_config.reward_pool
     assert "string_shot" in balance.run_config.reward_pool
+    assert balance.stage_rewards["stage1"]
+    assert balance.run_config.evolution_trigger == "post_rival"
 
 
 def test_registry_caches_balance() -> None:

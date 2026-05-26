@@ -1,6 +1,6 @@
 # Pokémon Crawlers — Combat PoC
 
-Pre-Godot validation harness for **Pokémon Crawlers**. A stdlib-only Python CLI that runs the Pewter City encounter loop (starter → wild fights → Brock), logs runs to JSON, and supports balance tuning via data files.
+Pre-Godot validation harness for **Pokémon Crawlers**. A stdlib-only Python CLI that runs the Kanto opening arc (Route/Viridian → Viridian Forest → Pewter Gym) with mid-boss trainers, gold economy, and in-combat items. Logs runs to JSON for balance tuning via data files.
 
 Long-term target: Godot 4 roguelite deckbuilder. This repo proves combat feel before any engine work.
 
@@ -19,17 +19,53 @@ pip install -e ".[dev]"
 
 ## Run
 
+Interactive Kanto arc run:
+
 ```bash
 python -m pokemon_crawlers
 # or
 pokemon-crawlers
+
+# Legacy Pewter-only regression (5 encounters)
+python -m pokemon_crawlers --pewter-only --auto --starter squirtle
 ```
 
-Optional balance override (when implemented):
+Auto-play smoke test (heuristic AI, logs optional):
+
+```bash
+python -m pokemon_crawlers --auto --starter squirtle --no-log
+```
+
+Bulk simulation for balance data (writes one JSON log per run under `runs/`):
+
+```bash
+python -m pokemon_crawlers.sim --runs 50 --seed 42
+# or
+python -m pokemon_crawlers --sim 50 --sim-seed 42
+```
+
+The sim AI favors block/heal when low on HP and deprioritizes Growl when the enemy still has substantial HP — useful for aggregate win rates, not a perfect human player.
+
+Analyze saved runs:
+
+```bash
+python -m pokemon_crawlers.analyze runs/
+python -m pokemon_crawlers.analyze runs/ --json
+```
+
+Balance tuning log (change deltas, KPI snapshots, meta analysis): [docs/POC_BALANCE_TUNING.md](docs/POC_BALANCE_TUNING.md)
+
+Options:
 
 ```bash
 python -m pokemon_crawlers --balance-dir path/to/balance
+python -m pokemon_crawlers --starter charmander   # skip starter prompt
+python -m pokemon_crawlers --runs-dir ./my-runs   # JSON logs (default: runs/)
 ```
+
+During combat: **hand index** to play a card, **`i <item_id>`** to use an item (once per turn), **`e`** to end turn, **`q`** to quit.
+
+Shop windows open after mid-boss victories (Pokémon Center + Poké Mart).
 
 ## Project layout
 

@@ -318,6 +318,13 @@ def resolve_enemy_action_effects(
     return results
 
 
+def apply_confuse_self_damage(combatant: Combatant, amount: int) -> int:
+    if not has_status(combatant, StatusType.CONFUSE):
+        return 0
+    combatant.hp = max(0, combatant.hp - amount)
+    return amount
+
+
 def apply_player_turn_start_modifiers(player: PlayerState, balance: GameBalance) -> None:
     """Reset stamina for the turn including Slow penalty and prior-turn Slow-on-enemy bonus."""
     base = player.base_max_stamina

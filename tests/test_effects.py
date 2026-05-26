@@ -188,7 +188,8 @@ def test_vine_whip_card_against_geodude(player, geodude, balance):
         balance=balance,
         badges=balance.badges,
     )
-    assert results[0].hp_damage == 16
+    assert results[0].hp_damage == 20
+    assert geodude.hp == 0
     assert has_condition(geodude, ConditionId.DISTRACTED) is False
 
 

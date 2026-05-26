@@ -36,6 +36,13 @@ class EffectType(StrEnum):
     APPLY_CONDITION = "apply_condition"
 
 
+class ItemEffectType(StrEnum):
+    HEAL = "heal"
+    CURE_STATUS = "cure_status"
+    CURE_ALL_STATUSES = "cure_all_statuses"
+    REVIVE = "revive"
+
+
 class StatusType(StrEnum):
     SLEEP = "sleep"
     PARALYZE = "paralyze"
@@ -156,22 +163,72 @@ class Constants:
     confuse_self_dmg: int
     min_damage: int
     draft_options: int
+    starter_stab_draft_chance: float
 
 
 @dataclass(frozen=True)
 class EvolutionConfig:
     from_card: str
     to_card: str
-    after_encounter: int
+    after_encounter: int  # pewter-only legacy trigger
+
+
+@dataclass(frozen=True)
+class ItemEffect:
+    type: ItemEffectType
+    magnitude: int = 0
+    status: StatusType | None = None
+
+
+@dataclass(frozen=True)
+class ItemDefinition:
+    id: str
+    name: str
+    cost: int
+    in_combat: bool
+    shop_windows: tuple[int, ...]
+    effect: ItemEffect
+
+
+@dataclass(frozen=True)
+class EconomyConfig:
+    center_cost: int
+    center_max_hp_bonus: int
+    inventory_max_slots: int
+    inventory_max_per_item: int
+    gold_wild_min: int
+    gold_wild_max: int
+    gold_mid_boss: int
+
+
+@dataclass(frozen=True)
+class StageDefinition:
+    id: str
+    wild_pool: tuple[str, ...]
+    wild_count: int
+    mid_boss: str | None
+    mid_boss_variants: tuple[str, ...] | None
+    shop_after: bool
+    shop_window: int
+    reward_pool_key: str
 
 
 @dataclass(frozen=True)
 class RunConfig:
-    encounter_sequence: tuple[str, ...]
-    reward_pool: tuple[str, ...]
+    pewter_encounter_sequence: tuple[str, ...]
+    reward_pool: tuple[str, ...]  # legacy alias for stage3 pool
     evolution: EvolutionConfig
+    evolution_trigger: str  # post_rival | post_bug_catcher
     signature_card: str
     badge_id: str
+    economy_enabled: bool
+    economy_shim_heal: bool
+    stages: tuple[StageDefinition, ...]
+
+    @property
+    def encounter_sequence(self) -> tuple[str, ...]:
+        """Legacy Pewter-only sequence accessor."""
+        return self.pewter_encounter_sequence
 
 
 @dataclass(frozen=True)
@@ -184,6 +241,9 @@ class GameBalance:
     starters: dict[str, StarterDefinition]
     badges: dict[str, BadgeDefinition]
     run_config: RunConfig
+    items: dict[str, ItemDefinition]
+    economy: EconomyConfig
+    stage_rewards: dict[str, tuple[str, ...]]
 
 
 # --- Runtime combat state (mutable) ---
@@ -229,6 +289,9 @@ class PlayerState(Combatant):
     hand: list[str] | None = None
     discard: list[str] | None = None
     badge_ids: list[str] | None = None
+    gold: int = 0
+    inventory: list[str] | None = None
+    center_visits: int = 0
 
     def __post_init__(self) -> None:
         super().__post_init__()
@@ -240,6 +303,8 @@ class PlayerState(Combatant):
             self.discard = []
         if self.badge_ids is None:
             self.badge_ids = []
+        if self.inventory is None:
+            self.inventory = []
 
 
 @dataclass

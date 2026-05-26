@@ -35,17 +35,18 @@ def player(balance):
     )
 
 
-def test_build_player_deck_has_five_cards(balance):
+def test_build_player_deck_has_six_cards(balance):
     deck = build_player_deck("bulbasaur", balance)
-    assert len(deck) == 5
+    assert len(deck) == 6
     assert deck.count("vine_whip") == 1
     assert deck.count("growl") == 2
+    assert deck.count("harden") == 1
 
 
 def test_draw_to_hand_fills_hand(player, balance):
     drawn = draw_to_hand(player, balance)
-    assert drawn == 3
-    assert len(player.hand) == 3
+    assert drawn == balance.constants.hand_size
+    assert len(player.hand) == balance.constants.hand_size
     assert len(player.deck) == 2
 
 
@@ -53,8 +54,8 @@ def test_shuffle_discard_when_deck_empty(player, balance):
     player.deck = []
     player.discard = ["tackle", "tackle", "water_gun", "tail_whip", "tail_whip"]
     draw_to_hand(player, balance)
-    assert len(player.hand) == 3
-    assert len(player.deck) == 2
+    assert len(player.hand) == balance.constants.hand_size
+    assert len(player.deck) == 1
     assert player.discard == []
 
 
@@ -70,7 +71,7 @@ def test_play_card_from_hand(player, balance):
     draw_to_hand(player, balance)
     card_id = play_card_from_hand(player, 0)
     assert card_id in balance.cards
-    assert len(player.hand) == 2
+    assert len(player.hand) == balance.constants.hand_size - 1
     assert player.discard[-1] == card_id
 
 

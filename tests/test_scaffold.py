@@ -18,4 +18,4 @@ def test_main_exits_when_balance_dir_missing(tmp_path: Path) -> None:
 
 def test_main_ok_with_project_balance_dir() -> None:
     balance_dir = Path(__file__).resolve().parents[1] / "data" / "balance"
-    assert main(["--balance-dir", str(balance_dir)]) == 0
+    assert main(["--balance-dir", str(balance_dir), "--auto", "--no-log"]) == 0

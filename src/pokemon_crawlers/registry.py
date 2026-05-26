@@ -21,6 +21,13 @@ def get_balance(balance_dir: Path | None = None) -> GameBalance:
     return _cached
 
 
+def set_balance(balance: GameBalance, *, balance_dir: Path | None = None) -> None:
+    """Install pre-loaded balance (e.g. after main loads a custom --balance-dir)."""
+    global _cached, _cached_path
+    _cached = balance
+    _cached_path = (balance_dir or _DEFAULT_BALANCE_DIR).resolve()
+
+
 def reset_cache() -> None:
     global _cached, _cached_path
     _cached = None
