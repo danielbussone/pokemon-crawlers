@@ -4,6 +4,19 @@ Pre-Godot validation harness for **Pokémon Crawlers**. A stdlib-only Python CLI
 
 Long-term target: Godot 4 roguelite deckbuilder. This repo proves combat feel before any engine work.
 
+## PoC status
+
+**Frozen baseline** (May 2026) — validated for Kanto opening through Brock. See [POC_FINDINGS.md](POC_FINDINGS.md#poc-baseline-frozen).
+
+| | |
+|--|--|
+| Type chart | 2.0× / 0.5× |
+| Hand | 4 cards |
+| Premium attacks | Body Slam / Hyper Fang at **cost 3** |
+| Charmander | Weak pre-Brock by design; accepted for PoC |
+
+**Next step:** [docs/GODOT_HANDOFF.md](docs/GODOT_HANDOFF.md) — implementation phases, data contract, combat turn order.
+
 ## Prerequisites
 
 - Python 3.11+
@@ -63,7 +76,7 @@ python -m pokemon_crawlers --starter charmander   # skip starter prompt
 python -m pokemon_crawlers --runs-dir ./my-runs   # JSON logs (default: runs/)
 ```
 
-During combat: **hand index** to play a card, **`i <item_id>`** to use an item (once per turn), **`e`** to end turn, **`q`** to quit.
+During combat: **hand index** to play a card, **`i`** plus slot number, item id, or name to use an item (once per turn), **`e`** to end turn, **`q`** to quit.
 
 Shop windows open after mid-boss victories (Pokémon Center + Poké Mart).
 
@@ -78,12 +91,16 @@ pokemon-crawlers/
 └── POC_FINDINGS.md        # Playtest conclusions (filled after 20+ runs)
 ```
 
-## Playtest protocol
+## Regression sim (baseline)
 
-1. Run full Pewter chains across all three starters (Bulbasaur, Squirtle, Charmander).
-2. Log at least 20 runs under `runs/`.
-3. Analyze aggregate metrics: `python -m pokemon_crawlers.analyze runs/` (when implemented).
-4. Record conclusions in [POC_FINDINGS.md](POC_FINDINGS.md).
+```bash
+python -m pokemon_crawlers.sim --runs 3000 --seed 42 --starter all \
+  --shop-policy greedy --play-style balanced \
+  --runs-dir runs/v2/regression-baseline/
+python -m pokemon_crawlers.analyze runs/v2/regression-baseline/ --json
+```
+
+Sim logs live under `runs/` (gitignored). Compare future balance changes against ~33% overall win rate on greedy shop.
 
 ## Balance tuning
 
@@ -91,8 +108,9 @@ Edit JSON under `data/balance/` (HP, damage, costs, condition magnitudes, encoun
 
 ## Docs
 
-- [POC_FINDINGS.md](POC_FINDINGS.md) — findings template / final report
-- Plan: `.cursor/plans/pokemon_crawlers_poc_*.plan.md` (local)
+- [POC_FINDINGS.md](POC_FINDINGS.md) — frozen baseline and playtest conclusions
+- [docs/POC_BALANCE_TUNING.md](docs/POC_BALANCE_TUNING.md) — sim milestones and KPI tables
+- [docs/GODOT_HANDOFF.md](docs/GODOT_HANDOFF.md) — Godot 4 port checklist and data contract
 
 ## License
 

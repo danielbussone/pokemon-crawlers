@@ -77,7 +77,8 @@ Deltas applied in order. Each row should link to a milestone or new milestone ID
 | 12 | 2026-05-26 | M4 | **Combat UX**: item slot/id in UI; enemy turn log line | `cli.py`, `combat.py` | Playtest friction |
 | 13 | 2026-05-26 | M5 | **Type chart revert**: 1.5/0.75 → **2.0/0.5** | `type_chart.json` | Re-test M4 economy + counter Rival at scale |
 | 14 | 2026-05-26 | M6 | VW/WG **cost 2 / power 10**; **hand_size 4** | `cards.json`, `constants.json` | Starter parity + draw consistency |
-| 15 | — | *next* | Pewter Fire relief or trim hand to 3 | TBD | Charmander still under 15% WR |
+| 15 | 2026-05-26 | PoC freeze | **Charmander early weakness accepted**; M6 + cost-3 BS/HF baseline | docs | Fire payoff deferred to post-Brock game |
+| 16 | — | *next* | Godot handoff / PRD sync | TBD | — |
 
 ---
 

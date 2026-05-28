@@ -4,6 +4,31 @@
 > **Structured tuning log (deltas + KPI tables + meta):** [docs/POC_BALANCE_TUNING.md](docs/POC_BALANCE_TUNING.md)
 > PRD sync happens here — not before PoC validation.
 
+## PoC baseline (frozen)
+
+**Committed config in `data/balance/`** (May 2026):
+
+| Setting | Value |
+|---------|--------|
+| Type chart | **2.0× super / 0.5× resist** |
+| Hand size | 4 |
+| Starter signatures | Vine Whip / Water Gun / Ember — cost 2, power 10 |
+| Body Slam / Hyper Fang | **cost 3** |
+| Economy | Wild 3–6g, mid-boss 18g; Center 30g (+3 max HP) |
+| Rival | Counter-type starter (typed mid-boss) |
+| Draft | 15% chance per pick to offer starter STAB card |
+
+**Reference sim batches** (local, `runs/v2/`, gitignored):
+
+- **Greedy / pessimistic:** `m6-play-balanced-card-cost` (~33% overall WR, seed 42, 3000 runs)
+- **Human-like healing:** `m6-shop-potions-card-cost` (~51% overall WR)
+
+**Charmander:** Early Kanto weakness vs Rock is **accepted** for this PoC. This slice ends at Brock; Fire is expected to struggle here and gain relative strength in later regions/gyms in the full game. No further Charmander-specific tuning required for PoC sign-off.
+
+**Godot handoff:** [docs/GODOT_HANDOFF.md](docs/GODOT_HANDOFF.md)
+
+---
+
 ## Test conditions
 
 - **Runs completed:** 1000+ per configuration (heuristic AI)
@@ -13,14 +38,16 @@
   - `runs/v2/soft-chart-charm/` — Charmander-only, soft chart, 500 runs
 - **Starters tested:** Bulbasaur / Squirtle / Charmander (rotated or isolated)
 - **Balance config:** `data/balance/` — `type_chart.json` is the primary lever documented below
-- **Sim flags:** `--seed 42`, `--shop-policy greedy`
-- **Date range:** 2026-05-25
+- **Sim flags:** `--seed 42`, `--shop-policy greedy|potions`, `--play-style balanced|aggressive|conservative`
+- **Date range:** 2026-05-25 – 2026-05-26
 
 ---
 
-## Type chart change: 2.0× / 0.5× → 1.5× / 0.75×
+## Type chart change: 2.0× / 0.5× → 1.5× / 0.75× (experiment) → 2.0× / 0.5× (PoC ship)
 
-**Decision:** Adopt **1.5× super effective / 0.75× resisted** globally in `data/balance/type_chart.json`. Neutral matchups remain 1.0×.
+**Historical experiment:** **1.5× super effective / 0.75× resisted** was tested to fix Charmander vs Pewter; it raised overall win rate to ~69% (too easy). Neutral matchups remain 1.0×.
+
+**PoC ship decision:** Revert to **2.0× / 0.5×** for overall difficulty in the 25–40% band with M6 knobs (see [docs/POC_BALANCE_TUNING.md](docs/POC_BALANCE_TUNING.md) M5–M6).
 
 **Rationale:** In this combat model (low HP pool, damage-only type scaling, short fights), classic Pokémon multipliers created a **4× spread** between super and resist on the same base power. Pewter Rock at 0.5× effectively doubled enemy effective HP for Fire, overwhelming the 3-stage onboarding arc. Softer multipliers compress starter spread while preserving type identity.
 
@@ -154,15 +181,16 @@ Fire → Rock: **0.75×** (was 0.5×) — ~50% more damage per attack vs Rock. F
 
 ## Recommended MVP adjustments (for Godot)
 
-1. **Type chart:** 1.5× super / 0.75× resist (committed in PoC JSON).
-2. **Pewter:** Tune Brock (and optionally Onix) to target **25–40%** overall sim win rate with soft chart.
-3. **Economy:** Revisit Center at 30g/+3 HP — strong with greedy AI; adjust before final balance lock.
+1. **Type chart:** **2.0× / 0.5×** as in PoC JSON; UI can show qualitative effectiveness, not necessarily classic multipliers.
+2. **Early game:** Accept Fire weakness through Brock; plan later-region payoff for Charmander in full roguelite arc.
+3. **Economy:** Center 30g/+3 HP and gold curve as tuned; greedy sim undervalues potions — human players heal more (`--shop-policy potions` for comparison).
+4. **Cards:** Body Slam / Hyper Fang at **cost 3**; consider rare-pool weighting when draft system grows.
 
 ---
 
 ## PRD sections to update later
 
-- [ ] Type effectiveness multipliers (1.5 / 0.75, UI copy)
+- [ ] Type effectiveness multipliers (2.0 / 0.5 in PoC; UI copy)
 - [ ] Card model (`pokemon_type`, conditions)
 - [ ] Status / condition semantics
 - [ ] Starter deck compositions
@@ -174,5 +202,5 @@ Fire → Rock: **0.75×** (was 0.5×) — ~50% more damage per attack vs Rock. F
 ## Open questions for Godot phase
 
 - Should resisted matchups show “0.75×” or qualitative “Not very effective…” only?
-- Is 69% sim win rate acceptable for “demo friendly” or must sim match hard roguelite targets?
-- Does manual play feel too easy despite Charmander finally winning?
+- Does manual play at M6 baseline feel fair for Squirtle/Bulbasaur and appropriately hard for Charmander pre-Brock?
+- When extending past Pewter, how should Fire’s power curve catch up without invalidating early Rock tension?
