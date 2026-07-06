@@ -17,6 +17,10 @@ Long-term target: Godot 4 roguelite deckbuilder. This repo proves combat feel be
 
 **Next step:** [docs/GODOT_HANDOFF.md](docs/GODOT_HANDOFF.md) — implementation phases, data contract, combat turn order.
 
+**Godot 3D port (first pass):** [godot/](godot/) — same balance data and 13-fight Kanto arc,
+walked in a 3D explorable world with procedurally generated (code-only) assets. See
+[godot/README.md](godot/README.md).
+
 ## Prerequisites
 
 - Python 3.11+

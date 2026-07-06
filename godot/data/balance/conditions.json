@@ -1,0 +1,33 @@
+{
+  "intimidated": {
+    "outgoing_damage_mult": 0.75,
+    "default_duration": 2
+  },
+  "distracted": {
+    "incoming_damage_mult": 1.25,
+    "default_duration": 2
+  },
+  "defenseless": {
+    "incoming_damage_mult": 1.25,
+    "blocks_block_gain": true,
+    "default_duration": 2
+  },
+  "blinded": {
+    "initial_budget": 4,
+    "reapply_budget_add": 2,
+    "reapply_budget_cap": 6,
+    "miss_on_even_budget": true,
+    "non_attacks_decrement": false
+  },
+  "slow": {
+    "on_player": {
+      "stamina_delta": -1,
+      "default_duration": 1
+    },
+    "on_enemy": {
+      "grant_player_stamina_next_turn": 1,
+      "allow_stamina_overflow": true,
+      "default_duration": 1
+    }
+  }
+}

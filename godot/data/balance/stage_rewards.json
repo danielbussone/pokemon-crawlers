@@ -1,0 +1,34 @@
+{
+  "stage1": [
+    "quick_attack",
+    "harden",
+    "recover",
+    "sand_attack",
+    "body_slam",
+    "defense_curl",
+    "bite"
+  ],
+  "stage2": [
+    "poison_powder",
+    "string_shot",
+    "sleep_powder",
+    "bite",
+    "harden",
+    "recover",
+    "quick_attack"
+  ],
+  "stage3": [
+    "quick_attack",
+    "harden",
+    "recover",
+    "poison_powder",
+    "sand_attack",
+    "body_slam",
+    "defense_curl",
+    "bite",
+    "supersonic",
+    "stun_spore",
+    "sleep_powder",
+    "string_shot"
+  ]
+}

@@ -1,0 +1,7 @@
+# Godot 4 cache/imported files
+.godot/
+*.import
+export_presets.cfg
+
+# --visualcheck dev-tool output
+.debug_screenshots/
