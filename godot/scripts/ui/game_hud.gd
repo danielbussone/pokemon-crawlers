@@ -1,7 +1,10 @@
 class_name GameHUD
 extends CanvasLayer
 ## Exploration HUD: player stats top-left, zone name top-center, minimap
-## top-right, trainer portrait bottom-left, toasts, movement hint.
+## top-right, trainer + starter party strip bottom-left, toasts, movement hint.
+
+const PARTY_TRAINER_HEIGHT := 64
+const PARTY_POKEMON_HEIGHT := 40  # ~62% of trainer — slightly larger than half
 
 var minimap: Minimap
 
@@ -62,16 +65,15 @@ func _ready() -> void:
 	portrait_wrap.offset_bottom = -12
 	portrait_wrap.grow_vertical = Control.GROW_DIRECTION_BEGIN
 	add_child(portrait_wrap)
-	var portrait := TextureRect.new()
-	portrait.texture = PortraitFactory.build(Run.trainer_appearance)
-	portrait.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-	portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT
-	# Real trainer art is much bigger than the procedural fallback's canvas —
-	# without IGNORE_SIZE the control balloons to the texture's native pixels
-	# (same bug as the card-art sizing issue).
-	portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	portrait.custom_minimum_size = Vector2(96, 120)
-	portrait_wrap.add_child(portrait)
+
+	var party := HBoxContainer.new()
+	party.add_theme_constant_override("separation", 2)
+	party.alignment = BoxContainer.ALIGNMENT_END
+	portrait_wrap.add_child(party)
+	party.add_child(_make_party_sprite(
+			PortraitFactory.build(Run.trainer_appearance), PARTY_TRAINER_HEIGHT))
+	party.add_child(_make_party_sprite(
+			CreatureArt.get_texture(Run.starter_id), PARTY_POKEMON_HEIGHT))
 
 	var hint := Label.new()
 	hint.text = "WASD/QE — move & strafe.  ← → — turn.  Step onto a Pokémon to battle.  Doors open shops once unlocked."
@@ -130,3 +132,34 @@ func toast(message: String) -> void:
 	tween.tween_interval(2.2)
 	tween.tween_property(label, "modulate:a", 0.0, 0.6)
 	tween.tween_callback(label.queue_free)
+
+
+static func _make_party_sprite(texture: Texture2D, height: float) -> Control:
+	texture = _crop_to_opaque(texture)
+	var tex_h := maxf(float(texture.get_height()), 1.0)
+	var aspect := float(texture.get_width()) / tex_h
+	var width := height * aspect
+
+	var wrap := Control.new()
+	wrap.custom_minimum_size = Vector2(width, height)
+
+	var rect := TextureRect.new()
+	rect.texture = texture
+	rect.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT
+	rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	rect.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_LEFT)
+	rect.offset_right = width
+	rect.offset_top = -height
+	wrap.add_child(rect)
+	return wrap
+
+
+static func _crop_to_opaque(texture: Texture2D) -> Texture2D:
+	var img := texture.get_image()
+	if img == null or img.is_empty():
+		return texture
+	var used: Rect2i = img.get_used_rect()
+	if used.size.x <= 0 or used.size.y <= 0:
+		return texture
+	return ImageTexture.create_from_image(img.get_region(used))
