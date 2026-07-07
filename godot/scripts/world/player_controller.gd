@@ -23,6 +23,9 @@ var frozen := false:
 var _moving := false
 var _queued_action := ""
 var _camera: Camera3D
+var _combat_pitch_tween: Tween
+
+const COMBAT_LOOK_UP_DEG := 7.0
 
 
 func setup(_starter_color: Color) -> void:
@@ -39,6 +42,17 @@ func warp_to(cell: Vector2i, p_facing: int) -> void:
 	position = WorldGrid.world_pos(cell)
 	rotation.y = WorldGrid.yaw_for_facing(facing)
 	tile_entered.emit(grid_pos, facing)
+
+
+func set_combat_view(active: bool) -> void:
+	if _camera == null:
+		return
+	if _combat_pitch_tween != null and _combat_pitch_tween.is_valid():
+		_combat_pitch_tween.kill()
+	var target := deg_to_rad(-COMBAT_LOOK_UP_DEG) if active else 0.0
+	_combat_pitch_tween = create_tween()
+	_combat_pitch_tween.tween_property(_camera, "rotation:x", target, 0.22) \
+			.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 
 
 func _process(_delta: float) -> void:

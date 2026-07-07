@@ -403,8 +403,10 @@ func _boulder(pos: Vector3) -> void:
 
 func _add_gym_lighting(boss_cell: Vector2i) -> void:
 	var base := WorldGrid.world_pos(boss_cell)
+	var wall_x := WorldGrid.TILE_SIZE * 0.5 - 0.08
+	var back_z := -WorldGrid.TILE_SIZE * 0.35
 	for side in [-1, 1]:
-		var pos := base + Vector3(side * 1.3, 1.8, 0.5)
+		var pos := base + Vector3(side * wall_x, 1.8, back_z)
 		var light := OmniLight3D.new()
 		light.position = pos
 		light.light_color = Color(1.0, 0.6, 0.3)
@@ -413,17 +415,19 @@ func _add_gym_lighting(boss_cell: Vector2i) -> void:
 		add_child(light)
 
 		var flame := MeshInstance3D.new()
-		var qmesh := QuadMesh.new()
-		qmesh.size = Vector2(0.4, 0.5)
-		flame.mesh = qmesh
+		var mesh := PlaneMesh.new()
+		mesh.size = Vector2(0.4, 0.5)
+		flame.mesh = mesh
 		var mat := StandardMaterial3D.new()
 		mat.albedo_color = Color(1.0, 0.6, 0.2)
 		mat.emission_enabled = true
 		mat.emission = Color(1.0, 0.5, 0.1)
 		mat.emission_energy_multiplier = 2.0
-		mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+		mat.cull_mode = BaseMaterial3D.CULL_DISABLED
 		flame.material_override = mat
 		flame.position = pos
+		flame.rotation_degrees = Vector3(0, 0, 90.0 * side)
+		flame.render_priority = -10
 		add_child(flame)
 
 

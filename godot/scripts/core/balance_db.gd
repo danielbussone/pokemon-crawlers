@@ -15,6 +15,7 @@ var items: Dictionary = {}        # item id -> item dict (insertion order = shop
 var economy: Dictionary = {}      # {center, inventory, gold}
 var run_config: Dictionary = {}
 var stage_rewards: Dictionary = {}
+var sprite_tuning: Dictionary = {}
 
 
 func _ready() -> void:
@@ -22,6 +23,7 @@ func _ready() -> void:
 	conditions = _load_json("conditions")
 	run_config = _load_json("run_config")
 	stage_rewards = _load_json("stage_rewards")
+	sprite_tuning = _load_json("sprite_tuning")
 	starters = _load_json("starters")
 	badges = _load_json("badges")
 
@@ -71,6 +73,18 @@ func stab_chance() -> float:
 
 func type_mod(attacker_type: String, defender_type: String) -> float:
 	return float(type_chart.get(attacker_type + ">" + defender_type, 1.0))
+
+
+## Per-species billboard tuning for world sprites (wild encounters + trainer partners).
+func sprite_tuning_for(species_id: String) -> Dictionary:
+	var defaults: Dictionary = sprite_tuning.get("defaults", {})
+	var species: Dictionary = sprite_tuning.get("species", {}).get(species_id, {})
+	return {
+		"wild_scale": float(species.get("wild_scale", defaults.get("wild_scale", 1.0))),
+		"companion_scale": float(species.get("companion_scale", defaults.get("companion_scale", 1.0))),
+		"flying": bool(species.get("flying", defaults.get("flying", false))),
+		"fly_height": float(species.get("fly_height", defaults.get("fly_height", 0.85))),
+	}
 
 
 # --- Loading / validation ---

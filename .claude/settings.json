@@ -1,0 +1,32 @@
+{
+  "permissions": {
+    "allow": [
+      "Skill(run)",
+      "Skill(run:*)",
+      "Read(//c//**)",
+      "Bash(where.exe godot *)",
+      "Bash(where.exe godot.exe)",
+      "Read(//c/Program Files/**)",
+      "Read(//c/Users/Danny/**)",
+      "Bash(find / -iname \"*godot*.exe\" 2>/dev/null | grep -v Recycle | head -50)",
+      "Bash(tasklist)",
+      "Bash(powershell -Command \"Get-ChildItem -Path 'C:\\\\' -Recurse -Filter 'godot*.exe' -ErrorAction SilentlyContinue | Select-Object -First 20 FullName\")",
+      "Read(//c/Users/Danny/AppData/Roaming/Godot/**)",
+      "Read(//c/Users/Danny/scoop/**)",
+      "Read(//c/Users/Danny/AppData/Local/Programs/**)",
+      "Bash(where.exe godot4 *)",
+      "Read(//c/Users/Danny/AppData/Local/Programs/Common/**)",
+      "Read(//c/Users/Danny/AppData/Local/**)",
+      "Read(//c/Users/Danny/AppData/Local/Godot/**)",
+      "Bash(where.exe /R \"C:\\\\Users\\\\Danny\\\\AppData\\\\Local\" Godot_v4*.exe)",
+      "Read(//c/Users/Danny/AppData/Local/Temp/WinGet/GodotEngine.GodotEngine.4.7/**)",
+      "Read(//c/Users/Danny/AppData/Local/Microsoft/WinGet/**)",
+      "Bash(\"/c/Users/Danny/AppData/Local/Microsoft/WinGet/Packages/GodotEngine.GodotEngine_Microsoft.Winget.Source_8wekyb3d8bbwe/Godot_v4.7-stable_win64.exe\" --path \"C:\\\\Users\\\\Danny\\\\Documents\\\\coding\\\\pokemon-crawlers\\\\godot\")",
+      "Bash(tasklist //FI \"IMAGENAME eq Godot*\")",
+      "Bash(python -c ' *)",
+      "PowerShell(Add-Type -AssemblyName System.Windows.Forms; [System.Windows.Forms.Screen]::PrimaryScreen | Select-Object Bounds, WorkingArea)",
+      "Bash(taskkill //F //IM Godot_v4.7-stable_win64.exe)",
+      "Bash(disown)"
+    ]
+  }
+}

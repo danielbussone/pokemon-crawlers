@@ -5,6 +5,8 @@ extends CanvasLayer
 
 signal finished(win: bool)
 
+const COMBAT_CARD_SIZE := Vector2(125, 175)
+
 var ctx: CombatCtx
 var busy := true
 
@@ -242,62 +244,66 @@ func _build_ui() -> void:
 	_intent.add_theme_color_override("font_color", Color(1.0, 0.85, 0.4))
 	enemy_box.add_child(_intent)
 
-	# Bottom panel: log, player stats, hand, actions.
+	# Bottom rail: compact, semi-transparent — cards hug the screen edge so the
+	# center band stays clear for the 3D opponent.
 	var bottom := PanelContainer.new()
 	bottom.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
-	bottom.offset_left = 14
-	bottom.offset_right = -14
-	bottom.offset_bottom = -10
+	bottom.offset_left = 8
+	bottom.offset_right = -8
+	bottom.offset_bottom = 0
 	bottom.grow_vertical = Control.GROW_DIRECTION_BEGIN
+	var bottom_style := StyleBoxFlat.new()
+	bottom_style.bg_color = Color(0.08, 0.08, 0.1, 0.75)
+	bottom_style.set_corner_radius_all(8)
+	bottom_style.set_content_margin_all(4)
+	bottom.add_theme_stylebox_override("panel", bottom_style)
 	add_child(bottom)
 
 	var vbox := VBoxContainer.new()
-	vbox.add_theme_constant_override("separation", 6)
+	vbox.add_theme_constant_override("separation", 2)
 	bottom.add_child(vbox)
 
+	var meta_row := HBoxContainer.new()
+	meta_row.add_theme_constant_override("separation", 10)
+	vbox.add_child(meta_row)
+
+	_player_stats = Label.new()
+	_player_stats.add_theme_font_size_override("font_size", 13)
+	meta_row.add_child(_player_stats)
+
+	_player_status = Label.new()
+	_player_status.add_theme_font_size_override("font_size", 11)
+	_player_status.modulate = Color(1, 1, 1, 0.75)
+	meta_row.add_child(_player_status)
+
 	_log = Label.new()
-	_log.add_theme_font_size_override("font_size", 17)
+	_log.add_theme_font_size_override("font_size", 14)
 	_log.add_theme_color_override("font_color", Color(0.95, 0.95, 0.85))
 	_log.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	vbox.add_child(_log)
-
-	var stats_row := HBoxContainer.new()
-	stats_row.add_theme_constant_override("separation", 20)
-	vbox.add_child(stats_row)
-	_player_stats = Label.new()
-	_player_stats.add_theme_font_size_override("font_size", 16)
-	stats_row.add_child(_player_stats)
-	_player_status = Label.new()
-	_player_status.add_theme_font_size_override("font_size", 14)
-	_player_status.modulate = Color(1, 1, 1, 0.8)
-	stats_row.add_child(_player_status)
-
-	_hand_box = HBoxContainer.new()
-	_hand_box.add_theme_constant_override("separation", 8)
-	_hand_box.alignment = BoxContainer.ALIGNMENT_CENTER
-	vbox.add_child(_hand_box)
-
-	var action_row := HBoxContainer.new()
-	action_row.add_theme_constant_override("separation", 8)
-	vbox.add_child(action_row)
+	_log.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_log.clip_text = true
+	meta_row.add_child(_log)
 
 	var items_label := Label.new()
 	items_label.text = "Bag:"
-	action_row.add_child(items_label)
+	items_label.add_theme_font_size_override("font_size", 13)
+	meta_row.add_child(items_label)
 	_items_box = HBoxContainer.new()
-	_items_box.add_theme_constant_override("separation", 6)
-	action_row.add_child(_items_box)
-
-	var spacer := Control.new()
-	spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	action_row.add_child(spacer)
+	_items_box.add_theme_constant_override("separation", 4)
+	meta_row.add_child(_items_box)
 
 	_end_turn = Button.new()
 	_end_turn.text = "End Turn"
-	_end_turn.custom_minimum_size = Vector2(140, 44)
-	_end_turn.add_theme_font_size_override("font_size", 18)
+	_end_turn.custom_minimum_size = Vector2(108, 30)
+	_end_turn.add_theme_font_size_override("font_size", 14)
 	_end_turn.pressed.connect(_on_end_turn_pressed)
-	action_row.add_child(_end_turn)
+	meta_row.add_child(_end_turn)
+
+	_hand_box = HBoxContainer.new()
+	_hand_box.add_theme_constant_override("separation", 6)
+	_hand_box.alignment = BoxContainer.ALIGNMENT_CENTER
+	_hand_box.size_flags_vertical = Control.SIZE_SHRINK_END
+	vbox.add_child(_hand_box)
 
 	_fx = CombatFX.new()
 	add_child(_fx)
@@ -358,7 +364,7 @@ func _rebuild_hand() -> void:
 		var check := ctx.can_play_card(i)
 		var button := CardWidget.build(
 			card_id, ctx.enemy.ptype, Run.starter_id,
-			busy or not check["ok"], String(check["reason"]),
+			busy or not check["ok"], String(check["reason"]), COMBAT_CARD_SIZE,
 		)
 		button.pressed.connect(_on_card_pressed.bind(i))
 		_hand_box.add_child(button)

@@ -3,8 +3,10 @@ extends CanvasLayer
 ## Exploration HUD: player stats top-left, zone name top-center, minimap
 ## top-right, trainer + starter party strip bottom-left, toasts, movement hint.
 
-const PARTY_TRAINER_HEIGHT := 64
-const PARTY_POKEMON_HEIGHT := 40  # ~62% of trainer — slightly larger than half
+const PARTY_TRAINER_HEIGHT := 150
+const PARTY_POKEMON_HEIGHT := 93  # ~62% of trainer
+const LAYER_NORMAL := 5
+const LAYER_ABOVE_COMBAT := 11  # CombatUI sits at layer 10
 
 var minimap: Minimap
 
@@ -12,6 +14,7 @@ var _stats: Label
 var _zone: Label
 var _toast_box: VBoxContainer
 var _minimap_wrap: VBoxContainer
+var _party_layer: CanvasLayer
 
 
 func _ready() -> void:
@@ -59,12 +62,16 @@ func _ready() -> void:
 	minimap = Minimap.new()
 	_minimap_wrap.add_child(minimap)
 
+	_party_layer = CanvasLayer.new()
+	_party_layer.layer = LAYER_NORMAL
+	add_child(_party_layer)
+
 	var portrait_wrap := PanelContainer.new()
 	portrait_wrap.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_LEFT)
 	portrait_wrap.offset_left = 12
 	portrait_wrap.offset_bottom = -12
 	portrait_wrap.grow_vertical = Control.GROW_DIRECTION_BEGIN
-	add_child(portrait_wrap)
+	_party_layer.add_child(portrait_wrap)
 
 	var party := HBoxContainer.new()
 	party.add_theme_constant_override("separation", 2)
@@ -119,6 +126,12 @@ func set_zone(zone: String) -> void:
 ## Not useful mid-fight anyway since the player can't move during combat.
 func set_minimap_visible(v: bool) -> void:
 	_minimap_wrap.visible = v
+
+
+## Raise the party strip above CombatUI (layer 10) so it isn't covered by the
+## bottom battle rail.
+func set_party_above_combat(above: bool) -> void:
+	_party_layer.layer = LAYER_ABOVE_COMBAT if above else LAYER_NORMAL
 
 
 func toast(message: String) -> void:

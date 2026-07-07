@@ -1,0 +1,19 @@
+{
+  "defaults": {
+    "wild_scale": 1.0,
+    "companion_scale": 1.0,
+    "flying": false,
+    "fly_height": 0.85
+  },
+  "species": {
+    "geodude": { "wild_scale": 0.55 },
+    "zubat": { "wild_scale": 0.48, "flying": true },
+    "onix": { "wild_scale": 1.55, "companion_scale": 2.5 },
+    "pidgey": { "wild_scale": 0.7, "flying": true },
+    "butterfree": { "flying": true, "fly_height": 0.7, "companion_scale": 0.95 },
+    "beedrill": { "flying": true, "fly_height": 0.65, "companion_scale": 0.9 },
+    "bulbasaur": { "companion_scale": 0.95 },
+    "squirtle": { "companion_scale": 0.95 },
+    "charmander": { "companion_scale": 0.95 }
+  }
+}

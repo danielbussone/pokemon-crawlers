@@ -94,6 +94,8 @@ func _on_encounter_triggered(marker: EncounterMarker) -> void:
 	current_marker = marker
 	player.frozen = true
 	hud.set_minimap_visible(false)
+	hud.set_party_above_combat(true)
+	player.set_combat_view(true)
 	var ctx := Run.begin_combat()
 	combat_ui = CombatUI.new(ctx, marker)
 	add_child(combat_ui)
@@ -103,6 +105,8 @@ func _on_encounter_triggered(marker: EncounterMarker) -> void:
 func _on_combat_finished(win: bool) -> void:
 	combat_ui.queue_free()
 	combat_ui = null
+	player.set_combat_view(false)
+	hud.set_party_above_combat(false)
 
 	if not win:
 		Run.after_loss()

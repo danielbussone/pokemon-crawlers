@@ -18,6 +18,9 @@ const TYPE_COLORS := {
 
 static var _cache: Dictionary = {}  # enemy_id -> ImageTexture
 
+const BASE_WILD_HEIGHT := 1.9
+const BASE_COMPANION_HEIGHT := 0.95
+
 
 static func type_color(ptype: String) -> Color:
 	return TYPE_COLORS.get(ptype, Color(0.7, 0.7, 0.7))
@@ -49,6 +52,10 @@ static func build_texture(enemy_id: String) -> ImageTexture:
 			img = _zubat()
 		"onix":
 			img = _onix()
+		"butterfree":
+			img = _butterfree()
+		"beedrill":
+			img = _beedrill()
 		"brock":
 			img = _trainer(Color(0.45, 0.3, 0.2), Color(0.25, 0.2, 0.18))
 		_:
@@ -65,13 +72,70 @@ static func build_texture(enemy_id: String) -> ImageTexture:
 
 
 static func build_sprite(enemy_id: String) -> Sprite3D:
+	var height: float = BASE_WILD_HEIGHT
+	var tune: Dictionary = {}
+	if _uses_species_tuning(enemy_id):
+		tune = Balance.sprite_tuning_for(enemy_id)
+		height *= float(tune.wild_scale)
+	var sprite := _make_sprite(CreatureArt.get_texture(enemy_id), height)
+	_apply_pose(sprite, tune)
+	return sprite
+
+
+## Partner Pokémon beside a trainer — scaled via sprite_tuning.json companion_scale.
+static func build_partner_sprite(species_id: String) -> Sprite3D:
+	var tune := Balance.sprite_tuning_for(species_id)
+	var height: float = BASE_COMPANION_HEIGHT * float(tune.companion_scale)
+	var sprite := _make_sprite(CreatureArt.get_texture(species_id), height)
+	_apply_pose(sprite, tune)
+	return sprite
+
+
+static func _uses_species_tuning(enemy_id: String) -> bool:
+	return enemy_id != "brock" \
+			and not enemy_id.begins_with("rival_") \
+			and not enemy_id.begins_with("bug_catcher_")
+
+
+static func _apply_pose(sprite: Sprite3D, tune: Dictionary) -> void:
+	if tune.get("flying", false):
+		sprite.position.y = float(tune.fly_height)
+
+
+## Half-width of the opaque pixels in world units (ignores transparent canvas padding).
+static func sprite_opaque_half_width(sprite: Sprite3D) -> float:
+	var tex := sprite.texture
+	var content_w := float(tex.get_width())
+	var img := tex.get_image()
+	if img != null and not img.is_empty():
+		var used: Rect2i = img.get_used_rect()
+		if used.size.x > 0:
+			content_w = float(used.size.x)
+	return content_w * sprite.pixel_size * 0.5
+
+
+## Shift draw offset so the node's origin sits on the opaque bbox center.
+static func center_sprite_on_opaque(sprite: Sprite3D) -> void:
+	var img := sprite.texture.get_image()
+	if img == null or img.is_empty():
+		return
+	var used: Rect2i = img.get_used_rect()
+	if used.size.x <= 0:
+		return
+	var canvas_center_x := float(img.get_width()) * 0.5
+	var opaque_center_x := float(used.position.x) + float(used.size.x) * 0.5
+	sprite.offset.x = canvas_center_x - opaque_center_x
+
+
+static func _make_sprite(texture: Texture2D, world_height: float) -> Sprite3D:
 	var sprite := Sprite3D.new()
-	sprite.texture = CreatureArt.get_texture(enemy_id)
+	sprite.texture = texture
 	sprite.billboard = BaseMaterial3D.BILLBOARD_ENABLED
 	sprite.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
 	sprite.alpha_cut = SpriteBase3D.ALPHA_CUT_DISCARD
+	sprite.render_priority = 1
 	var tex_height := sprite.texture.get_height()
-	sprite.pixel_size = 1.9 / float(tex_height)
+	sprite.pixel_size = world_height / float(tex_height)
 	sprite.offset = Vector2(0, tex_height / 2.0)
 	return sprite
 
@@ -176,6 +240,32 @@ static func _onix() -> Image:
 	PixelArt.outlined_circle(img, Vector2(16, 9), 8, gray)
 	PixelArt.rect(img, Rect2i(14, 0, 4, 4), gray.darkened(0.2))
 	_eyes(img, 16, 8, 4)
+	return img
+
+
+static func _butterfree() -> Image:
+	var img := PixelArt.new_canvas(32)
+	var purple := Color(0.55, 0.38, 0.72)
+	var wing := Color(0.72, 0.55, 0.88)
+	_streak_wing(img, Vector2(14, 15), -1, wing)
+	_streak_wing(img, Vector2(18, 15), 1, wing)
+	PixelArt.outlined_circle(img, Vector2(16, 18), 7, purple)
+	PixelArt.outlined_circle(img, Vector2(16, 9), 5, purple.lightened(0.15))
+	_eyes(img, 16, 8, 2)
+	return img
+
+
+static func _beedrill() -> Image:
+	var img := PixelArt.new_canvas_wh(32, 40)
+	var yellow := Color(0.92, 0.78, 0.2)
+	var stripe := Color(0.2, 0.2, 0.25)
+	PixelArt.outlined_circle(img, Vector2(16, 24), 8, yellow)
+	PixelArt.outlined_circle(img, Vector2(16, 11), 6, yellow.lightened(0.1))
+	PixelArt.rect(img, Rect2i(9, 20, 14, 2), stripe)
+	PixelArt.rect(img, Rect2i(9, 14, 14, 2), stripe)
+	_streak_wing(img, Vector2(12, 18), -1, Color(0.85, 0.9, 0.95, 0.9))
+	_streak_wing(img, Vector2(20, 18), 1, Color(0.85, 0.9, 0.95, 0.9))
+	_eyes(img, 16, 10, 2)
 	return img
 
 

@@ -32,7 +32,7 @@ static func _ensure_scanned() -> void:
 			var ext := fname.get_extension().to_lower()
 			if ext in ["png", "jpg", "jpeg", "webp"]:
 				var key := fname.get_basename()
-				var tex: Texture2D = load(ART_DIR + "/" + fname)
+				var tex: Texture2D = CreatureArt._load_cropped(ART_DIR + "/" + fname)
 				if tex != null:
 					_file_cache[key] = tex
 		fname = dir.get_next()

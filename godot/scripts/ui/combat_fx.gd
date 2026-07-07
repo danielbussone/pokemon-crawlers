@@ -87,7 +87,7 @@ func creature_screen_pos(marker: EncounterMarker) -> Vector2:
 
 func player_card_anchor() -> Vector2:
 	var size := get_viewport().get_visible_rect().size
-	return Vector2(size.x * 0.5, size.y * 0.82)
+	return Vector2(size.x * 0.5, size.y * 0.9)
 
 
 static func _type_icon_texture(pokemon_type: String) -> Texture2D:

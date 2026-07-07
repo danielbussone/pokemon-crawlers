@@ -39,11 +39,12 @@ static func _type_stylebox(ptype: String, pressed: bool = false) -> StyleBoxFlat
 
 
 static func build(card_id: String, enemy_type: String, starter_id: String,
-		disabled: bool, tooltip: String) -> Button:
+		disabled: bool, tooltip: String, card_size: Vector2 = CARD_SIZE) -> Button:
 	var card: Dictionary = Balance.cards[card_id]
 	var ptype := String(card["pokemon_type"])
+	var scale := card_size.y / CARD_SIZE.y
 	var button := Button.new()
-	button.custom_minimum_size = CARD_SIZE
+	button.custom_minimum_size = card_size
 	# Without these, the parent HBoxContainer stretches each card to fill any
 	# leftover space in the bottom panel instead of respecting CARD_SIZE.
 	button.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
@@ -74,13 +75,13 @@ static func build(card_id: String, enemy_type: String, starter_id: String,
 	var header := Label.new()
 	header.text = "%s — %d" % [String(card["name"]), int(card["cost"])]
 	header.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	header.add_theme_font_size_override("font_size", 13)
+	header.add_theme_font_size_override("font_size", maxi(9, int(13.0 * scale)))
 	header.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	vbox.add_child(header)
 
 	var art := TextureRect.new()
 	art.texture = CardArt.get_texture(card_id, starter_id)
-	art.custom_minimum_size = Vector2(CARD_SIZE.x - 12, CARD_SIZE.y * ART_HEIGHT_FRACTION)
+	art.custom_minimum_size = Vector2(card_size.x - 12, card_size.y * ART_HEIGHT_FRACTION)
 	# Default expand_mode (EXPAND_KEEP_SIZE) sizes to max(custom_minimum_size,
 	# texture's native pixels) — real art (e.g. 1201x880) would blow the card
 	# up to fit it. IGNORE_SIZE defers entirely to custom_minimum_size/layout.
@@ -96,7 +97,7 @@ static func build(card_id: String, enemy_type: String, starter_id: String,
 	effect.text = "%s\n%s" % [String(card["pokemon_type"]), CardText.summary(card, enemy_type, Balance)]
 	effect.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	effect.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	effect.add_theme_font_size_override("font_size", 12)
+	effect.add_theme_font_size_override("font_size", maxi(9, int(12.0 * scale)))
 	effect.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	effect.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	vbox.add_child(effect)
