@@ -1,0 +1,2280 @@
+{
+  "source": "https://pokemondb.net/sprites",
+  "generation": 5,
+  "game": "black-white",
+  "variant": "normal",
+  "count": 151,
+  "sprites": [
+    {
+      "dex": 1,
+      "slug": "bulbasaur",
+      "id": "bulbasaur",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/bulbasaur.png",
+        "path": "godot/art/creatures/bulbasaur.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/bulbasaur.gif",
+        "path": "godot/art/creatures/bulbasaur.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 2,
+      "slug": "ivysaur",
+      "id": "ivysaur",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/ivysaur.png",
+        "path": "godot/art/creatures/ivysaur.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/ivysaur.gif",
+        "path": "godot/art/creatures/ivysaur.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 3,
+      "slug": "venusaur",
+      "id": "venusaur",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/venusaur.png",
+        "path": "godot/art/creatures/venusaur.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/venusaur.gif",
+        "path": "godot/art/creatures/venusaur.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 4,
+      "slug": "charmander",
+      "id": "charmander",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/charmander.png",
+        "path": "godot/art/creatures/charmander.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/charmander.gif",
+        "path": "godot/art/creatures/charmander.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 5,
+      "slug": "charmeleon",
+      "id": "charmeleon",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/charmeleon.png",
+        "path": "godot/art/creatures/charmeleon.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/charmeleon.gif",
+        "path": "godot/art/creatures/charmeleon.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 6,
+      "slug": "charizard",
+      "id": "charizard",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/charizard.png",
+        "path": "godot/art/creatures/charizard.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/charizard.gif",
+        "path": "godot/art/creatures/charizard.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 7,
+      "slug": "squirtle",
+      "id": "squirtle",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/squirtle.png",
+        "path": "godot/art/creatures/squirtle.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/squirtle.gif",
+        "path": "godot/art/creatures/squirtle.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 8,
+      "slug": "wartortle",
+      "id": "wartortle",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/wartortle.png",
+        "path": "godot/art/creatures/wartortle.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/wartortle.gif",
+        "path": "godot/art/creatures/wartortle.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 9,
+      "slug": "blastoise",
+      "id": "blastoise",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/blastoise.png",
+        "path": "godot/art/creatures/blastoise.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/blastoise.gif",
+        "path": "godot/art/creatures/blastoise.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 10,
+      "slug": "caterpie",
+      "id": "caterpie",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/caterpie.png",
+        "path": "godot/art/creatures/caterpie.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/caterpie.gif",
+        "path": "godot/art/creatures/caterpie.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 11,
+      "slug": "metapod",
+      "id": "metapod",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/metapod.png",
+        "path": "godot/art/creatures/metapod.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/metapod.gif",
+        "path": "godot/art/creatures/metapod.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 12,
+      "slug": "butterfree",
+      "id": "butterfree",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/butterfree.png",
+        "path": "godot/art/creatures/butterfree.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/butterfree.gif",
+        "path": "godot/art/creatures/butterfree.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 13,
+      "slug": "weedle",
+      "id": "weedle",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/weedle.png",
+        "path": "godot/art/creatures/weedle.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/weedle.gif",
+        "path": "godot/art/creatures/weedle.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 14,
+      "slug": "kakuna",
+      "id": "kakuna",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/kakuna.png",
+        "path": "godot/art/creatures/kakuna.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/kakuna.gif",
+        "path": "godot/art/creatures/kakuna.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 15,
+      "slug": "beedrill",
+      "id": "beedrill",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/beedrill.png",
+        "path": "godot/art/creatures/beedrill.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/beedrill.gif",
+        "path": "godot/art/creatures/beedrill.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 16,
+      "slug": "pidgey",
+      "id": "pidgey",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/pidgey.png",
+        "path": "godot/art/creatures/pidgey.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/pidgey.gif",
+        "path": "godot/art/creatures/pidgey.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 17,
+      "slug": "pidgeotto",
+      "id": "pidgeotto",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/pidgeotto.png",
+        "path": "godot/art/creatures/pidgeotto.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/pidgeotto.gif",
+        "path": "godot/art/creatures/pidgeotto.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 18,
+      "slug": "pidgeot",
+      "id": "pidgeot",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/pidgeot.png",
+        "path": "godot/art/creatures/pidgeot.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/pidgeot.gif",
+        "path": "godot/art/creatures/pidgeot.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 19,
+      "slug": "rattata",
+      "id": "rattata",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/rattata.png",
+        "path": "godot/art/creatures/rattata.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/rattata.gif",
+        "path": "godot/art/creatures/rattata.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 20,
+      "slug": "raticate",
+      "id": "raticate",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/raticate.png",
+        "path": "godot/art/creatures/raticate.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/raticate.gif",
+        "path": "godot/art/creatures/raticate.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 21,
+      "slug": "spearow",
+      "id": "spearow",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/spearow.png",
+        "path": "godot/art/creatures/spearow.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/spearow.gif",
+        "path": "godot/art/creatures/spearow.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 22,
+      "slug": "fearow",
+      "id": "fearow",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/fearow.png",
+        "path": "godot/art/creatures/fearow.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/fearow.gif",
+        "path": "godot/art/creatures/fearow.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 23,
+      "slug": "ekans",
+      "id": "ekans",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/ekans.png",
+        "path": "godot/art/creatures/ekans.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/ekans.gif",
+        "path": "godot/art/creatures/ekans.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 24,
+      "slug": "arbok",
+      "id": "arbok",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/arbok.png",
+        "path": "godot/art/creatures/arbok.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/arbok.gif",
+        "path": "godot/art/creatures/arbok.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 25,
+      "slug": "pikachu",
+      "id": "pikachu",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/pikachu.png",
+        "path": "godot/art/creatures/pikachu.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/pikachu.gif",
+        "path": "godot/art/creatures/pikachu.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 26,
+      "slug": "raichu",
+      "id": "raichu",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/raichu.png",
+        "path": "godot/art/creatures/raichu.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/raichu.gif",
+        "path": "godot/art/creatures/raichu.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 27,
+      "slug": "sandshrew",
+      "id": "sandshrew",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/sandshrew.png",
+        "path": "godot/art/creatures/sandshrew.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/sandshrew.gif",
+        "path": "godot/art/creatures/sandshrew.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 28,
+      "slug": "sandslash",
+      "id": "sandslash",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/sandslash.png",
+        "path": "godot/art/creatures/sandslash.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/sandslash.gif",
+        "path": "godot/art/creatures/sandslash.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 29,
+      "slug": "nidoran-f",
+      "id": "nidoran_f",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/nidoran-f.png",
+        "path": "godot/art/creatures/nidoran_f.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/nidoran-f.gif",
+        "path": "godot/art/creatures/nidoran_f.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 30,
+      "slug": "nidorina",
+      "id": "nidorina",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/nidorina.png",
+        "path": "godot/art/creatures/nidorina.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/nidorina.gif",
+        "path": "godot/art/creatures/nidorina.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 31,
+      "slug": "nidoqueen",
+      "id": "nidoqueen",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/nidoqueen.png",
+        "path": "godot/art/creatures/nidoqueen.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/nidoqueen.gif",
+        "path": "godot/art/creatures/nidoqueen.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 32,
+      "slug": "nidoran-m",
+      "id": "nidoran_m",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/nidoran-m.png",
+        "path": "godot/art/creatures/nidoran_m.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/nidoran-m.gif",
+        "path": "godot/art/creatures/nidoran_m.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 33,
+      "slug": "nidorino",
+      "id": "nidorino",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/nidorino.png",
+        "path": "godot/art/creatures/nidorino.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/nidorino.gif",
+        "path": "godot/art/creatures/nidorino.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 34,
+      "slug": "nidoking",
+      "id": "nidoking",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/nidoking.png",
+        "path": "godot/art/creatures/nidoking.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/nidoking.gif",
+        "path": "godot/art/creatures/nidoking.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 35,
+      "slug": "clefairy",
+      "id": "clefairy",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/clefairy.png",
+        "path": "godot/art/creatures/clefairy.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/clefairy.gif",
+        "path": "godot/art/creatures/clefairy.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 36,
+      "slug": "clefable",
+      "id": "clefable",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/clefable.png",
+        "path": "godot/art/creatures/clefable.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/clefable.gif",
+        "path": "godot/art/creatures/clefable.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 37,
+      "slug": "vulpix",
+      "id": "vulpix",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/vulpix.png",
+        "path": "godot/art/creatures/vulpix.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/vulpix.gif",
+        "path": "godot/art/creatures/vulpix.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 38,
+      "slug": "ninetales",
+      "id": "ninetales",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/ninetales.png",
+        "path": "godot/art/creatures/ninetales.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/ninetales.gif",
+        "path": "godot/art/creatures/ninetales.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 39,
+      "slug": "jigglypuff",
+      "id": "jigglypuff",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/jigglypuff.png",
+        "path": "godot/art/creatures/jigglypuff.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/jigglypuff.gif",
+        "path": "godot/art/creatures/jigglypuff.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 40,
+      "slug": "wigglytuff",
+      "id": "wigglytuff",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/wigglytuff.png",
+        "path": "godot/art/creatures/wigglytuff.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/wigglytuff.gif",
+        "path": "godot/art/creatures/wigglytuff.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 41,
+      "slug": "zubat",
+      "id": "zubat",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/zubat.png",
+        "path": "godot/art/creatures/zubat.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/zubat.gif",
+        "path": "godot/art/creatures/zubat.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 42,
+      "slug": "golbat",
+      "id": "golbat",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/golbat.png",
+        "path": "godot/art/creatures/golbat.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/golbat.gif",
+        "path": "godot/art/creatures/golbat.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 43,
+      "slug": "oddish",
+      "id": "oddish",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/oddish.png",
+        "path": "godot/art/creatures/oddish.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/oddish.gif",
+        "path": "godot/art/creatures/oddish.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 44,
+      "slug": "gloom",
+      "id": "gloom",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/gloom.png",
+        "path": "godot/art/creatures/gloom.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/gloom.gif",
+        "path": "godot/art/creatures/gloom.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 45,
+      "slug": "vileplume",
+      "id": "vileplume",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/vileplume.png",
+        "path": "godot/art/creatures/vileplume.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/vileplume.gif",
+        "path": "godot/art/creatures/vileplume.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 46,
+      "slug": "paras",
+      "id": "paras",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/paras.png",
+        "path": "godot/art/creatures/paras.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/paras.gif",
+        "path": "godot/art/creatures/paras.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 47,
+      "slug": "parasect",
+      "id": "parasect",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/parasect.png",
+        "path": "godot/art/creatures/parasect.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/parasect.gif",
+        "path": "godot/art/creatures/parasect.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 48,
+      "slug": "venonat",
+      "id": "venonat",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/venonat.png",
+        "path": "godot/art/creatures/venonat.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/venonat.gif",
+        "path": "godot/art/creatures/venonat.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 49,
+      "slug": "venomoth",
+      "id": "venomoth",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/venomoth.png",
+        "path": "godot/art/creatures/venomoth.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/venomoth.gif",
+        "path": "godot/art/creatures/venomoth.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 50,
+      "slug": "diglett",
+      "id": "diglett",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/diglett.png",
+        "path": "godot/art/creatures/diglett.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/diglett.gif",
+        "path": "godot/art/creatures/diglett.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 51,
+      "slug": "dugtrio",
+      "id": "dugtrio",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/dugtrio.png",
+        "path": "godot/art/creatures/dugtrio.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/dugtrio.gif",
+        "path": "godot/art/creatures/dugtrio.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 52,
+      "slug": "meowth",
+      "id": "meowth",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/meowth.png",
+        "path": "godot/art/creatures/meowth.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/meowth.gif",
+        "path": "godot/art/creatures/meowth.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 53,
+      "slug": "persian",
+      "id": "persian",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/persian.png",
+        "path": "godot/art/creatures/persian.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/persian.gif",
+        "path": "godot/art/creatures/persian.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 54,
+      "slug": "psyduck",
+      "id": "psyduck",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/psyduck.png",
+        "path": "godot/art/creatures/psyduck.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/psyduck.gif",
+        "path": "godot/art/creatures/psyduck.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 55,
+      "slug": "golduck",
+      "id": "golduck",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/golduck.png",
+        "path": "godot/art/creatures/golduck.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/golduck.gif",
+        "path": "godot/art/creatures/golduck.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 56,
+      "slug": "mankey",
+      "id": "mankey",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/mankey.png",
+        "path": "godot/art/creatures/mankey.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/mankey.gif",
+        "path": "godot/art/creatures/mankey.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 57,
+      "slug": "primeape",
+      "id": "primeape",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/primeape.png",
+        "path": "godot/art/creatures/primeape.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/primeape.gif",
+        "path": "godot/art/creatures/primeape.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 58,
+      "slug": "growlithe",
+      "id": "growlithe",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/growlithe.png",
+        "path": "godot/art/creatures/growlithe.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/growlithe.gif",
+        "path": "godot/art/creatures/growlithe.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 59,
+      "slug": "arcanine",
+      "id": "arcanine",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/arcanine.png",
+        "path": "godot/art/creatures/arcanine.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/arcanine.gif",
+        "path": "godot/art/creatures/arcanine.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 60,
+      "slug": "poliwag",
+      "id": "poliwag",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/poliwag.png",
+        "path": "godot/art/creatures/poliwag.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/poliwag.gif",
+        "path": "godot/art/creatures/poliwag.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 61,
+      "slug": "poliwhirl",
+      "id": "poliwhirl",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/poliwhirl.png",
+        "path": "godot/art/creatures/poliwhirl.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/poliwhirl.gif",
+        "path": "godot/art/creatures/poliwhirl.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 62,
+      "slug": "poliwrath",
+      "id": "poliwrath",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/poliwrath.png",
+        "path": "godot/art/creatures/poliwrath.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/poliwrath.gif",
+        "path": "godot/art/creatures/poliwrath.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 63,
+      "slug": "abra",
+      "id": "abra",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/abra.png",
+        "path": "godot/art/creatures/abra.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/abra.gif",
+        "path": "godot/art/creatures/abra.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 64,
+      "slug": "kadabra",
+      "id": "kadabra",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/kadabra.png",
+        "path": "godot/art/creatures/kadabra.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/kadabra.gif",
+        "path": "godot/art/creatures/kadabra.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 65,
+      "slug": "alakazam",
+      "id": "alakazam",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/alakazam.png",
+        "path": "godot/art/creatures/alakazam.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/alakazam.gif",
+        "path": "godot/art/creatures/alakazam.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 66,
+      "slug": "machop",
+      "id": "machop",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/machop.png",
+        "path": "godot/art/creatures/machop.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/machop.gif",
+        "path": "godot/art/creatures/machop.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 67,
+      "slug": "machoke",
+      "id": "machoke",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/machoke.png",
+        "path": "godot/art/creatures/machoke.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/machoke.gif",
+        "path": "godot/art/creatures/machoke.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 68,
+      "slug": "machamp",
+      "id": "machamp",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/machamp.png",
+        "path": "godot/art/creatures/machamp.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/machamp.gif",
+        "path": "godot/art/creatures/machamp.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 69,
+      "slug": "bellsprout",
+      "id": "bellsprout",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/bellsprout.png",
+        "path": "godot/art/creatures/bellsprout.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/bellsprout.gif",
+        "path": "godot/art/creatures/bellsprout.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 70,
+      "slug": "weepinbell",
+      "id": "weepinbell",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/weepinbell.png",
+        "path": "godot/art/creatures/weepinbell.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/weepinbell.gif",
+        "path": "godot/art/creatures/weepinbell.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 71,
+      "slug": "victreebel",
+      "id": "victreebel",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/victreebel.png",
+        "path": "godot/art/creatures/victreebel.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/victreebel.gif",
+        "path": "godot/art/creatures/victreebel.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 72,
+      "slug": "tentacool",
+      "id": "tentacool",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/tentacool.png",
+        "path": "godot/art/creatures/tentacool.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/tentacool.gif",
+        "path": "godot/art/creatures/tentacool.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 73,
+      "slug": "tentacruel",
+      "id": "tentacruel",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/tentacruel.png",
+        "path": "godot/art/creatures/tentacruel.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/tentacruel.gif",
+        "path": "godot/art/creatures/tentacruel.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 74,
+      "slug": "geodude",
+      "id": "geodude",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/geodude.png",
+        "path": "godot/art/creatures/geodude.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/geodude.gif",
+        "path": "godot/art/creatures/geodude.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 75,
+      "slug": "graveler",
+      "id": "graveler",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/graveler.png",
+        "path": "godot/art/creatures/graveler.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/graveler.gif",
+        "path": "godot/art/creatures/graveler.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 76,
+      "slug": "golem",
+      "id": "golem",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/golem.png",
+        "path": "godot/art/creatures/golem.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/golem.gif",
+        "path": "godot/art/creatures/golem.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 77,
+      "slug": "ponyta",
+      "id": "ponyta",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/ponyta.png",
+        "path": "godot/art/creatures/ponyta.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/ponyta.gif",
+        "path": "godot/art/creatures/ponyta.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 78,
+      "slug": "rapidash",
+      "id": "rapidash",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/rapidash.png",
+        "path": "godot/art/creatures/rapidash.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/rapidash.gif",
+        "path": "godot/art/creatures/rapidash.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 79,
+      "slug": "slowpoke",
+      "id": "slowpoke",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/slowpoke.png",
+        "path": "godot/art/creatures/slowpoke.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/slowpoke.gif",
+        "path": "godot/art/creatures/slowpoke.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 80,
+      "slug": "slowbro",
+      "id": "slowbro",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/slowbro.png",
+        "path": "godot/art/creatures/slowbro.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/slowbro.gif",
+        "path": "godot/art/creatures/slowbro.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 81,
+      "slug": "magnemite",
+      "id": "magnemite",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/magnemite.png",
+        "path": "godot/art/creatures/magnemite.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/magnemite.gif",
+        "path": "godot/art/creatures/magnemite.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 82,
+      "slug": "magneton",
+      "id": "magneton",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/magneton.png",
+        "path": "godot/art/creatures/magneton.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/magneton.gif",
+        "path": "godot/art/creatures/magneton.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 83,
+      "slug": "farfetchd",
+      "id": "farfetchd",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/farfetchd.png",
+        "path": "godot/art/creatures/farfetchd.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/farfetchd.gif",
+        "path": "godot/art/creatures/farfetchd.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 84,
+      "slug": "doduo",
+      "id": "doduo",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/doduo.png",
+        "path": "godot/art/creatures/doduo.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/doduo.gif",
+        "path": "godot/art/creatures/doduo.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 85,
+      "slug": "dodrio",
+      "id": "dodrio",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/dodrio.png",
+        "path": "godot/art/creatures/dodrio.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/dodrio.gif",
+        "path": "godot/art/creatures/dodrio.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 86,
+      "slug": "seel",
+      "id": "seel",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/seel.png",
+        "path": "godot/art/creatures/seel.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/seel.gif",
+        "path": "godot/art/creatures/seel.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 87,
+      "slug": "dewgong",
+      "id": "dewgong",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/dewgong.png",
+        "path": "godot/art/creatures/dewgong.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/dewgong.gif",
+        "path": "godot/art/creatures/dewgong.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 88,
+      "slug": "grimer",
+      "id": "grimer",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/grimer.png",
+        "path": "godot/art/creatures/grimer.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/grimer.gif",
+        "path": "godot/art/creatures/grimer.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 89,
+      "slug": "muk",
+      "id": "muk",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/muk.png",
+        "path": "godot/art/creatures/muk.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/muk.gif",
+        "path": "godot/art/creatures/muk.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 90,
+      "slug": "shellder",
+      "id": "shellder",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/shellder.png",
+        "path": "godot/art/creatures/shellder.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/shellder.gif",
+        "path": "godot/art/creatures/shellder.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 91,
+      "slug": "cloyster",
+      "id": "cloyster",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/cloyster.png",
+        "path": "godot/art/creatures/cloyster.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/cloyster.gif",
+        "path": "godot/art/creatures/cloyster.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 92,
+      "slug": "gastly",
+      "id": "gastly",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/gastly.png",
+        "path": "godot/art/creatures/gastly.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/gastly.gif",
+        "path": "godot/art/creatures/gastly.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 93,
+      "slug": "haunter",
+      "id": "haunter",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/haunter.png",
+        "path": "godot/art/creatures/haunter.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/haunter.gif",
+        "path": "godot/art/creatures/haunter.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 94,
+      "slug": "gengar",
+      "id": "gengar",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/gengar.png",
+        "path": "godot/art/creatures/gengar.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/gengar.gif",
+        "path": "godot/art/creatures/gengar.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 95,
+      "slug": "onix",
+      "id": "onix",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/onix.png",
+        "path": "godot/art/creatures/onix.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/onix.gif",
+        "path": "godot/art/creatures/onix.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 96,
+      "slug": "drowzee",
+      "id": "drowzee",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/drowzee.png",
+        "path": "godot/art/creatures/drowzee.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/drowzee.gif",
+        "path": "godot/art/creatures/drowzee.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 97,
+      "slug": "hypno",
+      "id": "hypno",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/hypno.png",
+        "path": "godot/art/creatures/hypno.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/hypno.gif",
+        "path": "godot/art/creatures/hypno.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 98,
+      "slug": "krabby",
+      "id": "krabby",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/krabby.png",
+        "path": "godot/art/creatures/krabby.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/krabby.gif",
+        "path": "godot/art/creatures/krabby.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 99,
+      "slug": "kingler",
+      "id": "kingler",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/kingler.png",
+        "path": "godot/art/creatures/kingler.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/kingler.gif",
+        "path": "godot/art/creatures/kingler.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 100,
+      "slug": "voltorb",
+      "id": "voltorb",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/voltorb.png",
+        "path": "godot/art/creatures/voltorb.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/voltorb.gif",
+        "path": "godot/art/creatures/voltorb.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 101,
+      "slug": "electrode",
+      "id": "electrode",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/electrode.png",
+        "path": "godot/art/creatures/electrode.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/electrode.gif",
+        "path": "godot/art/creatures/electrode.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 102,
+      "slug": "exeggcute",
+      "id": "exeggcute",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/exeggcute.png",
+        "path": "godot/art/creatures/exeggcute.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/exeggcute.gif",
+        "path": "godot/art/creatures/exeggcute.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 103,
+      "slug": "exeggutor",
+      "id": "exeggutor",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/exeggutor.png",
+        "path": "godot/art/creatures/exeggutor.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/exeggutor.gif",
+        "path": "godot/art/creatures/exeggutor.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 104,
+      "slug": "cubone",
+      "id": "cubone",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/cubone.png",
+        "path": "godot/art/creatures/cubone.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/cubone.gif",
+        "path": "godot/art/creatures/cubone.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 105,
+      "slug": "marowak",
+      "id": "marowak",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/marowak.png",
+        "path": "godot/art/creatures/marowak.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/marowak.gif",
+        "path": "godot/art/creatures/marowak.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 106,
+      "slug": "hitmonlee",
+      "id": "hitmonlee",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/hitmonlee.png",
+        "path": "godot/art/creatures/hitmonlee.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/hitmonlee.gif",
+        "path": "godot/art/creatures/hitmonlee.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 107,
+      "slug": "hitmonchan",
+      "id": "hitmonchan",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/hitmonchan.png",
+        "path": "godot/art/creatures/hitmonchan.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/hitmonchan.gif",
+        "path": "godot/art/creatures/hitmonchan.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 108,
+      "slug": "lickitung",
+      "id": "lickitung",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/lickitung.png",
+        "path": "godot/art/creatures/lickitung.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/lickitung.gif",
+        "path": "godot/art/creatures/lickitung.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 109,
+      "slug": "koffing",
+      "id": "koffing",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/koffing.png",
+        "path": "godot/art/creatures/koffing.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/koffing.gif",
+        "path": "godot/art/creatures/koffing.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 110,
+      "slug": "weezing",
+      "id": "weezing",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/weezing.png",
+        "path": "godot/art/creatures/weezing.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/weezing.gif",
+        "path": "godot/art/creatures/weezing.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 111,
+      "slug": "rhyhorn",
+      "id": "rhyhorn",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/rhyhorn.png",
+        "path": "godot/art/creatures/rhyhorn.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/rhyhorn.gif",
+        "path": "godot/art/creatures/rhyhorn.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 112,
+      "slug": "rhydon",
+      "id": "rhydon",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/rhydon.png",
+        "path": "godot/art/creatures/rhydon.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/rhydon.gif",
+        "path": "godot/art/creatures/rhydon.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 113,
+      "slug": "chansey",
+      "id": "chansey",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/chansey.png",
+        "path": "godot/art/creatures/chansey.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/chansey.gif",
+        "path": "godot/art/creatures/chansey.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 114,
+      "slug": "tangela",
+      "id": "tangela",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/tangela.png",
+        "path": "godot/art/creatures/tangela.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/tangela.gif",
+        "path": "godot/art/creatures/tangela.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 115,
+      "slug": "kangaskhan",
+      "id": "kangaskhan",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/kangaskhan.png",
+        "path": "godot/art/creatures/kangaskhan.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/kangaskhan.gif",
+        "path": "godot/art/creatures/kangaskhan.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 116,
+      "slug": "horsea",
+      "id": "horsea",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/horsea.png",
+        "path": "godot/art/creatures/horsea.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/horsea.gif",
+        "path": "godot/art/creatures/horsea.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 117,
+      "slug": "seadra",
+      "id": "seadra",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/seadra.png",
+        "path": "godot/art/creatures/seadra.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/seadra.gif",
+        "path": "godot/art/creatures/seadra.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 118,
+      "slug": "goldeen",
+      "id": "goldeen",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/goldeen.png",
+        "path": "godot/art/creatures/goldeen.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/goldeen.gif",
+        "path": "godot/art/creatures/goldeen.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 119,
+      "slug": "seaking",
+      "id": "seaking",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/seaking.png",
+        "path": "godot/art/creatures/seaking.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/seaking.gif",
+        "path": "godot/art/creatures/seaking.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 120,
+      "slug": "staryu",
+      "id": "staryu",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/staryu.png",
+        "path": "godot/art/creatures/staryu.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/staryu.gif",
+        "path": "godot/art/creatures/staryu.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 121,
+      "slug": "starmie",
+      "id": "starmie",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/starmie.png",
+        "path": "godot/art/creatures/starmie.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/starmie.gif",
+        "path": "godot/art/creatures/starmie.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 122,
+      "slug": "mr-mime",
+      "id": "mr_mime",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/mr-mime.png",
+        "path": "godot/art/creatures/mr_mime.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/mr-mime.gif",
+        "path": "godot/art/creatures/mr_mime.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 123,
+      "slug": "scyther",
+      "id": "scyther",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/scyther.png",
+        "path": "godot/art/creatures/scyther.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/scyther.gif",
+        "path": "godot/art/creatures/scyther.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 124,
+      "slug": "jynx",
+      "id": "jynx",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/jynx.png",
+        "path": "godot/art/creatures/jynx.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/jynx.gif",
+        "path": "godot/art/creatures/jynx.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 125,
+      "slug": "electabuzz",
+      "id": "electabuzz",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/electabuzz.png",
+        "path": "godot/art/creatures/electabuzz.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/electabuzz.gif",
+        "path": "godot/art/creatures/electabuzz.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 126,
+      "slug": "magmar",
+      "id": "magmar",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/magmar.png",
+        "path": "godot/art/creatures/magmar.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/magmar.gif",
+        "path": "godot/art/creatures/magmar.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 127,
+      "slug": "pinsir",
+      "id": "pinsir",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/pinsir.png",
+        "path": "godot/art/creatures/pinsir.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/pinsir.gif",
+        "path": "godot/art/creatures/pinsir.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 128,
+      "slug": "tauros",
+      "id": "tauros",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/tauros.png",
+        "path": "godot/art/creatures/tauros.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/tauros.gif",
+        "path": "godot/art/creatures/tauros.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 129,
+      "slug": "magikarp",
+      "id": "magikarp",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/magikarp.png",
+        "path": "godot/art/creatures/magikarp.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/magikarp.gif",
+        "path": "godot/art/creatures/magikarp.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 130,
+      "slug": "gyarados",
+      "id": "gyarados",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/gyarados.png",
+        "path": "godot/art/creatures/gyarados.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/gyarados.gif",
+        "path": "godot/art/creatures/gyarados.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 131,
+      "slug": "lapras",
+      "id": "lapras",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/lapras.png",
+        "path": "godot/art/creatures/lapras.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/lapras.gif",
+        "path": "godot/art/creatures/lapras.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 132,
+      "slug": "ditto",
+      "id": "ditto",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/ditto.png",
+        "path": "godot/art/creatures/ditto.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/ditto.gif",
+        "path": "godot/art/creatures/ditto.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 133,
+      "slug": "eevee",
+      "id": "eevee",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/eevee.png",
+        "path": "godot/art/creatures/eevee.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/eevee.gif",
+        "path": "godot/art/creatures/eevee.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 134,
+      "slug": "vaporeon",
+      "id": "vaporeon",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/vaporeon.png",
+        "path": "godot/art/creatures/vaporeon.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/vaporeon.gif",
+        "path": "godot/art/creatures/vaporeon.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 135,
+      "slug": "jolteon",
+      "id": "jolteon",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/jolteon.png",
+        "path": "godot/art/creatures/jolteon.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/jolteon.gif",
+        "path": "godot/art/creatures/jolteon.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 136,
+      "slug": "flareon",
+      "id": "flareon",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/flareon.png",
+        "path": "godot/art/creatures/flareon.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/flareon.gif",
+        "path": "godot/art/creatures/flareon.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 137,
+      "slug": "porygon",
+      "id": "porygon",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/porygon.png",
+        "path": "godot/art/creatures/porygon.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/porygon.gif",
+        "path": "godot/art/creatures/porygon.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 138,
+      "slug": "omanyte",
+      "id": "omanyte",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/omanyte.png",
+        "path": "godot/art/creatures/omanyte.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/omanyte.gif",
+        "path": "godot/art/creatures/omanyte.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 139,
+      "slug": "omastar",
+      "id": "omastar",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/omastar.png",
+        "path": "godot/art/creatures/omastar.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/omastar.gif",
+        "path": "godot/art/creatures/omastar.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 140,
+      "slug": "kabuto",
+      "id": "kabuto",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/kabuto.png",
+        "path": "godot/art/creatures/kabuto.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/kabuto.gif",
+        "path": "godot/art/creatures/kabuto.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 141,
+      "slug": "kabutops",
+      "id": "kabutops",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/kabutops.png",
+        "path": "godot/art/creatures/kabutops.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/kabutops.gif",
+        "path": "godot/art/creatures/kabutops.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 142,
+      "slug": "aerodactyl",
+      "id": "aerodactyl",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/aerodactyl.png",
+        "path": "godot/art/creatures/aerodactyl.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/aerodactyl.gif",
+        "path": "godot/art/creatures/aerodactyl.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 143,
+      "slug": "snorlax",
+      "id": "snorlax",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/snorlax.png",
+        "path": "godot/art/creatures/snorlax.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/snorlax.gif",
+        "path": "godot/art/creatures/snorlax.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 144,
+      "slug": "articuno",
+      "id": "articuno",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/articuno.png",
+        "path": "godot/art/creatures/articuno.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/articuno.gif",
+        "path": "godot/art/creatures/articuno.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 145,
+      "slug": "zapdos",
+      "id": "zapdos",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/zapdos.png",
+        "path": "godot/art/creatures/zapdos.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/zapdos.gif",
+        "path": "godot/art/creatures/zapdos.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 146,
+      "slug": "moltres",
+      "id": "moltres",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/moltres.png",
+        "path": "godot/art/creatures/moltres.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/moltres.gif",
+        "path": "godot/art/creatures/moltres.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 147,
+      "slug": "dratini",
+      "id": "dratini",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/dratini.png",
+        "path": "godot/art/creatures/dratini.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/dratini.gif",
+        "path": "godot/art/creatures/dratini.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 148,
+      "slug": "dragonair",
+      "id": "dragonair",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/dragonair.png",
+        "path": "godot/art/creatures/dragonair.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/dragonair.gif",
+        "path": "godot/art/creatures/dragonair.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 149,
+      "slug": "dragonite",
+      "id": "dragonite",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/dragonite.png",
+        "path": "godot/art/creatures/dragonite.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/dragonite.gif",
+        "path": "godot/art/creatures/dragonite.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 150,
+      "slug": "mewtwo",
+      "id": "mewtwo",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/mewtwo.png",
+        "path": "godot/art/creatures/mewtwo.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/mewtwo.gif",
+        "path": "godot/art/creatures/mewtwo.gif",
+        "ok": true
+      }
+    },
+    {
+      "dex": 151,
+      "slug": "mew",
+      "id": "mew",
+      "static": {
+        "url": "https://img.pokemondb.net/sprites/black-white/normal/mew.png",
+        "path": "godot/art/creatures/mew.png",
+        "ok": true
+      },
+      "animated": {
+        "url": "https://img.pokemondb.net/sprites/black-white/anim/normal/mew.gif",
+        "path": "godot/art/creatures/mew.gif",
+        "ok": true
+      }
+    }
+  ],
+  "summary": {
+    "static_ok": 151,
+    "static_fail": 0,
+    "animated_ok": 151,
+    "animated_fail": 0
+  }
+}
