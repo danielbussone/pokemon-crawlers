@@ -158,7 +158,7 @@ func _process(delta: float) -> void:
 		return
 	_t += delta
 	if not _lunging:
-		_sprite_group.position.y = _creature_base_y + sin(_t * 2.0 + encounter_index) * 0.1
+		_sprite_group.position.y = _creature_base_y + (sin(_t * 2.0 + encounter_index) * 0.5 + 0.5) * 0.1
 	if active:
 		var pulse := 0.6 + 0.3 * sin(_t * 4.0)
 		_ring_mat.albedo_color = Color(1.0, 0.85, 0.25, pulse)

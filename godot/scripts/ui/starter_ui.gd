@@ -7,6 +7,7 @@ signal picked(starter_id: String, appearance_id: String)
 
 const TRAINER_BTN_SIZE := Vector2(180, 210)
 const TRAINER_ART_SIZE := Vector2(140, 150)
+const STARTER_ART_HEIGHT := 130.0
 const STARTER_BTN_SIZE := Vector2(260, 320)
 
 var _appearance := "boy"
@@ -39,7 +40,7 @@ func _ready() -> void:
 
 	var vbox := VBoxContainer.new()
 	vbox.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
-	vbox.add_theme_constant_override("separation", 24)
+	vbox.add_theme_constant_override("separation", 18)
 	outer.add_child(vbox)
 
 	var bottom_spacer := Control.new()
@@ -71,6 +72,7 @@ func _ready() -> void:
 		button.button_group = group
 		button.button_pressed = appearance_id == _appearance
 		button.custom_minimum_size = TRAINER_BTN_SIZE
+		button.clip_contents = false
 		button.pressed.connect(func(): _appearance = appearance_id)
 		appearance_inner.add_child(button)
 
@@ -120,6 +122,7 @@ func _ready() -> void:
 
 		var button := Button.new()
 		button.custom_minimum_size = STARTER_BTN_SIZE
+		button.clip_contents = false
 		button.text = ""
 		button.pressed.connect(func(): picked.emit(starter_id, _appearance))
 		starter_inner.add_child(button)
@@ -128,20 +131,23 @@ func _ready() -> void:
 		starter_vbox.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		starter_vbox.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		starter_vbox.add_theme_constant_override("separation", 8)
-		starter_vbox.alignment = BoxContainer.ALIGNMENT_CENTER
+		starter_vbox.alignment = BoxContainer.ALIGNMENT_BEGIN
 		button.add_child(starter_vbox)
 
 		var art_center := CenterContainer.new()
-		art_center.custom_minimum_size = Vector2(0, 128)
+		art_center.custom_minimum_size = Vector2(0, STARTER_ART_HEIGHT)
 		art_center.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		starter_vbox.add_child(art_center)
 
+		var tex := CreatureArt.get_texture(starter_id)
+		var tex_h := maxf(tex.get_height(), 1.0)
+		var tex_w := maxf(tex.get_width(), 1.0)
 		var art := TextureRect.new()
-		art.texture = CreatureArt.get_texture(starter_id)
+		art.texture = tex
 		art.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 		art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		art.expand_mode = TextureRect.EXPAND_FIT_WIDTH_PROPORTIONAL
-		art.custom_minimum_size = Vector2(118, 118)
+		art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		art.custom_minimum_size = Vector2(STARTER_ART_HEIGHT * (tex_w / tex_h), STARTER_ART_HEIGHT)
 		art.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		art_center.add_child(art)
 
@@ -214,4 +220,4 @@ func _deck_summary(starter: Dictionary) -> String:
 			parts.append("%s x%d" % [card_name, counts[card_name]])
 		else:
 			parts.append(card_name)
-	return "\n".join(parts)
+	return ", ".join(parts)

@@ -2,9 +2,17 @@ class_name CreatureArt
 ## Resolves creature/trainer art: real imported illustration if available for
 ## that enemy_id, else the procedural pixel-art fallback from CreatureFactory.
 ## Same pattern as CardArt — drop a `<enemy_id>.png` into art/creatures/ and
-## it's picked up automatically next run, no code changes needed.
+## it's picked up automatically next run, no code changes needed. A sibling
+## `<enemy_id>.gif` is preferred over the .png when Settings.use_gif_art is on.
+##
+## The Gen 5 Black/White scrape (see black-white/README.md) is checked first,
+## since it's the preferred art source going forward and covers all of Gen 1;
+## the flat files above remain a fallback for ids that aren't plain species
+## (rival_*, bug_catcher_*, brock) and a safety net for anything unscraped.
 
 const ART_DIR := "res://art/creatures"
+const BW_STATIC_DIR := ART_DIR + "/black-white/normal"
+const BW_ANIM_DIR := ART_DIR + "/black-white/anim/normal"
 const ALPHA_CUTOFF := 16
 const BRIGHT_THRESHOLD := 200  # r8/g8/b8 — faint highlights become opaque white
 const HOLE_FILL_MIN := 12      # ignore single-pixel noise
@@ -12,11 +20,22 @@ const HOLE_FILL_MAX := 350     # skip large interior gaps (mouth shading, etc.)
 const MIN_OPAQUE_PER_AXIS := 8
 const EYE_WHITE := Color(1, 1, 1, 1)
 
-static var _file_cache: Dictionary = {}  # enemy_id -> ImageTexture
+static var _file_cache: Dictionary = {}       # enemy_id -> ImageTexture
+static var _gif_cache: Dictionary = {}        # enemy_id -> AnimatedTexture (or null if none)
+static var _bw_static_cache: Dictionary = {}  # enemy_id -> ImageTexture (or null if none)
 static var _scanned := false
 
 
 static func get_texture(enemy_id: String) -> Texture2D:
+	if Settings.use_gif_art:
+		var gif_tex := _get_gif_texture(enemy_id)
+		if gif_tex != null:
+			return gif_tex
+
+	var bw_tex := _get_bw_static_texture(enemy_id)
+	if bw_tex != null:
+		return bw_tex
+
 	_ensure_scanned()
 	if _file_cache.has(enemy_id):
 		return _file_cache[enemy_id]
@@ -29,6 +48,51 @@ static func get_texture(enemy_id: String) -> Texture2D:
 			return tex
 
 	return CreatureFactory.build_texture(enemy_id)
+
+
+## pokemondb's scrape uses hyphenated slugs (nidoran-f) where our enemy ids
+## use underscores (nidoran_f); try the id as-is, then the hyphenated form.
+static func _slug_variants(enemy_id: String) -> Array[String]:
+	var variants: Array[String] = [enemy_id]
+	if enemy_id.contains("_"):
+		variants.append(enemy_id.replace("_", "-"))
+	return variants
+
+
+static func _get_gif_texture(enemy_id: String) -> Texture2D:
+	if _gif_cache.has(enemy_id):
+		return _gif_cache[enemy_id]
+
+	var tex: Texture2D = null
+	for slug in _slug_variants(enemy_id):
+		var bw_path := BW_ANIM_DIR + "/" + slug + ".gif"
+		if FileAccess.file_exists(bw_path):
+			tex = GifDecoder.load_animated_texture(bw_path)
+			break
+
+	if tex == null:
+		var flat_path := ART_DIR + "/" + enemy_id + ".gif"
+		if FileAccess.file_exists(flat_path):
+			tex = GifDecoder.load_animated_texture(flat_path)
+
+	_gif_cache[enemy_id] = tex
+	return tex
+
+
+static func _get_bw_static_texture(enemy_id: String) -> Texture2D:
+	if _bw_static_cache.has(enemy_id):
+		return _bw_static_cache[enemy_id]
+
+	var tex: Texture2D = null
+	for slug in _slug_variants(enemy_id):
+		var path := BW_STATIC_DIR + "/" + slug + ".png"
+		if FileAccess.file_exists(path):
+			tex = _load_cropped(path)
+			if tex != null:
+				break
+
+	_bw_static_cache[enemy_id] = tex
+	return tex
 
 
 static func _ensure_scanned() -> void:
@@ -65,6 +129,10 @@ static func _tight_opaque_crop(img: Image) -> Image:
 	work.convert(Image.FORMAT_RGBA8)
 	_decontaminate_alpha(work)
 	_fill_small_interior_holes(work)
+
+	# Small pixel-art sheets keep canvas padding; tight crop only helps large sheets.
+	if work.get_width() <= 128 and work.get_height() <= 128:
+		return work
 
 	var used := _significant_opaque_rect(work)
 	if used.size.x <= 0 or used.size.y <= 0:

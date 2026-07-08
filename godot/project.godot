@@ -23,6 +23,7 @@ config/icon="res://icon.svg"
 
 Balance="*res://scripts/core/balance_db.gd"
 Run="*res://scripts/core/run_manager.gd"
+Settings="*res://scripts/core/settings.gd"
 
 [display]
 

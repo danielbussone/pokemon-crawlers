@@ -7,16 +7,23 @@ Preference: **Generation 5 Black/White** art (static + animated).
 ## Layout
 
 ```
-artwork/creatures/
-├── black-white/normal/<slug>.png        # static sprites (Gen 5 B/W)
-└── black-white/anim/normal/<slug>.gif   # animated sprites (Gen 5 B/W)
+godot/art/creatures/black-white/
+├── normal/<slug>.png        # static sprites (Gen 5 B/W)
+└── anim/normal/<slug>.gif   # animated sprites (Gen 5 B/W)
 ```
 
 `<slug>` is the pokemondb name slug (e.g. `bulbasaur`, `nidoran-f`, `nidoran-m`,
-`mr-mime`, `farfetchd`). Files are in National Dex order by slug.
+`mr-mime`, `farfetchd`) — note this uses hyphens where the game's own enemy
+ids use underscores (`nidoran_f`). `CreatureArt.get_texture()` in
+`godot/scripts/world/creature_art.gd` checks this folder first (falling back
+to `_`→`-` if the underscore form isn't found here), then the older flat
+`godot/art/creatures/<id>.png`/`.gif` files, then procedural art. See
+Settings.use_gif_art (`godot/scripts/core/settings.gd`) to prefer static over
+animated.
 
-Current coverage: **all 151 Generation 1 Pokémon** (Bulbasaur #1 → Mew #151),
-2 files each (static PNG + animated GIF).
+Files are in National Dex order by slug. Current coverage: **all 151
+Generation 1 Pokémon** (Bulbasaur #1 → Mew #151), 2 files each (static PNG +
+animated GIF).
 
 ## Regenerating / extending
 

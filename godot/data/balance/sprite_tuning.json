@@ -6,14 +6,21 @@
     "fly_height": 0.85
   },
   "species": {
-    "geodude": { "wild_scale": 0.55 },
-    "zubat": { "wild_scale": 0.48, "flying": true },
-    "onix": { "wild_scale": 1.55, "companion_scale": 2.5 },
-    "pidgey": { "wild_scale": 0.7, "flying": true },
-    "butterfree": { "flying": true, "fly_height": 0.7, "companion_scale": 0.95 },
-    "beedrill": { "flying": true, "fly_height": 0.65, "companion_scale": 0.9 },
-    "bulbasaur": { "companion_scale": 0.95 },
-    "squirtle": { "companion_scale": 0.95 },
-    "charmander": { "companion_scale": 0.95 }
+    "rattata": { "wild_scale": 0.5 },
+    "nidoran_m": { "wild_scale": 0.5 },
+    "nidoran_f": { "wild_scale": 0.5 },
+    "caterpie": { "wild_scale": 0.5 },
+    "weedle": { "wild_scale": 0.5 },
+    "geodude": { "wild_scale": 0.8 },
+    "zubat": { "wild_scale": 0.5, "flying": true },
+    "onix": { "wild_scale": 1.5, "companion_scale": 3 },
+    "pidgey": { "wild_scale": 0.5 },
+    "kakuna": { "wild_scale": 0.6 },
+    "metapod": { "wild_scale": 0.6 },
+    "butterfree": { "flying": true, "fly_height": 0.8, "companion_scale": 0.95 },
+    "beedrill": { "flying": true, "fly_height": 0.8, "companion_scale": 0.95 },
+    "bulbasaur": { "companion_scale": 0.9 },
+    "squirtle": { "companion_scale": 0.9 },
+    "charmander": { "companion_scale": 0.9 }
   }
 }
