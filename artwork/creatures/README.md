@@ -7,7 +7,7 @@ Preference: **Generation 5 Black/White** art (static + animated).
 ## Layout
 
 ```
-assets/sprites/
+artwork/creatures/
 ├── black-white/normal/<slug>.png        # static sprites (Gen 5 B/W)
 └── black-white/anim/normal/<slug>.gif   # animated sprites (Gen 5 B/W)
 ```

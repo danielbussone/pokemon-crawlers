@@ -18,7 +18,7 @@ Examples
     python scripts/scrape_sprites.py                 # all Gen 1
     python scripts/scrape_sprites.py --generation 1  # explicit
     python scripts/scrape_sprites.py --count 9       # first 9 (starters)
-    python scripts/scrape_sprites.py --out assets/sprites --overwrite
+    python scripts/scrape_sprites.py --out artwork/creatures --overwrite
 """
 from __future__ import annotations
 
@@ -136,8 +136,8 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument(
         "--out",
         type=Path,
-        default=Path("assets/sprites"),
-        help="Output root directory (default: assets/sprites).",
+        default=Path("artwork/creatures"),
+        help="Output root directory (default: artwork/creatures).",
     )
     parser.add_argument(
         "--overwrite",
