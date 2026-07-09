@@ -14,7 +14,7 @@ Last updated: 2026-07-09
 | `phase2b-stage-layouts` | **DONE** | `stage_layouts.json` + `stage_layout.gd` for Route 1, Viridian Forest, Pewter |
 | `phase2c-world-builder` | **DONE** | Maze stamping, shop buildings, interior backgrounds, encounter triggers |
 | `phase2d-triggers-markers` | **IMPLEMENTED — pending approval** | Optional/gate/boss ring-color markers; optional wilds skippable (facing only triggers gates) |
-| `phase2e-minimap-sim` | Pending | Minimap fog-of-war; sim_check maze pathfinder |
+| `phase2e-minimap-sim` | **IMPLEMENTED — pending approval** | Minimap fog-of-war + explored barriers; sim_check maze pathfinder w/ optional engagement rate |
 | `phase1-learnset-data` | Pending | `learnsets.json`, trim starter decks, new learnset cards |
 | `phase1-learnset-code` | Pending | XP award, learnset UI, wire into main flow |
 | `phase3-upgrades` | Pending | Rare Candy + starter typed-card evolution milestones |
@@ -22,7 +22,7 @@ Last updated: 2026-07-09
 | `phase5-gyms-content` | Pending | 8 gyms + E4 content and mechanics |
 | `phase6-telemetry` | Pending | Run log metrics + sim_check extensions |
 
-**Current next TODO (after 2d approval):** `phase2e-minimap-sim`
+**Current next TODO (after 2e approval):** `phase1-learnset-data` (Phase 2 complete)
 
 ---
 
@@ -87,7 +87,7 @@ Last updated: 2026-07-09
 
 ---
 
-## Phase 2 — Remaining (2e)
+## Phase 2 — Complete (2d, 2e pending sign-off)
 
 ### 2d — Triggers & markers (IMPLEMENTED — pending approval)
 - `encounter_marker.gd` — `MarkerKind {OPTIONAL, GATE, BOSS}` distinguished by ring
@@ -100,9 +100,15 @@ Last updated: 2026-07-09
   also covers the turn-in-place case, since `player_controller._start_turn` emits
   `tile_entered`.
 
-### 2e — Minimap & sim
-- Fog-of-war on unexplored tiles
-- `sim_check.gd` — maze pathfinder (greedy toward gate, optional engagement rate)
+### 2e — Minimap & sim (IMPLEMENTED — pending approval)
+- `minimap.gd` — fog of war: only discovered tiles draw; walking a tile reveals its 8
+  neighbors so flanking **walls/barriers** show as solid slabs. Walked tiles draw at
+  full color, seen-but-not-walked tiles are dimmed, unexplored stays dark.
+- `world_builder.gd` — `build_grid_only()` produces the maze grid with no 3D geometry
+  for headless use.
+- `sim_check.gd` — maze pathfinder: BFS-walks the real stage grid, greedy toward each
+  gate, engaging reachable optional wilds at a configurable rate (`--engage=`, default
+  0.6). Reports optionals engaged + maze steps alongside win rate.
 
 ---
 
