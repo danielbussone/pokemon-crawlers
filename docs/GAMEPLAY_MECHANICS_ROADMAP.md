@@ -16,13 +16,13 @@ Last updated: 2026-07-09
 | `phase2d-triggers-markers` | **DONE** | Optional/gate/boss ring-color markers; optional wilds skippable (facing only triggers gates) |
 | `phase2e-minimap-sim` | **DONE** | Minimap fog-of-war + explored barriers; sim_check maze pathfinder w/ optional engagement rate |
 | `phase1-learnset-data` | **IMPLEMENTED — pending approval** | `learnsets.json` (move-set chains + XP), new learnset cards, XP constants (starter trim + draft cleanup deferred to code TODO) |
-| `phase1-learnset-code` | Pending | XP award, learnset add/replace UI, wire into main flow; trim `starters.json`, remove STAB injection, clean draft pools |
+| `phase1-learnset-code` | **IMPLEMENTED — pending approval** | XP award + add/replace learns, learnset UI, HUD XP; trimmed `starters.json`, removed STAB injection, cleaned draft pools |
 | `phase3-upgrades` | Pending | Rare Candy + starter typed-card evolution milestones |
 | `phase4-bills-pc` | Pending | Bill's PC in Pokémon Center after Gym 1 |
 | `phase5-gyms-content` | Pending | 8 gyms + E4 content and mechanics |
 | `phase6-telemetry` | Pending | Run log metrics + sim_check extensions |
 
-**Current next TODO:** `phase1-learnset-code` (data implemented; awaiting sign-off on learnset move-set design)
+**Current next TODO:** `phase3-upgrades` (Phase 1 implemented; awaiting sign-off)
 
 ---
 
@@ -126,18 +126,19 @@ Last updated: 2026-07-09
 | `starters.json` | Trim to filler decks | ⏭ deferred to `phase1-learnset-code` (coupled to deck build) |
 | `stage_rewards.json` | Remove starter-line moves from draft pools | ⏭ deferred (coupled to STAB removal) |
 
-### Code
-| File | Change |
-|------|--------|
-| `player_state.gd` | `xp`, `learned_moves`, `starter_evolution_tier` |
-| `learnset_ops.gd` | `award_xp()`, `pending_learns()`, `apply_learn()` |
-| `learnset_ui.gd` | Add or replace card UI |
-| `run_manager.gd` | Award XP in `after_win()`; return `learn_events` |
-| `main.gd` | Chain: combat → learnset → draft |
-| `rewards.gd` | Remove STAB injection |
-| `game_hud.gd` | XP display |
+### Code — `phase1-learnset-code` (IMPLEMENTED — pending approval)
+| File | Change | Status |
+|------|--------|--------|
+| `player_state.gd` | `xp` + per-line `learn_progress` / `learn_current` | ✅ |
+| `learnset_ops.gd` | `init_run()`, `award_xp()`, add/replace learn events, `next_unlock()` | ✅ new |
+| `learnset_ui.gd` | "Learned a move" add/replace overlay | ✅ new |
+| `run_manager.gd` | Deck via `LearnsetOps.init_run`; award XP in `after_win()`; return `learn_events`; dropped fixed evolution catalyst | ✅ |
+| `main.gd` | Chain combat → learnset → draft; XP toast | ✅ |
+| `rewards.gd` | Removed STAB injection | ✅ |
+| `game_hud.gd` | XP + next-unlock line | ✅ |
+| `starters.json` / `starter_ui.gd` / `stage_rewards.json` | Trim to filler; UI shows learnset deck; drop `bite` from pools | ✅ |
 
-Remove auto `evolution_after` from run_manager (replaced by Phase 3).
+**PoC balance note:** thresholds are paced for the full 8-gym arc, so the 1-gym PoC only surfaces the first 1–2 unlocks; grinding costs HP with little short-run payoff there (sim: engage 0.0→51%, 0.5→34%, 1.0→36%). The XP→power loop is wired; PoC balance still favors rushing until later gyms exist (Phase 5).
 
 ---
 
