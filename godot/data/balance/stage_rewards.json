@@ -5,14 +5,12 @@
     "recover",
     "sand_attack",
     "body_slam",
-    "defense_curl",
-    "bite"
+    "defense_curl"
   ],
   "stage2": [
     "poison_powder",
     "string_shot",
     "sleep_powder",
-    "bite",
     "harden",
     "recover",
     "quick_attack"
@@ -25,7 +23,6 @@
     "sand_attack",
     "body_slam",
     "defense_curl",
-    "bite",
     "supersonic",
     "stun_spore",
     "sleep_powder",

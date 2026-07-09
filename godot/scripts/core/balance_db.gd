@@ -18,6 +18,7 @@ var run_config: Dictionary = {}
 var stage_rewards: Dictionary = {}
 var stage_layouts: Dictionary = {}  # stage_id -> layout dict
 var sprite_tuning: Dictionary = {}
+var learnsets: Dictionary = {}     # starter id -> {starter_deck, lines}
 
 
 func _ready() -> void:
@@ -29,6 +30,7 @@ func _ready() -> void:
 	stage_layouts = layouts_raw.get("stages", {})
 	sprite_tuning = _load_json("sprite_tuning")
 	starters = _load_json("starters")
+	learnsets = _load_json("learnsets")
 	badges = _load_json("badges")
 
 	for m in _load_json("type_chart")["matchups"]:
@@ -75,6 +77,22 @@ func stab_chance() -> float:
 	return float(constants["rewards"]["starter_stab_draft_chance"])
 
 
+func xp_per_wild() -> int:
+	return int(constants["xp"]["per_wild"])
+
+
+func xp_per_mid_boss() -> int:
+	return int(constants["xp"]["per_mid_boss"])
+
+
+func xp_per_gym_boss() -> int:
+	return int(constants["xp"]["per_gym_boss"])
+
+
+func learnset_for(starter_id: String) -> Dictionary:
+	return learnsets.get(starter_id, {})
+
+
 func type_mod(attacker_type: String, defender_type: String) -> float:
 	return float(type_chart.get(attacker_type + ">" + defender_type, 1.0))
 
@@ -106,6 +124,11 @@ func _validate() -> void:
 	for sid in starters:
 		for cid in starters[sid]["deck"]:
 			assert(cards.has(cid), "Unknown card '%s' in starter '%s'" % [cid, sid])
+	for cid in cards:
+		var evolves_to := String(cards[cid].get("evolves_to", ""))
+		assert(evolves_to == "" or cards.has(evolves_to),
+				"Card '%s' evolves_to unknown card '%s'" % [cid, evolves_to])
+	_validate_learnsets()
 	for pool_key in stage_rewards:
 		for cid in stage_rewards[pool_key]:
 			assert(cards.has(cid), "Unknown card '%s' in stage_rewards '%s'" % [cid, pool_key])
@@ -119,3 +142,28 @@ func _validate() -> void:
 	assert(cards.has(run_config["evolution"]["to"]), "Unknown evolution.to card")
 	assert(badges.has(run_config["badge_id"]), "Unknown badge id")
 	StageLayout.validate(self)
+
+
+## Every learnset references real cards, and each starter has a learnset.
+func _validate_learnsets() -> void:
+	for sid in starters:
+		assert(learnsets.has(sid), "Missing learnset for starter '%s'" % sid)
+	for sid in learnsets:
+		if String(sid).begins_with("_"):
+			continue  # documentation keys (e.g. _comment)
+		var entry: Dictionary = learnsets[sid]
+		for cid in entry.get("starter_deck", []):
+			assert(cards.has(cid), "Unknown card '%s' in learnset '%s' starter_deck" % [cid, sid])
+		var prev_xp := -1
+		for line in entry.get("lines", []):
+			for stage in line["stages"]:
+				var cid := String(stage["card_id"])
+				assert(cards.has(cid), "Unknown card '%s' in learnset '%s'" % [cid, sid])
+				assert(int(stage["xp"]) >= 0, "Negative xp in learnset '%s'" % sid)
+			# Stages within a line must be non-decreasing in XP.
+			prev_xp = -1
+			for stage in line["stages"]:
+				var xp := int(stage["xp"])
+				assert(xp >= prev_xp, "Line '%s' in '%s' has out-of-order XP" % [
+						String(line.get("name", "?")), sid])
+				prev_xp = xp

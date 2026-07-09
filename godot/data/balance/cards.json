@@ -308,6 +308,346 @@
       "power": 20,
       "rarity": "signature",
       "effects": [{ "type": "damage", "magnitude": 20 }]
+    },
+
+    {
+      "id": "leech_seed",
+      "name": "Leech Seed",
+      "pokemon": "Bulbasaur",
+      "card_type": "status",
+      "pokemon_type": "GRASS",
+      "cost": 1,
+      "power": 0,
+      "rarity": "starter",
+      "evolves_to": "giga_drain",
+      "effects": [
+        { "type": "status", "status": "poison", "duration": 4, "magnitude": 2, "target": "enemy" },
+        { "type": "heal", "magnitude": 2, "target": "self" }
+      ]
+    },
+    {
+      "id": "giga_drain",
+      "name": "Giga Drain",
+      "pokemon": "Bulbasaur",
+      "card_type": "attack",
+      "pokemon_type": "GRASS",
+      "cost": 2,
+      "power": 9,
+      "rarity": "uncommon",
+      "effects": [
+        { "type": "damage", "magnitude": 9 },
+        { "type": "heal", "magnitude": 5, "target": "self" }
+      ]
+    },
+    {
+      "id": "razor_leaf",
+      "name": "Razor Leaf",
+      "pokemon": "Bulbasaur",
+      "card_type": "attack",
+      "pokemon_type": "GRASS",
+      "cost": 2,
+      "power": 14,
+      "rarity": "uncommon",
+      "evolves_to": "leaf_storm",
+      "effects": [{ "type": "damage", "magnitude": 14 }]
+    },
+    {
+      "id": "leaf_storm",
+      "name": "Leaf Storm",
+      "pokemon": "Venusaur",
+      "card_type": "attack",
+      "pokemon_type": "GRASS",
+      "cost": 3,
+      "power": 22,
+      "rarity": "rare",
+      "effects": [
+        { "type": "damage", "magnitude": 22 },
+        { "type": "apply_condition", "condition": "intimidated", "duration": 1, "target": "self" }
+      ]
+    },
+    {
+      "id": "take_down",
+      "name": "Take Down",
+      "pokemon": "Various",
+      "card_type": "attack",
+      "pokemon_type": "NORMAL",
+      "cost": 2,
+      "power": 14,
+      "rarity": "uncommon",
+      "evolves_to": "double_edge",
+      "effects": [
+        { "type": "damage", "magnitude": 14 },
+        { "type": "damage", "magnitude": 3, "target": "self", "ignore_block": true }
+      ]
+    },
+    {
+      "id": "double_edge",
+      "name": "Double-Edge",
+      "pokemon": "Various",
+      "card_type": "attack",
+      "pokemon_type": "NORMAL",
+      "cost": 3,
+      "power": 20,
+      "rarity": "rare",
+      "effects": [
+        { "type": "damage", "magnitude": 20 },
+        { "type": "damage", "magnitude": 5, "target": "self", "ignore_block": true }
+      ]
+    },
+    {
+      "id": "solar_beam",
+      "name": "Solar Beam",
+      "pokemon": "Venusaur",
+      "card_type": "attack",
+      "pokemon_type": "GRASS",
+      "cost": 3,
+      "power": 26,
+      "rarity": "rare",
+      "effects": [{ "type": "damage", "magnitude": 26 }]
+    },
+    {
+      "id": "petal_dance",
+      "name": "Petal Dance",
+      "pokemon": "Bulbasaur",
+      "card_type": "attack",
+      "pokemon_type": "GRASS",
+      "cost": 2,
+      "power": 16,
+      "rarity": "uncommon",
+      "effects": [
+        { "type": "damage", "magnitude": 16 },
+        { "type": "status", "status": "confuse", "duration": 2, "target": "self" }
+      ]
+    },
+    {
+      "id": "skull_bash",
+      "name": "Skull Bash",
+      "pokemon": "Squirtle",
+      "card_type": "attack",
+      "pokemon_type": "NORMAL",
+      "cost": 3,
+      "power": 16,
+      "rarity": "rare",
+      "effects": [
+        { "type": "block", "magnitude": 6, "target": "self" },
+        { "type": "damage", "magnitude": 16 }
+      ]
+    },
+    {
+      "id": "water_pulse",
+      "name": "Water Pulse",
+      "pokemon": "Squirtle",
+      "card_type": "attack",
+      "pokemon_type": "WATER",
+      "cost": 2,
+      "power": 14,
+      "rarity": "uncommon",
+      "evolves_to": "hydro_pump",
+      "effects": [
+        { "type": "damage", "magnitude": 14 },
+        { "type": "status", "status": "confuse", "duration": 1, "target": "enemy" }
+      ]
+    },
+    {
+      "id": "hydro_pump",
+      "name": "Hydro Pump",
+      "pokemon": "Blastoise",
+      "card_type": "attack",
+      "pokemon_type": "WATER",
+      "cost": 3,
+      "power": 24,
+      "rarity": "rare",
+      "effects": [{ "type": "damage", "magnitude": 24 }]
+    },
+    {
+      "id": "bubble",
+      "name": "Bubble",
+      "pokemon": "Squirtle",
+      "card_type": "attack",
+      "pokemon_type": "WATER",
+      "cost": 1,
+      "power": 7,
+      "rarity": "starter",
+      "evolves_to": "bubble_beam",
+      "effects": [
+        { "type": "damage", "magnitude": 7 },
+        { "type": "apply_condition", "condition": "slow", "duration": 1, "target": "enemy" }
+      ]
+    },
+    {
+      "id": "bubble_beam",
+      "name": "Bubble Beam",
+      "pokemon": "Squirtle",
+      "card_type": "attack",
+      "pokemon_type": "WATER",
+      "cost": 2,
+      "power": 13,
+      "rarity": "uncommon",
+      "effects": [
+        { "type": "damage", "magnitude": 13 },
+        { "type": "apply_condition", "condition": "slow", "duration": 1, "target": "enemy" }
+      ]
+    },
+    {
+      "id": "withdraw",
+      "name": "Withdraw",
+      "pokemon": "Squirtle",
+      "card_type": "support",
+      "pokemon_type": "WATER",
+      "cost": 1,
+      "power": 0,
+      "rarity": "starter",
+      "evolves_to": "protect",
+      "effects": [{ "type": "block", "magnitude": 6, "target": "self" }]
+    },
+    {
+      "id": "protect",
+      "name": "Protect",
+      "pokemon": "Various",
+      "card_type": "support",
+      "pokemon_type": "NORMAL",
+      "cost": 2,
+      "power": 0,
+      "rarity": "uncommon",
+      "evolves_to": "steel_defense",
+      "effects": [{ "type": "block", "magnitude": 12, "target": "self" }]
+    },
+    {
+      "id": "steel_defense",
+      "name": "Steel Defense",
+      "pokemon": "Various",
+      "card_type": "support",
+      "pokemon_type": "NORMAL",
+      "cost": 2,
+      "power": 0,
+      "rarity": "rare",
+      "effects": [
+        { "type": "block", "magnitude": 16, "target": "self" },
+        { "type": "draw", "magnitude": 1, "target": "self" }
+      ]
+    },
+    {
+      "id": "rain_dance",
+      "name": "Rain Dance",
+      "pokemon": "Squirtle",
+      "card_type": "support",
+      "pokemon_type": "WATER",
+      "cost": 2,
+      "power": 0,
+      "rarity": "uncommon",
+      "effects": [
+        { "type": "heal", "magnitude": 4, "target": "self" },
+        { "type": "draw", "magnitude": 1, "target": "self" }
+      ]
+    },
+    {
+      "id": "slash",
+      "name": "Slash",
+      "pokemon": "Charmander",
+      "card_type": "attack",
+      "pokemon_type": "NORMAL",
+      "cost": 2,
+      "power": 12,
+      "rarity": "uncommon",
+      "evolves_to": "dragon_claw",
+      "effects": [{ "type": "damage", "magnitude": 12 }]
+    },
+    {
+      "id": "dragon_claw",
+      "name": "Dragon Claw",
+      "pokemon": "Charizard",
+      "card_type": "attack",
+      "pokemon_type": "NORMAL",
+      "cost": 3,
+      "power": 18,
+      "rarity": "rare",
+      "effects": [{ "type": "damage", "magnitude": 18 }]
+    },
+    {
+      "id": "flame_burst",
+      "name": "Flame Burst",
+      "pokemon": "Charmander",
+      "card_type": "attack",
+      "pokemon_type": "FIRE",
+      "cost": 2,
+      "power": 14,
+      "rarity": "uncommon",
+      "evolves_to": "flamethrower",
+      "effects": [{ "type": "damage", "magnitude": 14 }]
+    },
+    {
+      "id": "flamethrower",
+      "name": "Flamethrower",
+      "pokemon": "Charizard",
+      "card_type": "attack",
+      "pokemon_type": "FIRE",
+      "cost": 3,
+      "power": 22,
+      "rarity": "rare",
+      "effects": [{ "type": "damage", "magnitude": 22 }]
+    },
+    {
+      "id": "fire_spin",
+      "name": "Fire Spin",
+      "pokemon": "Charmander",
+      "card_type": "attack",
+      "pokemon_type": "FIRE",
+      "cost": 2,
+      "power": 6,
+      "rarity": "uncommon",
+      "effects": [
+        { "type": "damage", "magnitude": 6 },
+        { "type": "status", "status": "poison", "duration": 3, "magnitude": 2, "target": "enemy" }
+      ]
+    },
+    {
+      "id": "smoke_screen",
+      "name": "Smoke Screen",
+      "pokemon": "Charmander",
+      "card_type": "status",
+      "pokemon_type": "NORMAL",
+      "cost": 1,
+      "power": 0,
+      "rarity": "common",
+      "effects": [
+        { "type": "apply_condition", "condition": "blinded", "target": "enemy" }
+      ]
+    },
+    {
+      "id": "scary_face",
+      "name": "Scary Face",
+      "pokemon": "Charmander",
+      "card_type": "status",
+      "pokemon_type": "NORMAL",
+      "cost": 1,
+      "power": 0,
+      "rarity": "common",
+      "effects": [
+        { "type": "apply_condition", "condition": "slow", "duration": 2, "target": "enemy" }
+      ]
+    },
+    {
+      "id": "rage",
+      "name": "Rage",
+      "pokemon": "Charmander",
+      "card_type": "attack",
+      "pokemon_type": "NORMAL",
+      "cost": 1,
+      "power": 6,
+      "rarity": "starter",
+      "evolves_to": "dragon_rage",
+      "effects": [{ "type": "damage", "magnitude": 6 }]
+    },
+    {
+      "id": "dragon_rage",
+      "name": "Dragon Rage",
+      "pokemon": "Charizard",
+      "card_type": "attack",
+      "pokemon_type": "NORMAL",
+      "cost": 2,
+      "power": 16,
+      "rarity": "uncommon",
+      "effects": [{ "type": "damage", "magnitude": 16 }]
     }
   ]
 }

@@ -3,6 +3,8 @@ extends CanvasLayer
 ## Full-screen starter selection at run start, plus a trainer appearance
 ## (boy/girl) toggle — the appearance drives the HUD portrait, not the deck.
 
+const LearnsetOps = preload("res://scripts/core/learnset_ops.gd")
+
 signal picked(starter_id: String, appearance_id: String)
 
 const TRAINER_BTN_SIZE := Vector2(180, 210)
@@ -124,7 +126,7 @@ func _ready() -> void:
 		button.custom_minimum_size = STARTER_BTN_SIZE
 		button.clip_contents = false
 		button.text = ""
-		button.pressed.connect(func(): picked.emit(starter_id, _appearance))
+		button.pressed.connect(func(id: String = starter_id): picked.emit(id, _appearance))
 		starter_inner.add_child(button)
 
 		var starter_vbox := VBoxContainer.new()
@@ -166,7 +168,7 @@ func _ready() -> void:
 		starter_vbox.add_child(type_label)
 
 		var deck_label := Label.new()
-		deck_label.text = _deck_summary(starter)
+		deck_label.text = _deck_summary(starter_id)
 		deck_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		deck_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		deck_label.custom_minimum_size = Vector2(228, 0)
@@ -209,9 +211,11 @@ static func _style_label(label: Label, font_size: int, color: Color = Color.WHIT
 	label.add_theme_color_override("font_outline_color", Color(0.04, 0.05, 0.08, 0.95))
 
 
-func _deck_summary(starter: Dictionary) -> String:
+func _deck_summary(starter_id: String) -> String:
 	var counts := {}
-	for card_id in starter["deck"]:
+	for card_id in LearnsetOps.starting_deck_ids(starter_id, Balance):
+		if not Balance.cards.has(card_id):
+			continue
 		var card_name := String(Balance.cards[card_id]["name"])
 		counts[card_name] = int(counts.get(card_name, 0)) + 1
 	var parts: Array[String] = []
