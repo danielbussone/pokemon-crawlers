@@ -13,7 +13,7 @@ Last updated: 2026-07-09
 | `phase2a-encounter-model` | **DONE** | Mandatory vs optional encounters; `cleared_optional`; optional wilds → gold + draft |
 | `phase2b-stage-layouts` | **DONE** | `stage_layouts.json` + `stage_layout.gd` for Route 1, Viridian Forest, Pewter |
 | `phase2c-world-builder` | **DONE** | Maze stamping, shop buildings, interior backgrounds, encounter triggers |
-| `phase2d-triggers-markers` | **IMPLEMENTED — pending approval** | Optional/gate/boss marker visuals; optional wilds skippable (facing only triggers gates) |
+| `phase2d-triggers-markers` | **IMPLEMENTED — pending approval** | Optional/gate/boss ring-color markers; optional wilds skippable (facing only triggers gates) |
 | `phase2e-minimap-sim` | Pending | Minimap fog-of-war; sim_check maze pathfinder |
 | `phase1-learnset-data` | Pending | `learnsets.json`, trim starter decks, new learnset cards |
 | `phase1-learnset-code` | Pending | XP award, learnset UI, wire into main flow |
@@ -90,9 +90,10 @@ Last updated: 2026-07-09
 ## Phase 2 — Remaining (2e)
 
 ### 2d — Triggers & markers (IMPLEMENTED — pending approval)
-- `encounter_marker.gd` — `MarkerKind {OPTIONAL, GATE, BOSS}`; optional = cool-blue dim
-  ring, gate = warm-gold glowing ring + arch signage ("TRAINER BATTLE"), boss = fiery
-  arch ("GYM LEADER"). Signage fades out with the marker on clear.
+- `encounter_marker.gd` — `MarkerKind {OPTIONAL, GATE, BOSS}` distinguished by ring
+  color alone: optional = cool-blue dim ring, gate = warm-gold ring, boss = fiery ring.
+  No arch/banner structures — a mandatory fight already reads as such from its blocked
+  chokepoint (bosses are further dressed by gym lighting/door).
 - `world_builder.gd` — `_build_markers` passes kind; `_try_trigger_encounter` now only
   starts *gate* fights when facing an adjacent tile (their tile is blocked). Optional
   wilds trigger solely by stepping onto their tile, so they are truly skippable — this
