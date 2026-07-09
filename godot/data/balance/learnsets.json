@@ -1,7 +1,9 @@
 {
   "_comment": "Per-starter XP learnset, paced for the FULL 8-gym + Elite 4 arc (not just the 1-gym PoC). starter_deck = the 3-card Normal-filler deck you begin with. Each entry in `lines` is one move 'line' whose stages unlock at cumulative XP: the first stage is ADDED to the deck, later stages REPLACE the previous card in that line (Vine Whip -> Razor Leaf -> Leaf Storm). A stage with xp 0 is granted at run start.",
 
-  "_economy": "Assumed XP economy (see constants.json xp): each gym segment yields ~90 XP from mandatory fights (gym leader = 90; between-gym trainer mid-bosses = 30) and up to ~30 more from optional wilds (~3 x 10). So mandatory:optional ~= 3:1, i.e. min ~90/gym, grind ~120/gym. Unlock ladder (cumulative XP): [40, 110, 190, 280, 370, 460, 550, 640, 700]. That completes a starter's full move set by ~gym 8 on the minimum path and ~gym 6 if every optional wild is cleared. Values are PROVISIONAL and to be balance-tuned once the 8-gym run_config exists (Phase 5).",
+  "_economy": "XP economy (see constants.json xp): per_wild=10, per_mid_boss=30, per_gym_boss=90. Unlock ladder (cumulative XP): [30, 100, 190, 280, 370, 460, 550, 640, 700]. Whole-arc pacing: full move set by ~gym 8 (minimum path) / ~gym 6 (every optional wild cleared), ~1-2 unlocks per gym. Values PROVISIONAL, to be tuned once the 8-gym run_config exists (Phase 5).",
+
+  "_gym1_target": "Gym 1 (Brock) is reached after 2 mid-bosses + ~10 optional wilds. XP available BEFORE the leader: 60 on the skip path (2 x 30) rising to ~160 with a full wild grind (60 + 10 x 10). Ladder is tuned so move #1 (rung1=30) is guaranteed pre-Brock, and move #2 (rung2=100) is a GRIND REWARD: unreachable on the pure skip path (60 < 100) but attainable with ~4 wilds, giving grinders their second move before the gym leader to make the fight easier. rung3=190 sits above the ~160 grind ceiling, so a full pre-Brock grind yields exactly the 2nd move.",
 
   "bulbasaur": {
     "starter_deck": ["tackle", "tackle", "growl"],
@@ -10,14 +12,14 @@
         "name": "Vine Whip",
         "stages": [
           { "xp": 0, "card_id": "vine_whip" },
-          { "xp": 110, "card_id": "razor_leaf" },
+          { "xp": 100, "card_id": "razor_leaf" },
           { "xp": 550, "card_id": "leaf_storm" }
         ]
       },
       {
         "name": "Leech Seed",
         "stages": [
-          { "xp": 40, "card_id": "leech_seed" },
+          { "xp": 30, "card_id": "leech_seed" },
           { "xp": 370, "card_id": "giga_drain" }
         ]
       },
@@ -59,14 +61,14 @@
         "name": "Water Gun",
         "stages": [
           { "xp": 0, "card_id": "water_gun" },
-          { "xp": 110, "card_id": "water_pulse" },
+          { "xp": 100, "card_id": "water_pulse" },
           { "xp": 550, "card_id": "hydro_pump" }
         ]
       },
       {
         "name": "Bubble",
         "stages": [
-          { "xp": 40, "card_id": "bubble" },
+          { "xp": 30, "card_id": "bubble" },
           { "xp": 370, "card_id": "bubble_beam" }
         ]
       },
@@ -109,13 +111,13 @@
       {
         "name": "Smoke Screen",
         "stages": [
-          { "xp": 40, "card_id": "smoke_screen" }
+          { "xp": 30, "card_id": "smoke_screen" }
         ]
       },
       {
         "name": "Rage",
         "stages": [
-          { "xp": 110, "card_id": "rage" },
+          { "xp": 100, "card_id": "rage" },
           { "xp": 550, "card_id": "dragon_rage" }
         ]
       },
