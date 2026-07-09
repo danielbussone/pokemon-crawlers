@@ -184,19 +184,27 @@ static func resolve_card_effects(card: Dictionary, player: PlayerState, enemy: C
 			bal, player, true, rng)
 
 
+static func attack_type_for_action(action_id: String, enemy_type: String, bal) -> String:
+	if action_id != "" and bal.cards.has(action_id):
+		return String(bal.cards[action_id]["pokemon_type"])
+	return enemy_type
+
+
 static func resolve_enemy_action_effects(effects: Array, is_attack: bool, enemy: Combatant,
-		player: PlayerState, enemy_type: String, bal, rng: RandomNumberGenerator) -> Array:
+		player: PlayerState, enemy_type: String, bal, rng: RandomNumberGenerator,
+		action_id: String = "") -> Array:
+	var attack_type := attack_type_for_action(action_id, enemy_type, bal)
 	if not is_attack:
-		return resolve_effects(effects, enemy, player, enemy_type, bal, player, false, rng)
+		return resolve_effects(effects, enemy, player, attack_type, bal, player, false, rng)
 
 	var results: Array = []
 	for eff in effects:
 		if String(eff.get("type", "")) == "damage":
-			var dmg := apply_damage(int(eff.get("magnitude", 0)), enemy_type, player,
+			var dmg := apply_damage(int(eff.get("magnitude", 0)), attack_type, player,
 					enemy, bal, [], true, bool(eff.get("ignore_block", false)))
 			results.append({"type": "damage", "target_is_player": true}.merged(dmg))
 		else:
-			results.append_array(resolve_effects([eff], enemy, player, enemy_type, bal, player, false, rng))
+			results.append_array(resolve_effects([eff], enemy, player, attack_type, bal, player, false, rng))
 	return results
 
 

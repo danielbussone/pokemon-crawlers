@@ -3,6 +3,7 @@ extends Node
 ## Same data contract as the Python PoC loader.py; fails fast on unknown ids.
 
 const DIR := "res://data/balance"
+const StageLayout = preload("res://scripts/world/stage_layout.gd")
 
 var constants: Dictionary = {}
 var conditions: Dictionary = {}
@@ -15,6 +16,7 @@ var items: Dictionary = {}        # item id -> item dict (insertion order = shop
 var economy: Dictionary = {}      # {center, inventory, gold}
 var run_config: Dictionary = {}
 var stage_rewards: Dictionary = {}
+var stage_layouts: Dictionary = {}  # stage_id -> layout dict
 var sprite_tuning: Dictionary = {}
 
 
@@ -23,6 +25,8 @@ func _ready() -> void:
 	conditions = _load_json("conditions")
 	run_config = _load_json("run_config")
 	stage_rewards = _load_json("stage_rewards")
+	var layouts_raw: Dictionary = _load_json("stage_layouts")
+	stage_layouts = layouts_raw.get("stages", {})
 	sprite_tuning = _load_json("sprite_tuning")
 	starters = _load_json("starters")
 	badges = _load_json("badges")
@@ -114,3 +118,4 @@ func _validate() -> void:
 	assert(cards.has(run_config["evolution"]["from"]), "Unknown evolution.from card")
 	assert(cards.has(run_config["evolution"]["to"]), "Unknown evolution.to card")
 	assert(badges.has(run_config["badge_id"]), "Unknown badge id")
+	StageLayout.validate(self)

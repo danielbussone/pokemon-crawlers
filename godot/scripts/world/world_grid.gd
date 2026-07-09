@@ -11,7 +11,17 @@ const EYE_HEIGHT := 1.6
 enum Facing { NORTH, EAST, SOUTH, WEST }
 const FACING_DIR := [Vector2i(0, -1), Vector2i(1, 0), Vector2i(0, 1), Vector2i(-1, 0)]
 
-enum TileKind { WALL, CORRIDOR, ENCOUNTER, ALCOVE, SHOP_DOOR, GYM_FLOOR, GYM_DOOR }
+enum TileKind {
+	WALL,
+	CORRIDOR,
+	ENCOUNTER,
+	OPTIONAL_ENCOUNTER,
+	GATE_ENCOUNTER,
+	ALCOVE,
+	SHOP_DOOR,
+	GYM_FLOOR,
+	GYM_DOOR,
+}
 
 var tiles: Dictionary = {}          # Vector2i -> TileKind
 var gate_encounter: Dictionary = {} # Vector2i -> int (encounter index that must be cleared)
@@ -42,11 +52,12 @@ func kind_at(cell: Vector2i) -> int:
 func is_walkable(cell: Vector2i) -> bool:
 	if not tiles.has(cell):
 		return false
-	if tiles[cell] == TileKind.WALL:
+	var kind: int = tiles[cell]
+	if kind == TileKind.WALL:
 		return false
 	if gate_encounter.has(cell) and run_ref != null:
-		var required_index: int = gate_encounter[cell]
-		if run_ref.encounter_index <= required_index:
+		var required_slot: int = gate_encounter[cell]
+		if run_ref.encounter_index <= required_slot:
 			return false
 	return true
 

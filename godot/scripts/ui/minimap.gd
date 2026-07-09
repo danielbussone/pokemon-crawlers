@@ -5,8 +5,8 @@ extends Control
 ## fixed window, so this shows a legible local neighborhood, not the whole map.
 
 const CELL_PX := 16.0
-const WINDOW_ROWS := 8
-const WINDOW_COLS := 3
+const WINDOW_ROWS := 10
+const WINDOW_COLS := 6
 const MARGIN := 6.0
 
 var grid: WorldGrid
@@ -65,12 +65,17 @@ func _draw() -> void:
 
 func _color_for_kind(cell: Vector2i, kind: int) -> Color:
 	match kind:
-		WorldGrid.TileKind.ENCOUNTER:
+		WorldGrid.TileKind.ENCOUNTER, WorldGrid.TileKind.GATE_ENCOUNTER:
 			if grid.gate_encounter.has(cell) and int(grid.gate_encounter[cell]) < Run.encounter_index:
 				return Color(0.35, 0.75, 0.35)
 			return Color(0.9, 0.7, 0.25)
+		WorldGrid.TileKind.OPTIONAL_ENCOUNTER:
+			return Color(0.55, 0.75, 0.9)
 		WorldGrid.TileKind.SHOP_DOOR:
-			return Color(0.85, 0.3, 0.3) if cell.x < 0 else Color(0.3, 0.45, 0.85)
+			var shop_kind := String(grid.tile_meta.get(cell, {}).get("shop_kind", "center"))
+			return Color(0.85, 0.3, 0.3) if shop_kind == "center" else Color(0.3, 0.45, 0.85)
+		WorldGrid.TileKind.GYM_DOOR:
+			return Color(0.85, 0.65, 0.2)
 		WorldGrid.TileKind.GYM_FLOOR:
 			return Color(0.6, 0.55, 0.35)
 		_:

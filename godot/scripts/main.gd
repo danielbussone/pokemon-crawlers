@@ -2,13 +2,14 @@ extends Node3D
 ## Game flow: starter pick → 3D exploration → combat overlays → draft/shop →
 ## Boulder Badge or defeat. The world and all UI are generated in code.
 
-var world: WorldBuilder
+var world: WorldMapBuilder
 var player: PlayerController
 var hud: GameHUD
 var combat_ui: CombatUI
 var current_marker: EncounterMarker
 var _shop_open := false
 var _shop_cooldown_end_ms := 0
+var _shop_entry_cell := Vector2i.ZERO
 
 
 func _ready() -> void:
@@ -64,7 +65,7 @@ func _on_starter_picked(starter_id: String, appearance_id: String, starter_ui: S
 	starter_ui.queue_free()
 	Run.start_run(starter_id, appearance_id)
 
-	world = WorldBuilder.new()
+	world = WorldMapBuilder.new()
 	add_child(world)
 	world.build(Run.encounters)
 	world.encounter_triggered.connect(_on_encounter_triggered)
@@ -83,7 +84,7 @@ func _on_starter_picked(starter_id: String, appearance_id: String, starter_ui: S
 	player.tile_entered.connect(hud.minimap.mark_visited)
 	hud.toast("Defeat all 13 encounters on the road to Brock!")
 
-	world.set_active_marker(Run.encounter_index)
+	world.set_active_marker(Run.active_marker_index())
 
 
 # --- Combat flow ---
@@ -92,14 +93,29 @@ func _on_encounter_triggered(marker: EncounterMarker) -> void:
 	if combat_ui != null or Run.run_over:
 		return
 	current_marker = marker
+	_snap_player_toward_marker(marker)
 	player.frozen = true
 	hud.set_minimap_visible(false)
 	hud.set_party_above_combat(true)
 	player.set_combat_view(true)
-	var ctx := Run.begin_combat()
+	var ctx := Run.begin_combat_at(current_marker.encounter_index)
 	combat_ui = CombatUI.new(ctx, marker)
 	add_child(combat_ui)
 	combat_ui.finished.connect(_on_combat_finished)
+
+
+func _snap_player_toward_marker(marker: EncounterMarker) -> void:
+	var enc_cell := world.encounter_cell(marker.encounter_index)
+	var delta := enc_cell - player.grid_pos
+	if delta == Vector2i.ZERO:
+		return
+	var facing := WorldGrid.Facing.NORTH
+	if abs(delta.x) > abs(delta.y):
+		facing = WorldGrid.Facing.EAST if delta.x > 0 else WorldGrid.Facing.WEST
+	elif delta.y != 0:
+		facing = WorldGrid.Facing.SOUTH if delta.y > 0 else WorldGrid.Facing.NORTH
+	player.facing = facing
+	player.rotation.y = WorldGrid.yaw_for_facing(facing)
 
 
 func _on_combat_finished(win: bool) -> void:
@@ -147,7 +163,7 @@ func _post_fight(result: Dictionary) -> void:
 		add_child(EndUI.new(true))
 		return
 	hud.set_minimap_visible(true)
-	world.set_active_marker(Run.encounter_index)
+	world.set_active_marker(Run.active_marker_index())
 	player.frozen = false
 
 
@@ -164,7 +180,10 @@ func _on_shop_entered(window: int, kind: String) -> void:
 		return
 
 	_shop_open = true
+	_shop_entry_cell = player.grid_pos
 	player.frozen = true
+	world.visible = false
+	hud.set_minimap_visible(false)
 	var shop := ShopUI.new(window, kind)
 	add_child(shop)
 	shop.closed.connect(_on_shop_closed.bind(shop))
@@ -174,6 +193,10 @@ func _on_shop_closed(shop: ShopUI) -> void:
 	shop.queue_free()
 	_shop_open = false
 	_shop_cooldown_end_ms = Time.get_ticks_msec() + 1500
+	world.visible = true
+	hud.set_minimap_visible(true)
+	var approach := world.shop_approach_facing(_shop_entry_cell)
+	player.warp_to(_shop_entry_cell, approach)
 	player.frozen = false
 	hud.refresh()
 
@@ -206,7 +229,7 @@ func _run_visualcheck() -> void:
 			appearance_id = a.substr("--appearance=".length())
 	Run.start_run(starter_id, appearance_id)
 
-	world = WorldBuilder.new()
+	world = WorldMapBuilder.new()
 	add_child(world)
 	world.build(Run.encounters)
 	world.encounter_triggered.connect(_on_encounter_triggered)
@@ -223,7 +246,7 @@ func _run_visualcheck() -> void:
 	add_child(hud)
 	hud.minimap.grid = world.grid
 	player.tile_entered.connect(hud.minimap.mark_visited)
-	world.set_active_marker(Run.encounter_index)
+	world.set_active_marker(Run.active_marker_index())
 
 	for _i in 4:
 		await get_tree().process_frame

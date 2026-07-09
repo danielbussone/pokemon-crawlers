@@ -6,6 +6,9 @@ extends CanvasLayer
 
 signal closed
 
+const CENTER_SPLASH := "res://art/ui/pokemon_center_splash.jpg"
+const MART_SPLASH := "res://art/ui/pokemart_splash.jpg"
+
 var window: int = 1
 var kind: String = "center"  # "center" or "mart"
 
@@ -23,17 +26,63 @@ func _init(p_window: int, p_kind: String = "center") -> void:
 
 
 func _ready() -> void:
-	var dim := ColorRect.new()
-	dim.color = Color(0, 0, 0, 0.55)
-	dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	add_child(dim)
+	_build_background()
+	_build_shop_panel()
+	_refresh()
 
+
+func _load_interior_texture(path: String) -> Texture2D:
+	var tex := load(path) as Texture2D
+	if tex != null:
+		return tex
+	# Fallback for dev runs before Godot has imported the JPEG.
+	var img := Image.new()
+	var err := img.load(path)
+	if err != OK or img.is_empty():
+		push_warning("ShopUI: could not load interior art at %s (err %s)" % [path, err])
+		return null
+	return ImageTexture.create_from_image(img)
+
+
+func _build_background() -> void:
+	var tex_path := CENTER_SPLASH if kind == "center" else MART_SPLASH
+	var tex := _load_interior_texture(tex_path)
+
+	var backdrop := ColorRect.new()
+	backdrop.color = Color(0.04, 0.05, 0.08, 1.0)
+	backdrop.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	add_child(backdrop)
+
+	if tex == null:
+		return
+
+	var img := TextureRect.new()
+	img.texture = tex
+	img.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+	img.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	img.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	img.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	add_child(img)
+
+	var shade := ColorRect.new()
+	shade.color = Color(0.02, 0.03, 0.05, 0.35)
+	shade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	add_child(shade)
+
+
+func _build_shop_panel() -> void:
 	var center := CenterContainer.new()
 	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(center)
 
 	var panel := PanelContainer.new()
+	var panel_style := StyleBoxFlat.new()
+	panel_style.bg_color = Color(0.06, 0.07, 0.1, 0.88)
+	panel_style.set_corner_radius_all(10)
+	panel_style.set_content_margin_all(18)
+	panel.add_theme_stylebox_override("panel", panel_style)
 	center.add_child(panel)
+
 	var vbox := VBoxContainer.new()
 	vbox.add_theme_constant_override("separation", 10)
 	vbox.custom_minimum_size = Vector2(420, 0)
@@ -43,6 +92,10 @@ func _ready() -> void:
 	title.text = "POKéMON CENTER" if kind == "center" else "POKé MART"
 	title.add_theme_font_size_override("font_size", 24)
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	if kind == "center":
+		title.add_theme_color_override("font_color", Color(0.95, 0.45, 0.45))
+	else:
+		title.add_theme_color_override("font_color", Color(0.5, 0.65, 0.95))
 	vbox.add_child(title)
 
 	_gold_label = Label.new()
@@ -90,8 +143,6 @@ func _ready() -> void:
 	leave.custom_minimum_size = Vector2(0, 40)
 	leave.pressed.connect(func(): closed.emit())
 	vbox.add_child(leave)
-
-	_refresh()
 
 
 func _on_center_pressed() -> void:

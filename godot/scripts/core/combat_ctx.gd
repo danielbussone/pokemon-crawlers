@@ -163,7 +163,8 @@ func enemy_turn() -> Dictionary:
 			return _turn_result(outcome, action_name, false, false, false, false)
 
 		effect_log = Effects.resolve_enemy_action_effects(action["effects"],
-				bool(action.get("is_attack", false)), enemy, player, enemy.ptype, bal, rng)
+				bool(action.get("is_attack", false)), enemy, player, enemy.ptype, bal, rng,
+				String(action.get("id", "")))
 		acted = true
 
 	if EnemyAI.uses_fixed_pattern(enemy_def):

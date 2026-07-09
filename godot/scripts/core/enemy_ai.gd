@@ -54,11 +54,12 @@ static func advance_boss_pattern_index(enemy_def: Dictionary, current_index: int
 
 
 static func _max_attack_damage(action: Dictionary, enemy_type: String, player_type: String, bal) -> int:
+	var attack_type := Effects.attack_type_for_action(String(action.get("id", "")), enemy_type, bal)
 	var best := 0
 	for eff in action["effects"]:
 		if String(eff.get("type", "")) != "damage":
 			continue
-		best = maxi(best, int(float(eff.get("magnitude", 0)) * bal.type_mod(enemy_type, player_type)))
+		best = maxi(best, int(float(eff.get("magnitude", 0)) * bal.type_mod(attack_type, player_type)))
 	return best
 
 

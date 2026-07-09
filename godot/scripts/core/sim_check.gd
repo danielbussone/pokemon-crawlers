@@ -28,7 +28,15 @@ static func run_batch(runs: int, run_mgr, bal) -> void:
 
 static func _play_run(run_mgr, bal) -> String:
 	while not run_mgr.run_over:
-		var ctx: CombatCtx = run_mgr.begin_combat()
+		var next_idx := -1
+		for i in run_mgr.encounters.size():
+			if run_mgr.can_trigger_encounter(i):
+				next_idx = i
+				break
+		if next_idx < 0:
+			break
+
+		var ctx: CombatCtx = run_mgr.begin_combat_at(next_idx)
 		var outcome := _play_combat(ctx)
 		if outcome != CombatCtx.WIN:
 			run_mgr.after_loss()

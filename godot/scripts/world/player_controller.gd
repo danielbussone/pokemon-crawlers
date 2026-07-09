@@ -108,7 +108,10 @@ func _start_turn(dir: int) -> void:
 	var tween := create_tween()
 	tween.tween_property(self, "rotation:y", rotation.y + delta_yaw, TURN_DURATION) \
 			.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-	tween.tween_callback(_finish_step)
+	tween.tween_callback(func():
+		tile_entered.emit(grid_pos, facing)
+		_finish_step()
+	)
 
 
 func _finish_step() -> void:
