@@ -2,6 +2,8 @@ extends Node3D
 ## Game flow: starter pick → 3D exploration → combat overlays → draft/shop →
 ## Boulder Badge or defeat. The world and all UI are generated in code.
 
+const LearnsetUI = preload("res://scripts/ui/learnset_ui.gd")
+
 var world: WorldMapBuilder
 var player: PlayerController
 var hud: GameHUD
@@ -10,11 +12,16 @@ var current_marker: EncounterMarker
 var _shop_open := false
 var _shop_cooldown_end_ms := 0
 var _shop_entry_cell := Vector2i.ZERO
+var _starting := false
 
 
 func _ready() -> void:
 	if OS.get_cmdline_user_args().has("--simcheck"):
-		SimCheck.run_batch(300, Run, Balance)
+		var engage := SimCheck.DEFAULT_ENGAGEMENT
+		for a in OS.get_cmdline_user_args():
+			if a.begins_with("--engage="):
+				engage = clampf(float(a.substr("--engage=".length())), 0.0, 1.0)
+		SimCheck.run_batch(300, Run, Balance, engage)
 		get_tree().quit()
 		return
 	if OS.get_cmdline_user_args().has("--visualcheck"):
@@ -62,7 +69,16 @@ func _build_environment() -> void:
 
 
 func _on_starter_picked(starter_id: String, appearance_id: String, starter_ui: StarterUI) -> void:
+	if _starting:
+		return
+	_starting = true
+	starter_ui.visible = false
 	starter_ui.queue_free()
+	await get_tree().process_frame
+	_boot_game(starter_id, appearance_id)
+
+
+func _boot_game(starter_id: String, appearance_id: String) -> void:
 	Run.start_run(starter_id, appearance_id)
 
 	world = WorldMapBuilder.new()
@@ -76,12 +92,15 @@ func _on_starter_picked(starter_id: String, appearance_id: String, starter_ui: S
 	player.setup(CreatureFactory.type_color(Run.player.ptype))
 	player.grid = world.grid
 	player.tile_entered.connect(world._on_tile_entered)
+	world.set_encounter_triggers_enabled(false)
 	player.warp_to(world.spawn_cell, WorldGrid.Facing.NORTH)
+	world.set_encounter_triggers_enabled(true)
 
 	hud = GameHUD.new()
 	add_child(hud)
 	hud.minimap.grid = world.grid
 	player.tile_entered.connect(hud.minimap.mark_visited)
+	hud.minimap.mark_visited(player.grid_pos, player.facing)
 	hud.toast("Defeat all 13 encounters on the road to Brock!")
 
 	world.set_active_marker(Run.active_marker_index())
@@ -135,11 +154,32 @@ func _on_combat_finished(win: bool) -> void:
 
 	if int(result["gold"]) > 0:
 		hud.toast("+%dg" % int(result["gold"]))
-	if bool(result["evolved"]):
-		hud.toast("Evolution! Quick Attack became Hyper Fang!")
+	if int(result["xp_gained"]) > 0:
+		hud.toast("+%d XP" % int(result["xp_gained"]))
 	if int(result["shop_window"]) > 0:
 		hud.toast("Shops unlocked — step up to a door to browse.")
 
+	_after_win_learn(result)
+
+
+## Chain: combat win -> learnset (add/replace) -> draft -> post-fight.
+func _after_win_learn(result: Dictionary) -> void:
+	var learn_events: Array = result.get("learn_events", [])
+	if learn_events.is_empty():
+		_offer_draft(result)
+		return
+	var learn_ui := LearnsetUI.new(learn_events)
+	add_child(learn_ui)
+	learn_ui.done.connect(_on_learn_done.bind(learn_ui, result))
+
+
+func _on_learn_done(learn_ui: LearnsetUI, result: Dictionary) -> void:
+	learn_ui.queue_free()
+	hud.refresh()
+	_offer_draft(result)
+
+
+func _offer_draft(result: Dictionary) -> void:
 	var options: Array[String] = result["draft_options"]
 	if not options.is_empty():
 		var draft := DraftUI.new(options)
@@ -240,7 +280,9 @@ func _run_visualcheck() -> void:
 	player.setup(CreatureFactory.type_color(Run.player.ptype))
 	player.grid = world.grid
 	player.tile_entered.connect(world._on_tile_entered)
+	world.set_encounter_triggers_enabled(false)
 	player.warp_to(world.spawn_cell, WorldGrid.Facing.NORTH)
+	world.set_encounter_triggers_enabled(true)
 
 	hud = GameHUD.new()
 	add_child(hud)

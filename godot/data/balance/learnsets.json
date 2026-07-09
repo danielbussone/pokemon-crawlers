@@ -1,0 +1,138 @@
+{
+  "_comment": "Per-starter XP learnset, paced for the FULL 8-gym + Elite 4 arc (not just the 1-gym PoC). starter_deck = the 3-card Normal-filler deck you begin with. Each entry in `lines` is one move 'line' whose stages unlock at cumulative XP: the first stage is ADDED to the deck, later stages REPLACE the previous card in that line (Vine Whip -> Razor Leaf -> Leaf Storm). A stage with xp 0 is granted at run start.",
+
+  "_economy": "XP economy (see constants.json xp): per_wild=10, per_mid_boss=30, per_gym_boss=90. Unlock ladder (cumulative XP): [30, 100, 190, 280, 370, 460, 550, 640, 700]. Whole-arc pacing: full move set by ~gym 8 (minimum path) / ~gym 6 (every optional wild cleared), ~1-2 unlocks per gym. Values PROVISIONAL, to be tuned once the 8-gym run_config exists (Phase 5).",
+
+  "_gym1_target": "Gym 1 (Brock) is reached after 2 mid-bosses + ~10 optional wilds. XP available BEFORE the leader: 60 on the skip path (2 x 30) rising to ~160 with a full wild grind (60 + 10 x 10). Ladder is tuned so move #1 (rung1=30) is guaranteed pre-Brock, and move #2 (rung2=100) is a GRIND REWARD: unreachable on the pure skip path (60 < 100) but attainable with ~4 wilds, giving grinders their second move before the gym leader to make the fight easier. rung3=190 sits above the ~160 grind ceiling, so a full pre-Brock grind yields exactly the 2nd move.",
+
+  "bulbasaur": {
+    "starter_deck": ["tackle", "tackle", "growl"],
+    "lines": [
+      {
+        "name": "Vine Whip",
+        "stages": [
+          { "xp": 0, "card_id": "vine_whip" },
+          { "xp": 100, "card_id": "razor_leaf" },
+          { "xp": 550, "card_id": "leaf_storm" }
+        ]
+      },
+      {
+        "name": "Leech Seed",
+        "stages": [
+          { "xp": 30, "card_id": "leech_seed" },
+          { "xp": 370, "card_id": "giga_drain" }
+        ]
+      },
+      {
+        "name": "Tackle",
+        "stages": [
+          { "xp": 0, "card_id": "tackle" },
+          { "xp": 190, "card_id": "take_down" },
+          { "xp": 640, "card_id": "double_edge" }
+        ]
+      },
+      {
+        "name": "Petal Dance",
+        "stages": [
+          { "xp": 280, "card_id": "petal_dance" }
+        ]
+      },
+      {
+        "name": "Solar Beam",
+        "stages": [
+          { "xp": 460, "card_id": "solar_beam" }
+        ]
+      }
+    ]
+  },
+
+  "squirtle": {
+    "starter_deck": ["tackle", "tackle", "tail_whip"],
+    "lines": [
+      {
+        "name": "Tackle",
+        "stages": [
+          { "xp": 0, "card_id": "tackle" },
+          { "xp": 190, "card_id": "bite" },
+          { "xp": 640, "card_id": "skull_bash" }
+        ]
+      },
+      {
+        "name": "Water Gun",
+        "stages": [
+          { "xp": 0, "card_id": "water_gun" },
+          { "xp": 100, "card_id": "water_pulse" },
+          { "xp": 550, "card_id": "hydro_pump" }
+        ]
+      },
+      {
+        "name": "Bubble",
+        "stages": [
+          { "xp": 30, "card_id": "bubble" },
+          { "xp": 370, "card_id": "bubble_beam" }
+        ]
+      },
+      {
+        "name": "Withdraw",
+        "stages": [
+          { "xp": 0, "card_id": "withdraw" },
+          { "xp": 280, "card_id": "protect" },
+          { "xp": 700, "card_id": "steel_defense" }
+        ]
+      },
+      {
+        "name": "Rain Dance",
+        "stages": [
+          { "xp": 460, "card_id": "rain_dance" }
+        ]
+      }
+    ]
+  },
+
+  "charmander": {
+    "starter_deck": ["scratch", "scratch", "growl"],
+    "lines": [
+      {
+        "name": "Claw",
+        "stages": [
+          { "xp": 0, "card_id": "scratch" },
+          { "xp": 370, "card_id": "slash" },
+          { "xp": 700, "card_id": "dragon_claw" }
+        ]
+      },
+      {
+        "name": "Ember",
+        "stages": [
+          { "xp": 0, "card_id": "ember" },
+          { "xp": 190, "card_id": "flame_burst" },
+          { "xp": 640, "card_id": "flamethrower" }
+        ]
+      },
+      {
+        "name": "Smoke Screen",
+        "stages": [
+          { "xp": 30, "card_id": "smoke_screen" }
+        ]
+      },
+      {
+        "name": "Rage",
+        "stages": [
+          { "xp": 100, "card_id": "rage" },
+          { "xp": 550, "card_id": "dragon_rage" }
+        ]
+      },
+      {
+        "name": "Scary Face",
+        "stages": [
+          { "xp": 280, "card_id": "scary_face" }
+        ]
+      },
+      {
+        "name": "Fire Spin",
+        "stages": [
+          { "xp": 460, "card_id": "fire_spin" }
+        ]
+      }
+    ]
+  }
+}

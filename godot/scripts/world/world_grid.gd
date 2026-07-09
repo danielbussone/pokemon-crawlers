@@ -55,6 +55,13 @@ func is_walkable(cell: Vector2i) -> bool:
 	var kind: int = tiles[cell]
 	if kind == TileKind.WALL:
 		return false
+	if kind == TileKind.OPTIONAL_ENCOUNTER:
+		if run_ref != null:
+			var meta = tile_meta.get(cell)
+			if meta != null and meta.has("encounter_index"):
+				if run_ref.is_optional_cleared(int(meta["encounter_index"])):
+					return true
+		return false
 	if gate_encounter.has(cell) and run_ref != null:
 		var required_slot: int = gate_encounter[cell]
 		if run_ref.encounter_index <= required_slot:

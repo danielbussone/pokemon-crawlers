@@ -32,6 +32,7 @@ var _shop_tex_cache: Dictionary = {}
 var _prop_rng := RandomNumberGenerator.new()
 var _prev_stage_exit_world := Vector2i.ZERO
 var _shop_facings: Dictionary = {}   # shop cell -> approach facing
+var _encounter_triggers_enabled := true
 
 
 func build(encounters: Array[Dictionary]) -> void:
@@ -46,6 +47,13 @@ func build(encounters: Array[Dictionary]) -> void:
 	_build_signs()
 	_add_gym_lighting(_boss_cell)
 	_build_markers(encounters)
+
+
+## Data-only grid build for the headless sim harness: produces the maze layout
+## (tiles, encounter cells, spawn) without instancing any 3D geometry.
+func build_grid_only(encounters: Array[Dictionary]) -> void:
+	_prop_rng.seed = 20260704
+	grid = _build_grid(encounters)
 
 
 func zone_name_for_cell(cell: Vector2i) -> String:
@@ -63,8 +71,19 @@ func zone_name_for_cell(cell: Vector2i) -> String:
 
 
 func clear_marker(index: int) -> void:
-	if index >= 0 and index < markers.size():
-		markers[index].clear()
+	if index < 0 or index >= markers.size():
+		return
+	markers[index].clear()
+	if bool(Run.encounter_at(index).get("is_optional", false)):
+		var cell := encounter_cell(index)
+		if cell == Vector2i.ZERO or grid.kind_at(cell) != WG.TileKind.OPTIONAL_ENCOUNTER:
+			return
+		grid.set_tile(cell, WG.TileKind.CORRIDOR, String(grid.zone_of.get(cell, "")))
+		grid.tile_meta.erase(cell)
+
+
+func set_encounter_triggers_enabled(enabled: bool) -> void:
+	_encounter_triggers_enabled = enabled
 
 
 func set_active_marker(index: int) -> void:
@@ -91,10 +110,11 @@ func encounter_cell(flat_idx: int) -> Vector2i:
 
 
 func _try_trigger_encounter(cell: Vector2i, facing: int) -> bool:
-	var meta = grid.tile_meta.get(cell)
-	if meta != null and meta.has("encounter_index"):
-		if _emit_encounter(int(meta["encounter_index"])):
-			return true
+	if not _encounter_triggers_enabled:
+		return false
+	# Face an adjacent encounter tile to start the fight. Gate and optional wilds
+	# both use a walkable trigger corridor beside a blocked encounter tile, so
+	# the player opts in by turning toward the Pokémon (can walk past otherwise).
 	var front: Vector2i = cell + WG.FACING_DIR[facing]
 	for i in _encounter_cells.size():
 		if _encounter_cells[i] == front and _emit_encounter(i):
@@ -834,8 +854,16 @@ func _build_markers(encounters: Array[Dictionary]) -> void:
 		var marker := EncounterMarker.new()
 		add_child(marker)
 		marker.position = WG.world_pos(_encounter_cells[i])
-		marker.setup(i, enemy_id, display_name)
+		marker.setup(i, enemy_id, display_name, _marker_kind_for(enc))
 		markers.append(marker)
+
+
+func _marker_kind_for(enc: Dictionary) -> int:
+	if bool(enc.get("is_final_boss", false)):
+		return EncounterMarker.MarkerKind.BOSS
+	if bool(enc.get("is_mandatory", false)):
+		return EncounterMarker.MarkerKind.GATE
+	return EncounterMarker.MarkerKind.OPTIONAL
 
 
 func _flat_material(color: Color) -> StandardMaterial3D:

@@ -4,11 +4,21 @@ extends Node3D
 ## Physics-free — the grid (WorldGrid.gate_encounter) decides whether the
 ## player can reach this tile; PlayerController.tile_entered decides when
 ## the fight actually starts.
+##
+## Markers read at a glance by ring color alone (no extra structures — a
+## mandatory fight already reads as such from its blocked chokepoint):
+##   OPTIONAL — cool blue ring, dimmed label; skippable wild.
+##   GATE     — warm gold ring; mandatory funnel fight.
+##   BOSS     — fiery ring; gym leader (already dressed by gym lighting/door).
+
+## Visual/behavioral class of an encounter marker.
+enum MarkerKind { OPTIONAL, GATE, BOSS }
 
 const DUO_GAP := 0.04  # world-space gap between trainer and partner opaque edges
 
 var encounter_index := -1
 var enemy_id := ""
+var marker_kind := MarkerKind.OPTIONAL
 var active := false
 var cleared := false
 
@@ -24,9 +34,11 @@ var _lunge_tween: Tween
 var _lunging := false
 
 
-func setup(p_index: int, p_enemy_id: String, display_name: String) -> void:
+func setup(p_index: int, p_enemy_id: String, display_name: String,
+		p_kind: int = MarkerKind.OPTIONAL) -> void:
 	encounter_index = p_index
 	enemy_id = p_enemy_id
+	marker_kind = p_kind
 
 	_sprite_group = Node3D.new()
 	add_child(_sprite_group)
@@ -70,10 +82,30 @@ func setup(p_index: int, p_enemy_id: String, display_name: String) -> void:
 	_ring.mesh = ring_mesh
 	_ring.position = Vector3(0, 0.05, 0)
 	_ring_mat = StandardMaterial3D.new()
-	_ring_mat.albedo_color = Color(0.5, 0.5, 0.5, 0.6)
+	_ring_mat.albedo_color = _base_color()
 	_ring_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	# Gates/bosses glow so they read as "must fight" even at a distance; wilds
+	# stay flat so they recede as skippable set dressing.
+	if marker_kind != MarkerKind.OPTIONAL:
+		_ring_mat.emission_enabled = true
+		_ring_mat.emission = _base_color()
+		_ring_mat.emission_energy_multiplier = 1.4
 	_ring.material_override = _ring_mat
 	add_child(_ring)
+
+	# Start dimmed; main.gd calls set_active() on the current gate to light it.
+	set_active(false)
+
+
+## Per-kind accent color for the ground ring.
+func _base_color() -> Color:
+	match marker_kind:
+		MarkerKind.GATE:
+			return Color(1.0, 0.78, 0.25)
+		MarkerKind.BOSS:
+			return Color(1.0, 0.45, 0.2)
+		_:
+			return Color(0.45, 0.7, 0.95)
 
 
 static func _companion_species_id(p_enemy_id: String) -> String:
@@ -100,12 +132,20 @@ func set_active(value: bool) -> void:
 	active = value and not cleared
 	if cleared:
 		return
+	var base := _base_color()
 	if active:
-		_ring_mat.albedo_color = Color(1.0, 0.85, 0.25, 0.85)
+		_ring_mat.albedo_color = Color(base.r, base.g, base.b, 0.9)
+		if _ring_mat.emission_enabled:
+			_ring_mat.emission_energy_multiplier = 2.0
 		_label.modulate = Color(1, 1, 1, 1)
 	else:
-		_ring_mat.albedo_color = Color(0.5, 0.5, 0.5, 0.35)
-		_label.modulate = Color(1, 1, 1, 0.55)
+		# Wilds recede (dim, no glow boost); pending gates stay clearly lit.
+		var ring_a := 0.32 if marker_kind == MarkerKind.OPTIONAL else 0.6
+		_ring_mat.albedo_color = Color(base.r, base.g, base.b, ring_a)
+		if _ring_mat.emission_enabled:
+			_ring_mat.emission_energy_multiplier = 1.2
+		var label_a := 0.5 if marker_kind == MarkerKind.OPTIONAL else 0.85
+		_label.modulate = Color(1, 1, 1, label_a)
 
 
 func clear() -> void:
@@ -161,4 +201,5 @@ func _process(delta: float) -> void:
 		_sprite_group.position.y = _creature_base_y + (sin(_t * 2.0 + encounter_index) * 0.5 + 0.5) * 0.1
 	if active:
 		var pulse := 0.6 + 0.3 * sin(_t * 4.0)
-		_ring_mat.albedo_color = Color(1.0, 0.85, 0.25, pulse)
+		var base := _base_color()
+		_ring_mat.albedo_color = Color(base.r, base.g, base.b, pulse)

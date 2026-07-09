@@ -2,16 +2,16 @@
   "bulbasaur": {
     "id": "bulbasaur",
     "name": "Bulbasaur",
-    "deck": ["growl", "growl", "tackle", "tackle", "vine_whip", "harden"]
+    "deck": ["tackle", "tackle", "growl"]
   },
   "squirtle": {
     "id": "squirtle",
     "name": "Squirtle",
-    "deck": ["tackle", "tackle", "tail_whip", "tail_whip", "water_gun", "harden"]
+    "deck": ["tackle", "tackle", "tail_whip"]
   },
   "charmander": {
     "id": "charmander",
     "name": "Charmander",
-    "deck": ["growl", "growl", "scratch", "scratch", "ember", "harden"]
+    "deck": ["scratch", "scratch", "growl"]
   }
 }
