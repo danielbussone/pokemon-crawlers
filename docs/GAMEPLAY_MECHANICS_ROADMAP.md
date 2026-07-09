@@ -2,7 +2,7 @@
 
 Portable copy of the implementation plan. **Workflow: one TODO at a time; manual review before marking complete.**
 
-Last updated: 2026-07-08
+Last updated: 2026-07-09
 
 ---
 
@@ -12,8 +12,8 @@ Last updated: 2026-07-08
 |----|--------|---------|
 | `phase2a-encounter-model` | **DONE** | Mandatory vs optional encounters; `cleared_optional`; optional wilds → gold + draft |
 | `phase2b-stage-layouts` | **DONE** | `stage_layouts.json` + `stage_layout.gd` for Route 1, Viridian Forest, Pewter |
-| `phase2c-world-builder` | **IMPLEMENTED — pending approval** | Maze stamping, shop buildings, interior backgrounds, encounter triggers |
-| `phase2d-triggers-markers` | Pending | Encounter marker visuals (optional vs gate); polish trigger wiring |
+| `phase2c-world-builder` | **DONE** | Maze stamping, shop buildings, interior backgrounds, encounter triggers |
+| `phase2d-triggers-markers` | **IMPLEMENTED — pending approval** | Optional/gate/boss marker visuals; optional wilds skippable (facing only triggers gates) |
 | `phase2e-minimap-sim` | Pending | Minimap fog-of-war; sim_check maze pathfinder |
 | `phase1-learnset-data` | Pending | `learnsets.json`, trim starter decks, new learnset cards |
 | `phase1-learnset-code` | Pending | XP award, learnset UI, wire into main flow |
@@ -22,7 +22,7 @@ Last updated: 2026-07-08
 | `phase5-gyms-content` | Pending | 8 gyms + E4 content and mechanics |
 | `phase6-telemetry` | Pending | Run log metrics + sim_check extensions |
 
-**Current next TODO (after 2c approval):** `phase2d-triggers-markers`
+**Current next TODO (after 2d approval):** `phase2e-minimap-sim`
 
 ---
 
@@ -87,11 +87,17 @@ Last updated: 2026-07-08
 
 ---
 
-## Phase 2 — Remaining (2d, 2e)
+## Phase 2 — Remaining (2e)
 
-### 2d — Triggers & markers
-- `encounter_marker.gd` — visual distinction: optional (dim) vs gate (bright + signage)
-- Confirm `main.gd` trigger logic for all edge cases
+### 2d — Triggers & markers (IMPLEMENTED — pending approval)
+- `encounter_marker.gd` — `MarkerKind {OPTIONAL, GATE, BOSS}`; optional = cool-blue dim
+  ring, gate = warm-gold glowing ring + arch signage ("TRAINER BATTLE"), boss = fiery
+  arch ("GYM LEADER"). Signage fades out with the marker on clear.
+- `world_builder.gd` — `_build_markers` passes kind; `_try_trigger_encounter` now only
+  starts *gate* fights when facing an adjacent tile (their tile is blocked). Optional
+  wilds trigger solely by stepping onto their tile, so they are truly skippable — this
+  also covers the turn-in-place case, since `player_controller._start_turn` emits
+  `tile_entered`.
 
 ### 2e — Minimap & sim
 - Fog-of-war on unexplored tiles
