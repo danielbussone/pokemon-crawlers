@@ -2,6 +2,8 @@ extends Node
 ## Autoload "Run" — full Kanto arc orchestration (port of run_flow.py).
 ## Mandatory gate fights advance encounter_index; optional wilds are tracked separately.
 
+const LearnsetOps = preload("res://scripts/core/learnset_ops.gd")
+
 var rng := RandomNumberGenerator.new()
 var starter_id := ""
 var trainer_appearance := "boy"

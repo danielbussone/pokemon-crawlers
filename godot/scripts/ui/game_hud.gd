@@ -3,6 +3,8 @@ extends CanvasLayer
 ## Exploration HUD: player stats top-left, zone name top-center, minimap
 ## top-right, trainer + starter party strip bottom-left, toasts, movement hint.
 
+const LearnsetOps = preload("res://scripts/core/learnset_ops.gd")
+
 const PARTY_TRAINER_HEIGHT := 150
 const PARTY_POKEMON_HEIGHT := 93  # ~62% of trainer
 const LAYER_NORMAL := 5
@@ -83,7 +85,7 @@ func _ready() -> void:
 			CreatureArt.get_texture(Run.starter_id), PARTY_POKEMON_HEIGHT))
 
 	var hint := Label.new()
-	hint.text = "WASD/QE — move & strafe.  ← → — turn.  Face a Pokémon to battle (or step on its tile).  Doors open shops once unlocked."
+	hint.text = "WASD/QE — move & strafe.  ← → — turn.  Face a Pokémon to battle.  Doors open shops once unlocked."
 	hint.set_anchors_and_offsets_preset(Control.PRESET_CENTER_BOTTOM)
 	hint.offset_bottom = -10
 	hint.grow_horizontal = Control.GROW_DIRECTION_BOTH

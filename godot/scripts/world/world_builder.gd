@@ -32,6 +32,7 @@ var _shop_tex_cache: Dictionary = {}
 var _prop_rng := RandomNumberGenerator.new()
 var _prev_stage_exit_world := Vector2i.ZERO
 var _shop_facings: Dictionary = {}   # shop cell -> approach facing
+var _encounter_triggers_enabled := true
 
 
 func build(encounters: Array[Dictionary]) -> void:
@@ -70,8 +71,19 @@ func zone_name_for_cell(cell: Vector2i) -> String:
 
 
 func clear_marker(index: int) -> void:
-	if index >= 0 and index < markers.size():
-		markers[index].clear()
+	if index < 0 or index >= markers.size():
+		return
+	markers[index].clear()
+	if bool(Run.encounter_at(index).get("is_optional", false)):
+		var cell := encounter_cell(index)
+		if cell == Vector2i.ZERO or grid.kind_at(cell) != WG.TileKind.OPTIONAL_ENCOUNTER:
+			return
+		grid.set_tile(cell, WG.TileKind.CORRIDOR, String(grid.zone_of.get(cell, "")))
+		grid.tile_meta.erase(cell)
+
+
+func set_encounter_triggers_enabled(enabled: bool) -> void:
+	_encounter_triggers_enabled = enabled
 
 
 func set_active_marker(index: int) -> void:
@@ -98,23 +110,14 @@ func encounter_cell(flat_idx: int) -> Vector2i:
 
 
 func _try_trigger_encounter(cell: Vector2i, facing: int) -> bool:
-	# Stepping onto a tile that hosts an encounter starts it. Optional wilds
-	# live on walkable tiles, so this is the deliberate opt-in for them.
-	var meta = grid.tile_meta.get(cell)
-	if meta != null and meta.has("encounter_index"):
-		if _emit_encounter(int(meta["encounter_index"])):
-			return true
-	# Facing an adjacent encounter only starts *gate* fights: their tile is
-	# blocked (WorldGrid.gate_encounter) so it can never be stepped onto, and
-	# they are mandatory. Optionals are intentionally skipped here so the
-	# player can walk past a wild without being dragged into it.
+	if not _encounter_triggers_enabled:
+		return false
+	# Face an adjacent encounter tile to start the fight. Gate and optional wilds
+	# both use a walkable trigger corridor beside a blocked encounter tile, so
+	# the player opts in by turning toward the Pokémon (can walk past otherwise).
 	var front: Vector2i = cell + WG.FACING_DIR[facing]
 	for i in _encounter_cells.size():
-		if _encounter_cells[i] != front:
-			continue
-		if bool(Run.encounter_at(i).get("is_optional", false)):
-			continue
-		if _emit_encounter(i):
+		if _encounter_cells[i] == front and _emit_encounter(i):
 			return true
 	return false
 

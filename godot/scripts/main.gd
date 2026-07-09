@@ -2,6 +2,8 @@ extends Node3D
 ## Game flow: starter pick → 3D exploration → combat overlays → draft/shop →
 ## Boulder Badge or defeat. The world and all UI are generated in code.
 
+const LearnsetUI = preload("res://scripts/ui/learnset_ui.gd")
+
 var world: WorldMapBuilder
 var player: PlayerController
 var hud: GameHUD
@@ -10,6 +12,7 @@ var current_marker: EncounterMarker
 var _shop_open := false
 var _shop_cooldown_end_ms := 0
 var _shop_entry_cell := Vector2i.ZERO
+var _starting := false
 
 
 func _ready() -> void:
@@ -66,7 +69,16 @@ func _build_environment() -> void:
 
 
 func _on_starter_picked(starter_id: String, appearance_id: String, starter_ui: StarterUI) -> void:
+	if _starting:
+		return
+	_starting = true
+	starter_ui.visible = false
 	starter_ui.queue_free()
+	await get_tree().process_frame
+	_boot_game(starter_id, appearance_id)
+
+
+func _boot_game(starter_id: String, appearance_id: String) -> void:
 	Run.start_run(starter_id, appearance_id)
 
 	world = WorldMapBuilder.new()
@@ -80,12 +92,15 @@ func _on_starter_picked(starter_id: String, appearance_id: String, starter_ui: S
 	player.setup(CreatureFactory.type_color(Run.player.ptype))
 	player.grid = world.grid
 	player.tile_entered.connect(world._on_tile_entered)
+	world.set_encounter_triggers_enabled(false)
 	player.warp_to(world.spawn_cell, WorldGrid.Facing.NORTH)
+	world.set_encounter_triggers_enabled(true)
 
 	hud = GameHUD.new()
 	add_child(hud)
 	hud.minimap.grid = world.grid
 	player.tile_entered.connect(hud.minimap.mark_visited)
+	hud.minimap.mark_visited(player.grid_pos, player.facing)
 	hud.toast("Defeat all 13 encounters on the road to Brock!")
 
 	world.set_active_marker(Run.active_marker_index())
@@ -265,7 +280,9 @@ func _run_visualcheck() -> void:
 	player.setup(CreatureFactory.type_color(Run.player.ptype))
 	player.grid = world.grid
 	player.tile_entered.connect(world._on_tile_entered)
+	world.set_encounter_triggers_enabled(false)
 	player.warp_to(world.spawn_cell, WorldGrid.Facing.NORTH)
+	world.set_encounter_triggers_enabled(true)
 
 	hud = GameHUD.new()
 	add_child(hud)
