@@ -14,7 +14,7 @@
   },
   "xp": {
     "per_wild": 10,
-    "per_mid_boss": 25,
-    "per_gym_boss": 40
+    "per_mid_boss": 30,
+    "per_gym_boss": 90
   }
 }
