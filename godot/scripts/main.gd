@@ -139,11 +139,32 @@ func _on_combat_finished(win: bool) -> void:
 
 	if int(result["gold"]) > 0:
 		hud.toast("+%dg" % int(result["gold"]))
-	if bool(result["evolved"]):
-		hud.toast("Evolution! Quick Attack became Hyper Fang!")
+	if int(result["xp_gained"]) > 0:
+		hud.toast("+%d XP" % int(result["xp_gained"]))
 	if int(result["shop_window"]) > 0:
 		hud.toast("Shops unlocked — step up to a door to browse.")
 
+	_after_win_learn(result)
+
+
+## Chain: combat win -> learnset (add/replace) -> draft -> post-fight.
+func _after_win_learn(result: Dictionary) -> void:
+	var learn_events: Array = result.get("learn_events", [])
+	if learn_events.is_empty():
+		_offer_draft(result)
+		return
+	var learn_ui := LearnsetUI.new(learn_events)
+	add_child(learn_ui)
+	learn_ui.done.connect(_on_learn_done.bind(learn_ui, result))
+
+
+func _on_learn_done(learn_ui: LearnsetUI, result: Dictionary) -> void:
+	learn_ui.queue_free()
+	hud.refresh()
+	_offer_draft(result)
+
+
+func _offer_draft(result: Dictionary) -> void:
 	var options: Array[String] = result["draft_options"]
 	if not options.is_empty():
 		var draft := DraftUI.new(options)

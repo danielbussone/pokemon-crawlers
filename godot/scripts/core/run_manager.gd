@@ -53,7 +53,7 @@ func start_run(p_starter_id: String, p_appearance: String = "boy") -> void:
 	player.base_max_stamina = Balance.max_stamina()
 	player.max_stamina = player.base_max_stamina
 	player.current_stamina = player.base_max_stamina
-	player.deck = DeckOps.build_player_deck(p_starter_id, Balance, rng)
+	LearnsetOps.init_run(player, p_starter_id, Balance, rng)
 
 	_build_encounters()
 
@@ -137,8 +137,16 @@ func after_win() -> Dictionary:
 		"shop_window": 0,
 		"run_complete": false,
 		"was_optional": is_optional,
+		"xp_gained": 0,
+		"learn_events": [] as Array,
 	}
 	prepare_between_encounters()
+
+	# XP learnset (Phase 1): award XP for the fight and apply any unlocks. This
+	# replaces the old fixed evolution_after catalyst.
+	var xp_gain := LearnsetOps.xp_for_encounter(enc, Balance)
+	out["xp_gained"] = xp_gain
+	out["learn_events"] = LearnsetOps.award_xp(player, starter_id, Balance, xp_gain)
 
 	var gold_cfg: Dictionary = Balance.economy["gold"]
 	if String(enc.get("gold", "")) == "wild":
@@ -157,11 +165,6 @@ func after_win() -> Dictionary:
 	if is_optional:
 		cleared_optional[_active_encounter_idx] = true
 	else:
-		if bool(enc.get("evolution_after", false)) and not evolution_applied:
-			if Rewards.apply_evolution_catalyst(player, Balance):
-				evolution_applied = true
-				out["evolved"] = true
-
 		if int(enc.get("shop_window_after", 0)) > 0:
 			unlocked_shop_window = int(enc["shop_window_after"])
 			out["shop_window"] = unlocked_shop_window

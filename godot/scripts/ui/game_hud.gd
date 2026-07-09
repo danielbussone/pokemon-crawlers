@@ -111,10 +111,18 @@ func refresh() -> void:
 		for item_id in Run.player.inventory:
 			item_names.append(String(Balance.items[item_id]["name"]))
 		inventory_text = ", ".join(item_names)
-	_stats.text = "HP %d/%d\nGold %dg\nDeck %d cards\nBag: %s\nBadges: %s" % [
+	_stats.text = "HP %d/%d\nGold %dg\nDeck %d cards\n%s\nBag: %s\nBadges: %s" % [
 		Run.player.hp, Run.player.max_hp, Run.player.gold,
-		Run.deck_size(), inventory_text, badge_text,
+		Run.deck_size(), _xp_line(), inventory_text, badge_text,
 	]
+
+
+func _xp_line() -> String:
+	var next: Dictionary = LearnsetOps.next_unlock(Run.player, Run.starter_id, Balance)
+	if next.is_empty():
+		return "XP %d (all moves learned)" % Run.player.xp
+	var move_name := String(Balance.cards[next["card_id"]]["name"])
+	return "XP %d — next: %s in %d" % [Run.player.xp, move_name, int(next["remaining"])]
 
 
 func set_zone(zone: String) -> void:

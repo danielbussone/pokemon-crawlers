@@ -1,11 +1,6 @@
 class_name Rewards
-## Post-combat rewards: draft picks, evolution, badge, signature card (port of rewards.py).
-
-const STARTER_STAB_CARD := {
-	"bulbasaur": "vine_whip",
-	"squirtle": "water_gun",
-	"charmander": "ember",
-}
+## Post-combat rewards: draft picks, badge, signature card (port of rewards.py).
+## Starter-line STAB moves now come from the XP learnset (Phase 1), not draft.
 
 
 static func generate_draft_options(bal, reward_pool: Array, rng: RandomNumberGenerator,
@@ -14,23 +9,6 @@ static func generate_draft_options(bal, reward_pool: Array, rng: RandomNumberGen
 	var count: int = mini(bal.draft_options(), pool.size())
 	if count == 0:
 		return []
-
-	var stab_card := String(STARTER_STAB_CARD.get(starter_id, ""))
-	var inject_stab: bool = stab_card != "" and bal.cards.has(stab_card) \
-			and rng.randf() < bal.stab_chance()
-
-	if inject_stab:
-		var filler: Array = pool.filter(func(card_id): return card_id != stab_card)
-		var need := count - 1
-		if need <= 0:
-			var only: Array[String] = [stab_card]
-			return only
-		if need <= filler.size():
-			var options := _sample(filler, need, rng)
-			options.append(stab_card)
-			DeckOps.shuffle(options, rng)
-			return options
-
 	return _sample(pool, count, rng)
 
 

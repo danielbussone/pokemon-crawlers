@@ -13,3 +13,9 @@ var badge_ids: Array[String] = []
 var gold: int = 0
 var inventory: Array[String] = []
 var center_visits: int = 0
+## XP learnset (Phase 1). `xp` accrues from fights; `learn_progress`/`learn_current`
+## track, per learnset line index, the highest unlocked stage and the card that
+## line currently contributes to the deck (so upgrades can replace it).
+var xp: int = 0
+var learn_progress: Dictionary = {}   # line_index -> highest stage index applied
+var learn_current: Dictionary = {}    # line_index -> current card_id in deck

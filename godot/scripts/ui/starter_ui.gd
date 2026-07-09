@@ -166,7 +166,7 @@ func _ready() -> void:
 		starter_vbox.add_child(type_label)
 
 		var deck_label := Label.new()
-		deck_label.text = _deck_summary(starter)
+		deck_label.text = _deck_summary(starter_id)
 		deck_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		deck_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		deck_label.custom_minimum_size = Vector2(228, 0)
@@ -209,9 +209,9 @@ static func _style_label(label: Label, font_size: int, color: Color = Color.WHIT
 	label.add_theme_color_override("font_outline_color", Color(0.04, 0.05, 0.08, 0.95))
 
 
-func _deck_summary(starter: Dictionary) -> String:
+func _deck_summary(starter_id: String) -> String:
 	var counts := {}
-	for card_id in starter["deck"]:
+	for card_id in LearnsetOps.starting_deck_ids(starter_id, Balance):
 		var card_name := String(Balance.cards[card_id]["name"])
 		counts[card_name] = int(counts.get(card_name, 0)) + 1
 	var parts: Array[String] = []
