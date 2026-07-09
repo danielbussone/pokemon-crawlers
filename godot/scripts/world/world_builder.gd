@@ -48,6 +48,13 @@ func build(encounters: Array[Dictionary]) -> void:
 	_build_markers(encounters)
 
 
+## Data-only grid build for the headless sim harness: produces the maze layout
+## (tiles, encounter cells, spawn) without instancing any 3D geometry.
+func build_grid_only(encounters: Array[Dictionary]) -> void:
+	_prop_rng.seed = 20260704
+	grid = _build_grid(encounters)
+
+
 func zone_name_for_cell(cell: Vector2i) -> String:
 	match String(grid.zone_of.get(cell, "")):
 		"route_viridian":

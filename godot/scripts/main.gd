@@ -14,7 +14,11 @@ var _shop_entry_cell := Vector2i.ZERO
 
 func _ready() -> void:
 	if OS.get_cmdline_user_args().has("--simcheck"):
-		SimCheck.run_batch(300, Run, Balance)
+		var engage := SimCheck.DEFAULT_ENGAGEMENT
+		for a in OS.get_cmdline_user_args():
+			if a.begins_with("--engage="):
+				engage = clampf(float(a.substr("--engage=".length())), 0.0, 1.0)
+		SimCheck.run_batch(300, Run, Balance, engage)
 		get_tree().quit()
 		return
 	if OS.get_cmdline_user_args().has("--visualcheck"):
