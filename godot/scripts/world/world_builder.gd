@@ -91,13 +91,23 @@ func encounter_cell(flat_idx: int) -> Vector2i:
 
 
 func _try_trigger_encounter(cell: Vector2i, facing: int) -> bool:
+	# Stepping onto a tile that hosts an encounter starts it. Optional wilds
+	# live on walkable tiles, so this is the deliberate opt-in for them.
 	var meta = grid.tile_meta.get(cell)
 	if meta != null and meta.has("encounter_index"):
 		if _emit_encounter(int(meta["encounter_index"])):
 			return true
+	# Facing an adjacent encounter only starts *gate* fights: their tile is
+	# blocked (WorldGrid.gate_encounter) so it can never be stepped onto, and
+	# they are mandatory. Optionals are intentionally skipped here so the
+	# player can walk past a wild without being dragged into it.
 	var front: Vector2i = cell + WG.FACING_DIR[facing]
 	for i in _encounter_cells.size():
-		if _encounter_cells[i] == front and _emit_encounter(i):
+		if _encounter_cells[i] != front:
+			continue
+		if bool(Run.encounter_at(i).get("is_optional", false)):
+			continue
+		if _emit_encounter(i):
 			return true
 	return false
 
@@ -834,8 +844,16 @@ func _build_markers(encounters: Array[Dictionary]) -> void:
 		var marker := EncounterMarker.new()
 		add_child(marker)
 		marker.position = WG.world_pos(_encounter_cells[i])
-		marker.setup(i, enemy_id, display_name)
+		marker.setup(i, enemy_id, display_name, _marker_kind_for(enc))
 		markers.append(marker)
+
+
+func _marker_kind_for(enc: Dictionary) -> int:
+	if bool(enc.get("is_final_boss", false)):
+		return EncounterMarker.MarkerKind.BOSS
+	if bool(enc.get("is_mandatory", false)):
+		return EncounterMarker.MarkerKind.GATE
+	return EncounterMarker.MarkerKind.OPTIONAL
 
 
 func _flat_material(color: Color) -> StandardMaterial3D:
