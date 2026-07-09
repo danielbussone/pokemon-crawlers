@@ -15,14 +15,14 @@ Last updated: 2026-07-09
 | `phase2c-world-builder` | **DONE** | Maze stamping, shop buildings, interior backgrounds, encounter triggers |
 | `phase2d-triggers-markers` | **DONE** | Optional/gate/boss ring-color markers; optional wilds skippable (facing only triggers gates) |
 | `phase2e-minimap-sim` | **DONE** | Minimap fog-of-war + explored barriers; sim_check maze pathfinder w/ optional engagement rate |
-| `phase1-learnset-data` | Pending | `learnsets.json`, trim starter decks, new learnset cards |
-| `phase1-learnset-code` | Pending | XP award, learnset UI, wire into main flow |
+| `phase1-learnset-data` | **IMPLEMENTED — pending approval** | `learnsets.json` (move-set chains + XP), new learnset cards, XP constants (starter trim + draft cleanup deferred to code TODO) |
+| `phase1-learnset-code` | Pending | XP award, learnset add/replace UI, wire into main flow; trim `starters.json`, remove STAB injection, clean draft pools |
 | `phase3-upgrades` | Pending | Rare Candy + starter typed-card evolution milestones |
 | `phase4-bills-pc` | Pending | Bill's PC in Pokémon Center after Gym 1 |
 | `phase5-gyms-content` | Pending | 8 gyms + E4 content and mechanics |
 | `phase6-telemetry` | Pending | Run log metrics + sim_check extensions |
 
-**Current next TODO:** `phase1-learnset-data` (Phase 2 complete & approved)
+**Current next TODO:** `phase1-learnset-code` (data implemented; awaiting sign-off on learnset move-set design)
 
 ---
 
@@ -116,14 +116,15 @@ Last updated: 2026-07-09
 
 **Goal:** Fix early-game deck identity. Ships after Phase 2.
 
-### Data
-| File | Change |
-|------|--------|
-| `learnsets.json` | Per-starter `starter_deck` (3 cards) + `learnset[]` with `xp` + `card_id` |
-| `starters.json` | Trim to filler decks |
-| `cards.json` | `bubble`, `leech_seed`, `smokescreen`, `withdraw`, `rage`, `razor_leaf`, `flamethrower`, `bubble_beam` |
-| `constants.json` | `xp_per_wild`, `xp_per_mid_boss`, `xp_per_gym_boss` |
-| `stage_rewards.json` | Remove starter-line moves from draft pools |
+### Data — `phase1-learnset-data` (IMPLEMENTED — pending approval)
+| File | Change | Status |
+|------|--------|--------|
+| `learnsets.json` | Per-starter `starter_deck` (3-card Normal filler) + `lines[]`; each line is a move chain with `stages[]` of `{xp, card_id}`. First stage adds; later stages replace (Vine Whip→Razor Leaf→Leaf Storm). XP thresholds provisional. | ✅ new file |
+| `cards.json` | Added 26 learnset moves: `leech_seed`, `giga_drain`, `razor_leaf`, `leaf_storm`, `take_down`, `double_edge`, `solar_beam`, `petal_dance`, `skull_bash`, `water_pulse`, `hydro_pump`, `bubble`, `bubble_beam`, `withdraw`, `protect`, `steel_defense`, `rain_dance`, `slash`, `dragon_claw`, `flame_burst`, `flamethrower`, `fire_spin`, `smoke_screen`, `scary_face`, `rage`, `dragon_rage` — all using existing effect vocabulary (recoil = self-targeted `ignore_block` damage; burn/leech = `poison` DoT + `heal`). | ✅ |
+| `constants.json` | `xp.per_wild`, `xp.per_mid_boss`, `xp.per_gym_boss` | ✅ |
+| `balance_db.gd` | Load + validate `learnsets` (cards exist, XP non-decreasing per line); validate all `evolves_to` targets; XP + `learnset_for()` accessors | ✅ |
+| `starters.json` | Trim to filler decks | ⏭ deferred to `phase1-learnset-code` (coupled to deck build) |
+| `stage_rewards.json` | Remove starter-line moves from draft pools | ⏭ deferred (coupled to STAB removal) |
 
 ### Code
 | File | Change |

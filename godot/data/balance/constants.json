@@ -11,5 +11,10 @@
   "rewards": {
     "draft_options": 3,
     "starter_stab_draft_chance": 0.15
+  },
+  "xp": {
+    "per_wild": 10,
+    "per_mid_boss": 25,
+    "per_gym_boss": 40
   }
 }

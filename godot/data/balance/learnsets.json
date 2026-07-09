@@ -1,0 +1,134 @@
+{
+  "_comment": "Per-starter XP learnset. starter_deck = the cards you begin the run with (3-card Normal filler). Each entry in `lines` is one move 'line' whose stages unlock at cumulative XP: the first stage is ADDED to the deck, later stages REPLACE the previous card in that line (Vine Whip -> Razor Leaf -> Leaf Storm). A stage with xp 0 is granted at run start. XP thresholds are PROVISIONAL and meant to be balance-tuned.",
+
+  "bulbasaur": {
+    "starter_deck": ["tackle", "tackle", "growl"],
+    "lines": [
+      {
+        "name": "Vine Whip",
+        "stages": [
+          { "xp": 0, "card_id": "vine_whip" },
+          { "xp": 40, "card_id": "razor_leaf" },
+          { "xp": 110, "card_id": "leaf_storm" }
+        ]
+      },
+      {
+        "name": "Leech Seed",
+        "stages": [
+          { "xp": 20, "card_id": "leech_seed" },
+          { "xp": 85, "card_id": "giga_drain" }
+        ]
+      },
+      {
+        "name": "Tackle",
+        "stages": [
+          { "xp": 0, "card_id": "tackle" },
+          { "xp": 55, "card_id": "take_down" },
+          { "xp": 120, "card_id": "double_edge" }
+        ]
+      },
+      {
+        "name": "Solar Beam",
+        "stages": [
+          { "xp": 95, "card_id": "solar_beam" }
+        ]
+      },
+      {
+        "name": "Petal Dance",
+        "stages": [
+          { "xp": 70, "card_id": "petal_dance" }
+        ]
+      }
+    ]
+  },
+
+  "squirtle": {
+    "starter_deck": ["tackle", "tackle", "tail_whip"],
+    "lines": [
+      {
+        "name": "Tackle",
+        "stages": [
+          { "xp": 0, "card_id": "tackle" },
+          { "xp": 55, "card_id": "bite" },
+          { "xp": 120, "card_id": "skull_bash" }
+        ]
+      },
+      {
+        "name": "Water Gun",
+        "stages": [
+          { "xp": 0, "card_id": "water_gun" },
+          { "xp": 40, "card_id": "water_pulse" },
+          { "xp": 110, "card_id": "hydro_pump" }
+        ]
+      },
+      {
+        "name": "Bubble",
+        "stages": [
+          { "xp": 20, "card_id": "bubble" },
+          { "xp": 85, "card_id": "bubble_beam" }
+        ]
+      },
+      {
+        "name": "Withdraw",
+        "stages": [
+          { "xp": 0, "card_id": "withdraw" },
+          { "xp": 60, "card_id": "protect" },
+          { "xp": 125, "card_id": "steel_defense" }
+        ]
+      },
+      {
+        "name": "Rain Dance",
+        "stages": [
+          { "xp": 75, "card_id": "rain_dance" }
+        ]
+      }
+    ]
+  },
+
+  "charmander": {
+    "starter_deck": ["scratch", "scratch", "growl"],
+    "lines": [
+      {
+        "name": "Claw",
+        "stages": [
+          { "xp": 0, "card_id": "scratch" },
+          { "xp": 55, "card_id": "slash" },
+          { "xp": 120, "card_id": "dragon_claw" }
+        ]
+      },
+      {
+        "name": "Ember",
+        "stages": [
+          { "xp": 0, "card_id": "ember" },
+          { "xp": 40, "card_id": "flame_burst" },
+          { "xp": 110, "card_id": "flamethrower" }
+        ]
+      },
+      {
+        "name": "Fire Spin",
+        "stages": [
+          { "xp": 70, "card_id": "fire_spin" }
+        ]
+      },
+      {
+        "name": "Smoke Screen",
+        "stages": [
+          { "xp": 25, "card_id": "smoke_screen" }
+        ]
+      },
+      {
+        "name": "Scary Face",
+        "stages": [
+          { "xp": 50, "card_id": "scary_face" }
+        ]
+      },
+      {
+        "name": "Rage",
+        "stages": [
+          { "xp": 30, "card_id": "rage" },
+          { "xp": 95, "card_id": "dragon_rage" }
+        ]
+      }
+    ]
+  }
+}
