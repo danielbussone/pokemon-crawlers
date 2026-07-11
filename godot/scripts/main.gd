@@ -3,6 +3,8 @@ extends Node3D
 ## Boulder Badge or defeat. The world and all UI are generated in code.
 
 const LearnsetUI = preload("res://scripts/ui/learnset_ui.gd")
+const RareCandyUI = preload("res://scripts/ui/rare_candy_ui.gd")
+const RareCandyOps = preload("res://scripts/core/rare_candy_ops.gd")
 
 var world: WorldMapBuilder
 var player: PlayerController
@@ -21,7 +23,12 @@ func _ready() -> void:
 		for a in OS.get_cmdline_user_args():
 			if a.begins_with("--engage="):
 				engage = clampf(float(a.substr("--engage=".length())), 0.0, 1.0)
-		SimCheck.run_batch(300, Run, Balance, engage)
+		if OS.get_cmdline_user_args().has("--candy-compare"):
+			SimCheck.run_batch(300, Run, Balance, engage, false)  # hoard
+			SimCheck.run_batch(300, Run, Balance, engage, true)   # spend
+		else:
+			SimCheck.run_batch(300, Run, Balance, engage,
+					OS.get_cmdline_user_args().has("--spend-candy"))
 		get_tree().quit()
 		return
 	if OS.get_cmdline_user_args().has("--visualcheck"):
@@ -158,15 +165,17 @@ func _on_combat_finished(win: bool) -> void:
 		hud.toast("+%d XP" % int(result["xp_gained"]))
 	if int(result["shop_window"]) > 0:
 		hud.toast("Shops unlocked — step up to a door to browse.")
+	if int(result.get("rare_candy_gained", 0)) > 0:
+		hud.toast("Found a Rare Candy!")
 
 	_after_win_learn(result)
 
 
-## Chain: combat win -> learnset (add/replace) -> draft -> post-fight.
+## Chain: combat win -> learnset (add/replace) -> Rare Candy -> draft -> post-fight.
 func _after_win_learn(result: Dictionary) -> void:
 	var learn_events: Array = result.get("learn_events", [])
 	if learn_events.is_empty():
-		_offer_draft(result)
+		_offer_rare_candy(result)
 		return
 	var learn_ui := LearnsetUI.new(learn_events)
 	add_child(learn_ui)
@@ -175,6 +184,28 @@ func _after_win_learn(result: Dictionary) -> void:
 
 func _on_learn_done(learn_ui: LearnsetUI, result: Dictionary) -> void:
 	learn_ui.queue_free()
+	hud.refresh()
+	_offer_rare_candy(result)
+
+
+## Offer to spend a Rare Candy token, unless the run just ended (nothing to spend
+## it on) or there are no eligible cards. Skipped tokens stay in the bag for the
+## next boss.
+func _offer_rare_candy(result: Dictionary) -> void:
+	if bool(result["run_complete"]) or not RareCandyOps.has_spendable(Run.player, Balance):
+		_offer_draft(result)
+		return
+	var options := RareCandyOps.evolvable_deck_cards(Run.player, Balance)
+	var candy_ui := RareCandyUI.new(options, Run.player.rare_candy)
+	add_child(candy_ui)
+	candy_ui.done.connect(_on_rare_candy_done.bind(candy_ui, result))
+
+
+func _on_rare_candy_done(pick: String, candy_ui: RareCandyUI, result: Dictionary) -> void:
+	candy_ui.queue_free()
+	if pick != "" and RareCandyOps.spend(Run.player, pick, Balance):
+		var to_name := String(Balance.cards[Balance.cards[pick]["evolves_to"]]["name"])
+		hud.toast("Evolved into %s!" % to_name)
 	hud.refresh()
 	_offer_draft(result)
 

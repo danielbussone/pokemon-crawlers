@@ -2,7 +2,7 @@
 
 Portable copy of the implementation plan. **Workflow: one TODO at a time; manual review before marking complete.**
 
-Last updated: 2026-07-09
+Last updated: 2026-07-10
 
 ---
 
@@ -15,14 +15,14 @@ Last updated: 2026-07-09
 | `phase2c-world-builder` | **DONE** | Maze stamping, shop buildings, interior backgrounds, encounter triggers |
 | `phase2d-triggers-markers` | **DONE** | Optional/gate/boss ring-color markers; optional wilds skippable (facing only triggers gates) |
 | `phase2e-minimap-sim` | **DONE** | Minimap fog-of-war + explored barriers; sim_check maze pathfinder w/ optional engagement rate |
-| `phase1-learnset-data` | **IMPLEMENTED — pending approval** | `learnsets.json` (move-set chains + XP), new learnset cards, XP constants (starter trim + draft cleanup deferred to code TODO) |
-| `phase1-learnset-code` | **IMPLEMENTED — pending approval** | XP award + add/replace learns, learnset UI, HUD XP; trimmed `starters.json`, removed STAB injection, cleaned draft pools |
-| `phase3-upgrades` | Pending | Rare Candy + starter typed-card evolution milestones |
+| `phase1-learnset-data` | **DONE** | `learnsets.json` (move-set chains + XP), new learnset cards, XP constants (merged PR #5) |
+| `phase1-learnset-code` | **DONE** | XP award + add/replace learns, learnset UI, HUD XP; trimmed `starters.json`, removed STAB injection, cleaned draft pools (merged PR #6) |
+| `phase3-upgrades` | **IMPLEMENTED — pending approval** | Rare Candy token (boss drop → evolve a deck card) + starter typed-card evolution damage milestones |
 | `phase4-bills-pc` | Pending | Bill's PC in Pokémon Center after Gym 1 |
 | `phase5-gyms-content` | Pending | 8 gyms + E4 content and mechanics |
 | `phase6-telemetry` | Pending | Run log metrics + sim_check extensions |
 
-**Current next TODO:** `phase3-upgrades` (Phase 1 implemented; awaiting sign-off)
+**Current next TODO:** `phase4-bills-pc` (Phase 3 implemented; awaiting sign-off)
 
 ---
 
@@ -142,10 +142,39 @@ Last updated: 2026-07-09
 
 ---
 
-## Phase 3 — Rare Candy + Starter Evolution
+## Phase 3 — Rare Candy + Starter Evolution (IMPLEMENTED — pending approval)
 
 - **Rare Candy:** boss reward; pick any active-deck card with `evolves_to`; `rare_candy_ui.gd`
 - **Starter typed evolution:** +50% damage on starter-line cards at XP milestones after Gym 2 and Gym 5 (multiplicative per tier default)
+
+### Data
+| File | Change | Status |
+|------|--------|--------|
+| `constants.json` | `rewards.rare_candy_mid_boss`/`rare_candy_gym_boss` (1 each); `starter_evolution.tiers` = `[{at_xp:190, mult:1.5}, {at_xp:460, mult:1.5}]` (provisional, ~Gym 2 / ~Gym 5, unreachable in 1-gym PoC) | ✅ |
+| `balance_db.gd` | `starter_line_cards()`, `starter_evolution_tiers()`, `rare_candy_*()` accessors; validate tiers non-decreasing / positive mult | ✅ |
+
+### Code
+| File | Change | Status |
+|------|--------|--------|
+| `player_state.gd` | `starter_id` + `rare_candy` fields | ✅ |
+| `starter_evo.gd` | `tier()`, `damage_mult()`, `card_damage_mult()` — starter-line buff from XP milestones | ✅ new |
+| `effects.gd` | thread `outgoing_mult` through `resolve_card_effects` → `resolve_effects` → `apply_damage`; multiplied alongside `badge_mult` (starter-line cards only) | ✅ |
+| `rare_candy_ops.gd` | `evolvable_deck_cards()` (deck cards with valid `evolves_to`, **excluding** learnset-managed cards so tokens can't desync XP progression), `has_spendable()`, `spend()` | ✅ new |
+| `rare_candy_ui.gd` | tappable from→to evolve picker + "Save it for later" | ✅ new |
+| `rewards.gd` / `run_manager.gd` | grant tokens (gym boss via `grant_boss_rewards`; mid-bosses in `after_win` so the loop is exercisable pre-Brock); set `player.starter_id`; `after_win` returns `rare_candy_gained` | ✅ |
+| `main.gd` | post-win chain now combat → learnset → **Rare Candy** → draft; "Found/Evolved" toasts | ✅ |
+| `game_hud.gd` | Rare Candy count + starter-evo tier lines | ✅ |
+
+**PoC note:** starter-evolution tiers (190/460 XP) don't fire in the 1-gym PoC (grind ceiling ~160 XP), same posture as Phase 1 — the buff is wired and applies in combat via `resolve_card_effects`, but tier stays 0 (mult 1.0). Rare Candy **is** exercisable: mid-bosses (rival, bug catchers) drop a token spendable on `quick_attack`→`hyper_fang` / poison-powder lines. Sim: 300 runs, 33.7% win, 4.6 optionals, 48.1 steps — no combat regression.
+
+### Manual test checklist (Phase 3)
+- [ ] Beat a mid-boss (rival / bug catcher) → "Found a Rare Candy!" toast; HUD shows `Rare Candy ×1`
+- [ ] After a subsequent win, Rare Candy overlay lists only evolvable **non-starter-line** deck cards (e.g. Quick Attack → Hyper Fang); starter moves absent
+- [ ] Pick a card → every copy evolves, token decrements, "Evolved into …" toast; deck size unchanged
+- [ ] "Save it for later" keeps the token; it re-offers after the next win
+- [ ] `godot --headless --import .` then `--simcheck` passes (needed once so new `class_name`s register)
+
+> **Note:** new `class_name` scripts (`StarterEvo`, `RareCandyOps`, `RareCandyUI`) must be registered via an `--import` pass before a headless `--simcheck`, else `effects.gd` fails to resolve `StarterEvo` and combat errors out. The editor registers them automatically on open.
 
 ---
 
@@ -215,7 +244,7 @@ flowchart TD
 | Map / wilds | `stage_layouts.json`, `stage_layout.gd`, `world_builder.gd`, `world_grid.gd`, `run_manager.gd`, `minimap.gd` |
 | Shops | `shop_ui.gd`, `main.gd`, `art/ui/*_splash.jpg` |
 | XP / Learnset | `learnsets.json`, `learnset_ops.gd`, `learnset_ui.gd`, `player_state.gd` |
-| Rare Candy | `rare_candy_ui.gd`, `items.json`, `deck_ops.gd` |
+| Rare Candy / starter evo | `rare_candy_ui.gd`, `rare_candy_ops.gd`, `starter_evo.gd`, `deck_ops.gd`, `effects.gd`, `constants.json` |
 | Bill's PC | `bills_pc_ui.gd`, `pc_ops.gd`, `shop_ui.gd` |
 | 8 Gyms | `run_config.json`, `enemies.json`, `badges.json`, `cards.json`, `effects.gd` |
 | Harness | `sim_check.gd`, `run_log.gd` |

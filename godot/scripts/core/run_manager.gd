@@ -52,6 +52,7 @@ func start_run(p_starter_id: String, p_appearance: String = "boy") -> void:
 	player.hp = Balance.max_hp()
 	player.max_hp = player.hp
 	player.ptype = String(STARTER_TYPES.get(p_starter_id, "NORMAL"))
+	player.starter_id = p_starter_id
 	player.base_max_stamina = Balance.max_stamina()
 	player.max_stamina = player.base_max_stamina
 	player.current_stamina = player.base_max_stamina
@@ -141,6 +142,7 @@ func after_win() -> Dictionary:
 		"was_optional": is_optional,
 		"xp_gained": 0,
 		"learn_events": [] as Array,
+		"rare_candy_gained": 0,
 	}
 	prepare_between_encounters()
 
@@ -159,6 +161,12 @@ func after_win() -> Dictionary:
 		var amount := int(gold_cfg["mid_boss"])
 		player.gold += amount
 		out["gold"] = amount
+		# Rare Candy (Phase 3): trainer mid-bosses drop a token so the evolve loop
+		# is exercisable before the single gym boss, which ends the PoC run.
+		var candy := Balance.rare_candy_mid_boss()
+		if candy > 0:
+			player.rare_candy += candy
+			out["rare_candy_gained"] = candy
 
 	if bool(enc.get("draft_after", false)):
 		out["draft_options"] = Rewards.generate_draft_options(
@@ -173,6 +181,7 @@ func after_win() -> Dictionary:
 
 		if bool(enc.get("is_final_boss", false)):
 			Rewards.grant_boss_rewards(player, Balance)
+			out["rare_candy_gained"] = Balance.rare_candy_gym_boss()
 			out["run_complete"] = true
 			run_over = true
 			run_won = true

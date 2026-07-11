@@ -93,6 +93,31 @@ func learnset_for(starter_id: String) -> Dictionary:
 	return learnsets.get(starter_id, {})
 
 
+## Set of every card id reachable through a starter's learnset lines (Phase 3).
+## Used to decide which deck cards get the starter-evolution damage buff and,
+## conversely, which are eligible for Rare Candy (learnset cards are excluded so
+## a token can't desync XP progression).
+func starter_line_cards(starter_id: String) -> Dictionary:
+	var out: Dictionary = {}
+	var ls: Dictionary = learnset_for(starter_id)
+	for line in ls.get("lines", []):
+		for stage in line["stages"]:
+			out[String(stage["card_id"])] = true
+	return out
+
+
+func starter_evolution_tiers() -> Array:
+	return constants.get("starter_evolution", {}).get("tiers", [])
+
+
+func rare_candy_mid_boss() -> int:
+	return int(constants["rewards"].get("rare_candy_mid_boss", 0))
+
+
+func rare_candy_gym_boss() -> int:
+	return int(constants["rewards"].get("rare_candy_gym_boss", 0))
+
+
 func type_mod(attacker_type: String, defender_type: String) -> float:
 	return float(type_chart.get(attacker_type + ">" + defender_type, 1.0))
 
@@ -141,7 +166,19 @@ func _validate() -> void:
 	assert(cards.has(run_config["evolution"]["from"]), "Unknown evolution.from card")
 	assert(cards.has(run_config["evolution"]["to"]), "Unknown evolution.to card")
 	assert(badges.has(run_config["badge_id"]), "Unknown badge id")
+	_validate_starter_evolution()
 	StageLayout.validate(self)
+
+
+## Starter-evolution tiers (Phase 3): thresholds must be non-decreasing so the
+## crossed-tier count is monotonic in XP, and each multiplier positive.
+func _validate_starter_evolution() -> void:
+	var prev_xp := -1
+	for tier in starter_evolution_tiers():
+		var at_xp := int(tier["at_xp"])
+		assert(at_xp >= prev_xp, "starter_evolution tiers must be non-decreasing in at_xp")
+		assert(float(tier["damage_mult"]) > 0.0, "starter_evolution damage_mult must be positive")
+		prev_xp = at_xp
 
 
 ## Every learnset references real cards, and each starter has a learnset.

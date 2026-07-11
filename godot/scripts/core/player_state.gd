@@ -13,6 +13,10 @@ var badge_ids: Array[String] = []
 var gold: int = 0
 var inventory: Array[String] = []
 var center_visits: int = 0
+## Starter this run was built from; drives starter-line evolution buffs (Phase 3).
+var starter_id: String = ""
+## Rare Candy tokens (Phase 3): boss drops; spent to evolve an eligible deck card.
+var rare_candy: int = 0
 ## XP learnset (Phase 1). `xp` accrues from fights; `learn_progress`/`learn_current`
 ## track, per learnset line index, the highest unlocked stage and the card that
 ## line currently contributes to the deck (so upgrades can replace it).

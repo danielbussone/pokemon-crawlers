@@ -10,11 +10,20 @@
   },
   "rewards": {
     "draft_options": 3,
-    "starter_stab_draft_chance": 0.15
+    "starter_stab_draft_chance": 0.15,
+    "rare_candy_mid_boss": 1,
+    "rare_candy_gym_boss": 1
   },
   "xp": {
     "per_wild": 10,
     "per_mid_boss": 30,
     "per_gym_boss": 90
+  },
+  "starter_evolution": {
+    "_comment": "Phase 3. Starter-line cards gain a multiplicative damage bonus once XP crosses each tier's threshold. Paced to the learnset ladder so tier 1 lands ~Gym 2 and tier 2 ~Gym 5; provisional and unreachable in the 1-gym PoC.",
+    "tiers": [
+      { "at_xp": 190, "damage_mult": 1.5 },
+      { "at_xp": 460, "damage_mult": 1.5 }
+    ]
   }
 }

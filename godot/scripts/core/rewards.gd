@@ -26,6 +26,7 @@ static func grant_boss_rewards(player: PlayerState, bal) -> void:
 	if not player.badge_ids.has(badge_id):
 		player.badge_ids.append(badge_id)
 	DeckOps.add_card_to_deck(player, String(bal.run_config["signature_card"]))
+	player.rare_candy += bal.rare_candy_gym_boss()
 
 
 static func _sample(pool: Array, count: int, rng: RandomNumberGenerator) -> Array[String]:

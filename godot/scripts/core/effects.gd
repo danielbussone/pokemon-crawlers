@@ -35,7 +35,8 @@ static func apply_blinded_attack_check(attacker: Combatant) -> bool:
 ## Returns {"hp_damage": int, "blocked": bool, "missed_blinded": bool}
 static func apply_damage(base_amount: int, attacker_type: String, defender: Combatant,
 		attacker: Combatant, bal, attacker_badge_ids: Array,
-		is_attack: bool = true, ignore_block: bool = false) -> Dictionary:
+		is_attack: bool = true, ignore_block: bool = false,
+		outgoing_mult: float = 1.0) -> Dictionary:
 	if is_attack and apply_blinded_attack_check(attacker):
 		return {"hp_damage": 0, "blocked": false, "missed_blinded": true}
 
@@ -51,7 +52,8 @@ static func apply_damage(base_amount: int, attacker_type: String, defender: Comb
 	for badge_id in attacker_badge_ids:
 		if bal.badges.has(badge_id):
 			badge_mult *= float(bal.badges[badge_id].get("outgoing_damage_mult", 1.0))
-	amount = int(amount * badge_mult)
+	# `outgoing_mult` carries the starter-evolution buff (Phase 3) for starter-line cards.
+	amount = int(amount * badge_mult * outgoing_mult)
 	amount = maxi(0, amount)
 
 	if amount == 0:
@@ -140,7 +142,7 @@ static func decrement_conditions(c: Combatant) -> void:
 ## Resolves an effect array (card or enemy action). Returns Array of effect-log dicts.
 static func resolve_effects(effects: Array, attacker: Combatant, defender: Combatant,
 		attacker_type: String, bal, player: PlayerState, is_player_attacker: bool,
-		rng: RandomNumberGenerator) -> Array:
+		rng: RandomNumberGenerator, outgoing_mult: float = 1.0) -> Array:
 	var results: Array = []
 	var badge_ids: Array = []
 	if player != null and is_player_attacker:
@@ -153,7 +155,7 @@ static func resolve_effects(effects: Array, attacker: Combatant, defender: Comba
 
 		if eff_type == "damage":
 			var dmg := apply_damage(int(eff.get("magnitude", 0)), attacker_type, target,
-					attacker, bal, badge_ids, true, bool(eff.get("ignore_block", false)))
+					attacker, bal, badge_ids, true, bool(eff.get("ignore_block", false)), outgoing_mult)
 			results.append({"type": "damage", "target_is_player": is_target_player}.merged(dmg))
 		elif eff_type == "block":
 			var block := apply_block(target, int(eff.get("magnitude", 0)))
@@ -180,8 +182,10 @@ static func resolve_effects(effects: Array, attacker: Combatant, defender: Comba
 
 static func resolve_card_effects(card: Dictionary, player: PlayerState, enemy: Combatant,
 		bal, rng: RandomNumberGenerator) -> Array:
+	# Starter-line cards (Phase 3) carry the XP-milestone damage buff.
+	var outgoing_mult := StarterEvo.card_damage_mult(card, player, bal)
 	return resolve_effects(card["effects"], player, enemy, String(card["pokemon_type"]),
-			bal, player, true, rng)
+			bal, player, true, rng, outgoing_mult)
 
 
 static func attack_type_for_action(action_id: String, enemy_type: String, bal) -> String:

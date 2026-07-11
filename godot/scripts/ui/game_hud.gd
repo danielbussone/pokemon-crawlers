@@ -4,6 +4,7 @@ extends CanvasLayer
 ## top-right, trainer + starter party strip bottom-left, toasts, movement hint.
 
 const LearnsetOps = preload("res://scripts/core/learnset_ops.gd")
+const StarterEvo = preload("res://scripts/core/starter_evo.gd")
 
 const PARTY_TRAINER_HEIGHT := 150
 const PARTY_POKEMON_HEIGHT := 93  # ~62% of trainer
@@ -113,9 +114,15 @@ func refresh() -> void:
 		for item_id in Run.player.inventory:
 			item_names.append(String(Balance.items[item_id]["name"]))
 		inventory_text = ", ".join(item_names)
-	_stats.text = "HP %d/%d\nGold %dg\nDeck %d cards\n%s\nBag: %s\nBadges: %s" % [
+	var candy_text := ""
+	if Run.player.rare_candy > 0:
+		candy_text = "\nRare Candy ×%d" % Run.player.rare_candy
+	var evo_tier := StarterEvo.tier(Run.player.xp, Balance)
+	if evo_tier > 0:
+		candy_text += "\nStarter evo: tier %d" % evo_tier
+	_stats.text = "HP %d/%d\nGold %dg\nDeck %d cards\n%s%s\nBag: %s\nBadges: %s" % [
 		Run.player.hp, Run.player.max_hp, Run.player.gold,
-		Run.deck_size(), _xp_line(), inventory_text, badge_text,
+		Run.deck_size(), _xp_line(), candy_text, inventory_text, badge_text,
 	]
 
 
