@@ -47,6 +47,7 @@ func _ready() -> void:
 		"center": items_raw["center"],
 		"inventory": items_raw["inventory"],
 		"gold": items_raw["gold"],
+		"bills_pc": items_raw["bills_pc"],
 	}
 	_validate()
 
@@ -116,6 +117,11 @@ func rare_candy_mid_boss() -> int:
 
 func rare_candy_gym_boss() -> int:
 	return int(constants["rewards"].get("rare_candy_gym_boss", 0))
+
+
+## Bill's PC config (Phase 4): {swap_limit, swap_fee, min_deck_size}.
+func bills_pc() -> Dictionary:
+	return economy["bills_pc"]
 
 
 func type_mod(attacker_type: String, defender_type: String) -> float:

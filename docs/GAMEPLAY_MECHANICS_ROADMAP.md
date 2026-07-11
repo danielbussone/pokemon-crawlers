@@ -17,12 +17,12 @@ Last updated: 2026-07-10
 | `phase2e-minimap-sim` | **DONE** | Minimap fog-of-war + explored barriers; sim_check maze pathfinder w/ optional engagement rate |
 | `phase1-learnset-data` | **DONE** | `learnsets.json` (move-set chains + XP), new learnset cards, XP constants (merged PR #5) |
 | `phase1-learnset-code` | **DONE** | XP award + add/replace learns, learnset UI, HUD XP; trimmed `starters.json`, removed STAB injection, cleaned draft pools (merged PR #6) |
-| `phase3-upgrades` | **IMPLEMENTED — pending approval** | Rare Candy token (boss drop → evolve a deck card) + starter typed-card evolution damage milestones |
-| `phase4-bills-pc` | Pending | Bill's PC in Pokémon Center after Gym 1 |
+| `phase3-upgrades` | **DONE** | Rare Candy token (boss drop → evolve a deck card) + starter typed-card evolution damage milestones (committed `phase3-upgrades` branch) |
+| `phase4-bills-pc` | **IMPLEMENTED — pending approval** | Bill's PC at Centers after first badge: deposit/withdraw cards, 3 swaps/visit, 5g/swap, min deck 5 |
 | `phase5-gyms-content` | Pending | 8 gyms + E4 content and mechanics |
 | `phase6-telemetry` | Pending | Run log metrics + sim_check extensions |
 
-**Current next TODO:** `phase4-bills-pc` (Phase 3 implemented; awaiting sign-off)
+**Current next TODO:** `phase5-gyms-content` (Phase 4 implemented; awaiting sign-off)
 
 ---
 
@@ -178,10 +178,35 @@ Last updated: 2026-07-10
 
 ---
 
-## Phase 4 — Bill's PC
+## Phase 4 — Bill's PC (IMPLEMENTED — pending approval)
 
-After Gym 1. `pc_ops.gd`, `bills_pc_ui.gd`, button in `shop_ui.gd` at Centers.  
-`pc_swap_limit: 3`, `pc_swap_fee: 5`, `pc_min_deck_size: 5`. Resets swaps on Center visit.
+After the first badge. `pc_ops.gd`, `bills_pc_ui.gd`, button in `shop_ui.gd` at Centers.
+`swap_limit: 3`, `swap_fee: 5`, `min_deck_size: 5`. Resets swaps on Center visit.
+
+### Data
+| File | Change | Status |
+|------|--------|--------|
+| `items.json` | `economy.bills_pc` = `{swap_limit:3, swap_fee:5, min_deck_size:5}` | ✅ |
+| `balance_db.gd` | load `bills_pc` into `economy`; `bills_pc()` accessor | ✅ |
+
+### Code
+| File | Change | Status |
+|------|--------|--------|
+| `player_state.gd` | `pc_box: Array[String]` + `pc_swaps_used: int` (fresh per run) | ✅ |
+| `pc_ops.gd` | `unlocked()` (needs a badge), `on_center_visit()` (reset swaps), `deposit()`/`withdraw()` (fee + per-visit limit + min-deck floor), `active_deck_cards/size` (consolidates deck+hand+discard), `swaps_remaining()` | ✅ new |
+| `bills_pc_ui.gd` | two-column deck⇄box swap overlay (layer 12) with per-card deposit/withdraw, live swap/fee/gold status, disabled states | ✅ new |
+| `shop_ui.gd` | badge-gated "Bill's PC" button in the Center panel; `on_center_visit()` swap reset on Center entry | ✅ |
+
+**Design:** a "swap" = one deposit **or** one withdraw; each costs the flat fee and burns one of the 3 per-visit swaps. Deposits can't drop the active deck below `min_deck_size` (keeps it ≥ hand size). Box persists across the run; swap budget refreshes every Center entry.
+
+**PoC note:** strict badge-gated per the locked decision, so Bill's PC is **unreachable in the 1-gym PoC** (the only badge comes from Brock, who ends the run) — dead content until Phase 5 adds post-Gym-1 Centers, same posture as the starter-evo milestones. Ops verified headless (24 assertions: swap limit, fee, min-deck floor, reset, unlock, discard-pile deposits); UI cannot be driven pre-badge.
+
+### Manual test checklist (Phase 4) — needs Phase 5 (a Center after a badge)
+- [ ] "Bill's PC" button hidden at pre-badge Centers, shown after the first badge
+- [ ] Deposit moves a card deck→box, charges 5g, decrements the swap counter
+- [ ] Withdraw moves box→deck, charges 5g, shares the same 3-swap budget
+- [ ] Deposit blocked at min deck size (5) and when gold < fee or swaps exhausted
+- [ ] Leaving and re-entering a Center refreshes the swap budget to 3
 
 ---
 

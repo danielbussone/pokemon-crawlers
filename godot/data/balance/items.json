@@ -69,5 +69,10 @@
     "wild_min": 3,
     "wild_max": 6,
     "mid_boss": 18
+  },
+  "bills_pc": {
+    "swap_limit": 3,
+    "swap_fee": 5,
+    "min_deck_size": 5
   }
 }

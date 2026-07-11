@@ -8,6 +8,8 @@ signal closed
 
 const CENTER_SPLASH := "res://art/ui/pokemon_center_splash.jpg"
 const MART_SPLASH := "res://art/ui/pokemart_splash.jpg"
+const PcOps = preload("res://scripts/core/pc_ops.gd")
+const BillsPcUI = preload("res://scripts/ui/bills_pc_ui.gd")
 
 var window: int = 1
 var kind: String = "center"  # "center" or "mart"
@@ -26,6 +28,8 @@ func _init(p_window: int, p_kind: String = "center") -> void:
 
 
 func _ready() -> void:
+	if kind == "center":
+		PcOps.on_center_visit(Run.player)  # refresh Bill's PC swap budget
 	_build_background()
 	_build_shop_panel()
 	_refresh()
@@ -113,6 +117,13 @@ func _build_shop_panel() -> void:
 		_center_button.custom_minimum_size = Vector2(0, 42)
 		_center_button.pressed.connect(_on_center_pressed)
 		vbox.add_child(_center_button)
+
+		if PcOps.unlocked(Run.player):
+			var pc_button := Button.new()
+			pc_button.text = "Bill's PC — store & swap cards (%dg/swap)" % PcOps.swap_fee(Balance)
+			pc_button.custom_minimum_size = Vector2(0, 42)
+			pc_button.pressed.connect(_on_bills_pc_pressed)
+			vbox.add_child(pc_button)
 	else:
 		for item in ShopOps.items_for_shop_window(Balance, window):
 			var item_id := String(item["id"])
@@ -151,6 +162,14 @@ func _on_center_pressed() -> void:
 	else:
 		_feedback.text = "Not enough gold."
 	_refresh()
+
+
+func _on_bills_pc_pressed() -> void:
+	var pc := BillsPcUI.new()
+	add_child(pc)
+	pc.closed.connect(func():
+		pc.queue_free()
+		_refresh())
 
 
 func _on_item_pressed(item_id: String) -> void:

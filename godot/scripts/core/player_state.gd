@@ -17,6 +17,10 @@ var center_visits: int = 0
 var starter_id: String = ""
 ## Rare Candy tokens (Phase 3): boss drops; spent to evolve an eligible deck card.
 var rare_candy: int = 0
+## Bill's PC (Phase 4): cards deposited out of the active deck, and swaps spent
+## this Center visit (reset on each Center entry).
+var pc_box: Array[String] = []
+var pc_swaps_used: int = 0
 ## XP learnset (Phase 1). `xp` accrues from fights; `learn_progress`/`learn_current`
 ## track, per learnset line index, the highest unlocked stage and the card that
 ## line currently contributes to the deck (so upgrades can replace it).
