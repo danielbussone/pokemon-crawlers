@@ -21,12 +21,12 @@ Last updated: 2026-07-10
 | `phase4-bills-pc` | **IMPLEMENTED — pending approval** | Bill's PC at Centers after first badge: deposit/withdraw cards, 3 swaps/visit, 5g/swap, min deck 5 |
 | `phase5a-gym-engine` | **IMPLEMENTED — pending approval** | Data-driven N-gym run loop: uniform `segments[]`; every leader grants badge+signature+rare candy and **continues**, only the `is_final` leader ends the run; sim + validation scale to N. (world_builder zone/gym de-hardcoding deferred to `phase5-map-format`) |
 | `phase5-map-format` | **IMPLEMENTED — pending approval** | ASCII-grid-in-JSON layouts + parser; migrated the 3 stages; optional-wild count/placement now from the grid (`w` cells); zone names + gym anchors data-driven; reachability validation |
-| `phase5-map-editor` | **Planned** | In-engine paint tool (`--mapeditor`) over the grid format: terrain + encounter palettes, click-to-paint, load/save JSON, live spawn→gate reachability validation |
+| `phase5-map-editor` | **IMPLEMENTED — pending approval** | In-engine paint tool (`--mapeditor`): full terrain+encounter palette, click/drag paint, metadata panel, stage picker / new / resize, save to JSON, live validation. Gate funnel now auto-derived (no hand-authoring) |
 | `phase5b-gym-mechanics` | Pending | New combat mechanics (stamina drain, multi-status/action, stacking poison+evasion, hand shuffle, arena lava tick, multi-phase boss, escalating Center costs) + badge-passive schema |
 | `phase5c-gym-content` | Pending | Author 8 gyms + E4 with the editor: Pokémon, leaders, badges, signature cards, draft pools, maze layouts; balance pass |
 | `phase6-telemetry` | Pending | Run log metrics + sim_check extensions |
 
-**Current next TODO:** `phase5-map-editor` (5a + map-format implemented, awaiting sign-off). Editor lands before `phase5c` content authoring.
+**Current next TODO:** `phase5b-gym-mechanics` (5a + map-format + editor implemented, awaiting sign-off). Content (`phase5c`) can now be authored with the editor.
 
 ---
 
@@ -304,9 +304,23 @@ road, tree vs wall visuals) — the renderer still collapses barrier→wall and 
   added later by the tool; the renderer collapses subtypes to default floor/wall until
   per-cell terrain rendering exists.
 
-**Editor** (`phase5-map-editor`): in-engine standalone scene (`--mapeditor`) reusing the
-`world_grid`/tile rendering — grid canvas, terrain + encounter palette sidebar,
-click-to-paint, load/save the JSON `grid`, live spawn→gate reachability validation.
+**Editor** (`phase5-map-editor` — IMPLEMENTED): `godot --path . -- --mapeditor` opens
+`scripts/tools/map_editor.gd` (2D `Control`, `_draw`-based canvas like the minimap).
+- Full palette (walkable/barrier subtypes + objects `S X c m w L D`), click **and drag** to paint.
+- Metadata side-panel: `display_name`, `template`, `gym_name`, `gate_facing`, shop windows.
+- Toolbar: stage picker (loads from `stage_layouts.json`), New stage, Rows/Cols + Resize, Save.
+- Live validation strip: equal rows, exactly one `S`/`L`, spawn→leader reachable, no sealed wilds.
+- Reads/writes the JSON directly (bypasses Balance validation so in-progress maps are editable).
+
+**Gate funnel is now auto-derived** (not authored): the engine blocks the leader cell + every
+walkable cell north of it until the gate clears (`world_builder._place_mandatory_gate`);
+`funnel_cells` removed from the format. Verified: simcheck still gates correctly (~35–42%).
+
+**Verified (editor):** headless logic harness (15 checks: 3 stages round-trip grid↔rows +
+validate clean; validator catches missing/dup spawn/leader, ragged rows, unreachable leader,
+sealed wild; blank-stage borders) and a headless `_ready` boot (UI builds, file loads, first
+stage selects — no runtime errors). The click-paint GUI itself needs a real display; couldn't
+screenshot here (no Vulkan surface), so eyeball the canvas on first run.
 
 ---
 

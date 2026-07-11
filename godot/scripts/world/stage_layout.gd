@@ -135,13 +135,6 @@ static func _walkable_neighbor(p: Dictionary, cell: Vector2i) -> Vector2i:
 	return cell
 
 
-static func funnel_cells_local(bal, stage_id: String) -> Array[Vector2i]:
-	var out: Array[Vector2i] = []
-	for pair in layout_for(bal, stage_id).get("funnel_cells", []):
-		out.append(vec2_from_json(pair))
-	return out
-
-
 static func shop_cells_local(bal, stage_id: String) -> Dictionary:
 	return parsed(bal, stage_id)["shops"].duplicate()
 

@@ -35,6 +35,13 @@ func _ready() -> void:
 		await _run_visualcheck()
 		get_tree().quit()
 		return
+	if OS.get_cmdline_user_args().has("--mapeditor"):
+		# Dev map editor: replace the game with the 2D editor UI (needs a window).
+		var editor := preload("res://scripts/tools/map_editor.gd").new()
+		var layer := CanvasLayer.new()
+		add_child(layer)
+		layer.add_child(editor)
+		return
 	_build_environment()
 	var starter_ui := StarterUI.new()
 	add_child(starter_ui)

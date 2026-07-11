@@ -1,12 +1,11 @@
 {
-  "_legend": "Phase 5 map format. `grid` rows (equal length) are the stage geometry. Barrier: # wall, T tree, H hedge, ^ mountain, B building. Walkable: . grass, = road, , dirt, _ interior/gym floor. Objects (walkable): S spawn, X exit, c center, m mart, w wild encounter, L leader gate, D gym door. The leader's trigger cell + north facing are derived from the south→north arc; funnel_cells still list the chokepoint blocked until the gate clears.",
+  "_legend": "Phase 5 map format. `grid` rows (equal length) are the stage geometry. Barrier: # wall, T tree, H hedge, ^ mountain, B building. Walkable: . grass, = road, , dirt, _ interior/gym floor. Objects (walkable): S spawn, X exit, c center, m mart, w wild encounter, L leader gate, D gym door. The leader's trigger cell + north facing are derived from the south→north arc; the gate auto-blocks the leader cell and every walkable cell north of it until cleared.",
   "stages": {
     "route_viridian": {
       "id": "route_viridian",
       "template": "open_field",
       "display_name": "Route 1 — Viridian Outskirts",
       "gate_facing": "north",
-      "funnel_cells": [[4, 1], [5, 1], [6, 1]],
       "shop_windows": { "center": 1, "mart": 1 },
       "grid": [
         "#####X#####",
@@ -25,7 +24,6 @@
       "template": "forest_maze",
       "display_name": "Viridian Forest",
       "gate_facing": "north",
-      "funnel_cells": [[4, 1], [5, 1], [6, 1]],
       "shop_windows": { "center": 1, "mart": 2 },
       "grid": [
         "#####X#####",
@@ -47,7 +45,6 @@
       "display_name": "Pewter City",
       "gym_name": "Pewter Gym",
       "gate_facing": "north",
-      "funnel_cells": [],
       "shop_windows": { "center": 1, "mart": 2 },
       "grid": [
         "#####_L_#####",

@@ -202,11 +202,6 @@ func _stamp_stage(g, stage_id: String, origin: Vector2i,
 			var enc_zone := "gym" if bool(enc.get("is_final_boss", false)) else zone_id
 			_place_mandatory_gate(g, gate, origin, enc_zone, flat_i, enc, stage_id)
 
-	for cell in StageLayout.funnel_cells_local(Balance, stage_id):
-		var world_cell := StageLayout.local_to_world(cell, origin)
-		if g.kind_at(world_cell) == WG.TileKind.CORRIDOR:
-			g.set_tile(world_cell, WG.TileKind.CORRIDOR, zone_id)
-
 	_stamp_shops(g, stage_id, origin, zone_id)
 
 
@@ -232,12 +227,12 @@ func _place_mandatory_gate(g, gate: Dictionary, origin: Vector2i, zone_id: Strin
 	g.tile_meta[encounter_world] = {"encounter_index": flat_idx}
 	_encounter_cells[flat_idx] = encounter_world
 
-	_gate_block_cells(g, mandatory_slot, [
-		encounter_world,
-		StageLayout.local_to_world(StageLayout.exit_local(Balance, stage_id), origin),
-	])
+	# Auto-funnel (Phase 5 map-editor): block the gate cell plus every walkable
+	# cell north of it (progression direction) until this gate clears, so the
+	# player can't slip around it to the exit. Replaces hand-listed funnel_cells.
 	var enc_local: Vector2i = gate["encounter"]
-	for cell in StageLayout.funnel_cells_local(Balance, stage_id):
+	_gate_block_cells(g, mandatory_slot, [encounter_world])
+	for cell in StageLayout.parsed(Balance, stage_id)["walkable"]:
 		if cell.y < enc_local.y:
 			_gate_block_cells(g, mandatory_slot, [StageLayout.local_to_world(cell, origin)])
 
