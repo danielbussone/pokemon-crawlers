@@ -57,17 +57,12 @@ func build_grid_only(encounters: Array[Dictionary]) -> void:
 
 
 func zone_name_for_cell(cell: Vector2i) -> String:
-	match String(grid.zone_of.get(cell, "")):
-		"route_viridian":
-			return "Route 1 — Viridian Outskirts"
-		"viridian_forest":
-			return "Viridian Forest"
-		"pewter":
-			return "Pewter City"
-		"gym":
-			return "Pewter Gym"
-		_:
-			return ""
+	var zone := String(grid.zone_of.get(cell, ""))
+	if zone == "":
+		return ""
+	if zone == "gym":
+		return StageLayout.gym_display_name(Balance)
+	return StageLayout.display_name(Balance, zone)
 
 
 func clear_marker(index: int) -> void:
@@ -183,14 +178,14 @@ func _stamp_stage(g, stage_id: String, origin: Vector2i,
 			else:
 				g.set_tile(world_cell, WG.TileKind.CORRIDOR, zone_id)
 
-	if stage_id == "pewter":
-		for cell in StageLayout.gym_floor_cells_local(Balance, stage_id):
-			var world_cell := StageLayout.local_to_world(cell, origin)
-			g.set_tile(world_cell, WG.TileKind.GYM_FLOOR, "gym")
-		var door_local := StageLayout.gym_door_local(Balance, stage_id)
-		if door_local.x >= 0:
-			var door_world := StageLayout.local_to_world(door_local, origin)
-			g.set_tile(door_world, WG.TileKind.GYM_DOOR, zone_id)
+	# Gym anchors come from the grid ('_' floor, 'D' door); no-ops for non-gym stages.
+	for cell in StageLayout.gym_floor_cells_local(Balance, stage_id):
+		var gym_world := StageLayout.local_to_world(cell, origin)
+		g.set_tile(gym_world, WG.TileKind.GYM_FLOOR, "gym")
+	var door_local := StageLayout.gym_door_local(Balance, stage_id)
+	if door_local.x >= 0:
+		var door_world := StageLayout.local_to_world(door_local, origin)
+		g.set_tile(door_world, WG.TileKind.GYM_DOOR, zone_id)
 
 	var opt_spawns := StageLayout.optional_spawns_local(Balance, stage_id)
 	var opt_idx := 0

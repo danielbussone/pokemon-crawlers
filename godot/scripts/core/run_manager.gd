@@ -3,6 +3,7 @@ extends Node
 ## Mandatory gate fights advance encounter_index; optional wilds are tracked separately.
 
 const LearnsetOps = preload("res://scripts/core/learnset_ops.gd")
+const StageLayout = preload("res://scripts/world/stage_layout.gd")
 
 var rng := RandomNumberGenerator.new()
 var starter_id := ""
@@ -18,7 +19,6 @@ var optional_encounters: Array[Dictionary] = []
 var encounter_index := 0
 ## flat_index -> true for cleared optional wilds.
 var cleared_optional: Dictionary = {}
-var evolution_applied := false
 var unlocked_shop_window := 0  # 0 = none, 1 = after Rival, 2 = after Bug Catcher
 var run_over := false
 var run_won := false
@@ -40,7 +40,6 @@ func _ready() -> void:
 func start_run(p_starter_id: String, p_appearance: String = "boy") -> void:
 	starter_id = p_starter_id
 	trainer_appearance = p_appearance
-	evolution_applied = false
 	encounter_index = 0
 	cleared_optional.clear()
 	unlocked_shop_window = 0
@@ -161,12 +160,6 @@ func after_win() -> Dictionary:
 		var amount := int(gold_cfg["mid_boss"])
 		player.gold += amount
 		out["gold"] = amount
-		# Rare Candy (Phase 3): trainer mid-bosses drop a token so the evolve loop
-		# is exercisable before the single gym boss, which ends the PoC run.
-		var candy := Balance.rare_candy_mid_boss()
-		if candy > 0:
-			player.rare_candy += candy
-			out["rare_candy_gained"] = candy
 
 	if bool(enc.get("draft_after", false)):
 		out["draft_options"] = Rewards.generate_draft_options(
@@ -175,13 +168,14 @@ func after_win() -> Dictionary:
 	if is_optional:
 		cleared_optional[_active_encounter_idx] = true
 	else:
+		# Every leader grants its badge/signature/rare candy (Phase 5a); the run
+		# continues unless this is the final leader.
+		out["rare_candy_gained"] = Rewards.grant_leader_rewards(player, enc, Balance)
 		if int(enc.get("shop_window_after", 0)) > 0:
 			unlocked_shop_window = int(enc["shop_window_after"])
 			out["shop_window"] = unlocked_shop_window
 
 		if bool(enc.get("is_final_boss", false)):
-			Rewards.grant_boss_rewards(player, Balance)
-			out["rare_candy_gained"] = Balance.rare_candy_gym_boss()
 			out["run_complete"] = true
 			run_over = true
 			run_won = true
@@ -214,60 +208,27 @@ func deck_size() -> int:
 	return player.deck.size() + player.hand.size() + player.discard.size()
 
 
+## Phase 5a: one uniform pass over gym segments. Each segment lays down its
+## optional wilds, then a single mandatory leader gate. A leader grants its
+## badge/signature/rare candy and the run continues; only the `is_final` leader
+## ends it (handled in after_win).
 func _build_encounters() -> void:
 	encounters.clear()
 	mandatory_encounters.clear()
 	optional_encounters.clear()
 	var mandatory_slot := 0
-	var trigger := String(Balance.run_config.get("evolution_trigger", "post_rival"))
 
-	for stage in Balance.run_config["stages"]:
-		var stage_id := String(stage["id"])
-		var gate_id := stage_id
-
-		for _i in int(stage["wild_count"]):
-			var pool: Array = stage["wild_pool"]
-			_append_encounter(_make_optional_wild(
-					String(pool[rng.randi_range(0, pool.size() - 1)]),
-					stage_id,
-					String(stage["reward_pool_key"]),
-					gate_id,
-			))
-
-		var mid_boss_id := _resolve_mid_boss_id(stage)
-		var evolution_after := (trigger == "post_rival" and stage_id == "route_viridian") \
-				or (trigger == "post_bug_catcher" and stage_id == "viridian_forest")
-		_append_encounter(_make_mandatory_gate(
-				mid_boss_id,
-				"midboss",
-				stage_id,
-				String(stage["reward_pool_key"]),
-				mandatory_slot,
-				gate_id,
-				int(stage["shop_window"]) if bool(stage["shop_after"]) else 0,
-				evolution_after,
-				false,
-		))
+	for segment in Balance.run_config["segments"]:
+		var seg_id := String(segment["id"])
+		var reward_key := String(segment["reward_pool_key"])
+		# Placement/count come from the map grid (Phase 5 map format): one optional
+		# wild per `w` cell, its species drawn from the segment's wild pool.
+		var pool: Array = segment["wild_pool"]
+		for _i in StageLayout.optional_count(Balance, seg_id):
+			var wild_id := String(pool[rng.randi_range(0, pool.size() - 1)])
+			_append_encounter(_make_optional_wild(wild_id, seg_id, reward_key, seg_id))
+		_append_encounter(_make_leader_gate(segment, _resolve_leader_id(segment), mandatory_slot))
 		mandatory_slot += 1
-
-	for enemy_id in Balance.run_config["pewter_encounter_sequence"]:
-		var eid := String(enemy_id)
-		var is_boss := bool(Balance.enemies[eid].get("is_boss", false))
-		if is_boss:
-			_append_encounter(_make_mandatory_gate(
-					eid,
-					"boss",
-					"pewter",
-					"stage3",
-					mandatory_slot,
-					"pewter_gym",
-					0,
-					false,
-					true,
-			))
-			mandatory_slot += 1
-		else:
-			_append_encounter(_make_optional_wild(eid, "pewter", "stage3", "pewter_gym", "pewter"))
 
 
 func _append_encounter(enc: Dictionary) -> void:
@@ -297,33 +258,37 @@ func _make_optional_wild(enemy_id: String, stage_id: String, reward_pool_key: St
 	}
 
 
-func _make_mandatory_gate(enemy_id: String, kind: String, stage_id: String,
-		reward_pool_key: String, mandatory_slot: int, gate_id: String,
-		shop_window_after: int, evolution_after: bool, is_final_boss: bool) -> Dictionary:
+func _resolve_leader_id(segment: Dictionary) -> String:
+	if segment.has("leader_variants"):
+		var variants: Array = segment["leader_variants"]
+		return String(variants[rng.randi_range(0, variants.size() - 1)])
+	var leader := String(segment["leader"])
+	if leader == Rivals.RIVAL_SENTINEL:
+		return Rivals.resolve_rival_enemy_id(starter_id)
+	return leader
+
+
+func _make_leader_gate(segment: Dictionary, enemy_id: String, mandatory_slot: int) -> Dictionary:
+	var seg_id := String(segment["id"])
+	var kind := String(segment.get("leader_kind", "trainer"))
 	return {
 		"kind": kind,
 		"enemy_id": enemy_id,
-		"stage_id": stage_id,
-		"reward_pool_key": reward_pool_key,
-		"gate_id": gate_id,
+		"stage_id": seg_id,
+		"reward_pool_key": String(segment["reward_pool_key"]),
+		"gate_id": seg_id,
 		"is_mandatory": true,
 		"is_optional": false,
 		"mandatory_slot": mandatory_slot,
 		"draft_after": false,
-		"gold": "midboss" if kind == "midboss" else "",
-		"shop_window_after": shop_window_after,
-		"evolution_after": evolution_after,
-		"is_final_boss": is_final_boss,
+		"gold": String(segment.get("leader_gold", "")),
+		"leader_kind": kind,
+		"badge_id": String(segment.get("badge_id", "")),
+		"signature_card": String(segment.get("signature_card", "")),
+		"shop_window_after": int(segment.get("shop_window", 0)),
+		"is_final_boss": bool(segment.get("is_final", false)),
+		"is_gym": kind == "gym",
 	}
-
-
-func _resolve_mid_boss_id(stage: Dictionary) -> String:
-	if stage.get("mid_boss") != null:
-		if String(stage["mid_boss"]) == Rivals.RIVAL_SENTINEL:
-			return Rivals.resolve_rival_enemy_id(starter_id)
-		return String(stage["mid_boss"])
-	var variants: Array = stage["mid_boss_variants"]
-	return String(variants[rng.randi_range(0, variants.size() - 1)])
 
 
 # --- Input map (defined in code so project.godot stays minimal) ---

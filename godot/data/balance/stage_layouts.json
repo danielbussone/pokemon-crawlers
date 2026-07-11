@@ -1,103 +1,67 @@
 {
+  "_legend": "Phase 5 map format. `grid` rows (equal length) are the stage geometry. Barrier: # wall, T tree, H hedge, ^ mountain, B building. Walkable: . grass, = road, , dirt, _ interior/gym floor. Objects (walkable): S spawn, X exit, c center, m mart, w wild encounter, L leader gate, D gym door. The leader's trigger cell + north facing are derived from the south→north arc; funnel_cells still list the chokepoint blocked until the gate clears.",
   "stages": {
     "route_viridian": {
       "id": "route_viridian",
       "template": "open_field",
-      "size": [11, 9],
-      "spawn": [5, 7],
-      "gate": {
-        "trigger": [5, 3],
-        "encounter": [5, 2],
-        "facing": "north"
-      },
-      "optional_spawns": [
-        { "trigger": [2, 6], "encounter": [2, 5] },
-        { "trigger": [8, 5], "encounter": [8, 4] },
-        { "trigger": [3, 3], "encounter": [2, 3] }
-      ],
+      "display_name": "Route 1 — Viridian Outskirts",
+      "gate_facing": "north",
       "funnel_cells": [[4, 1], [5, 1], [6, 1]],
-      "shops": {
-        "center": [4, 2],
-        "mart": [6, 2]
-      },
       "shop_windows": { "center": 1, "mart": 1 },
-      "blocked_cells": [
-        [0, 0], [1, 0], [2, 0], [3, 0], [4, 0], [6, 0], [7, 0], [8, 0], [9, 0], [10, 0],
-        [0, 8], [1, 8], [2, 8], [3, 8], [4, 8], [6, 8], [7, 8], [8, 8], [9, 8], [10, 8],
-        [0, 1], [0, 2], [0, 3], [0, 4], [0, 5], [0, 6], [0, 7],
-        [10, 1], [10, 2], [10, 3], [10, 4], [10, 5], [10, 6], [10, 7]
-      ],
-      "exit": [5, 0]
+      "grid": [
+        "#####X#####",
+        "#.........#",
+        "#...cLm...#",
+        "#.w.......#",
+        "#.......w.#",
+        "#.w.......#",
+        "#.........#",
+        "#....S....#",
+        "#####.#####"
+      ]
     },
     "viridian_forest": {
       "id": "viridian_forest",
       "template": "forest_maze",
-      "size": [11, 11],
-      "spawn": [5, 9],
-      "gate": {
-        "trigger": [5, 3],
-        "encounter": [5, 2],
-        "facing": "north"
-      },
-      "optional_spawns": [
-        { "trigger": [2, 7], "encounter": [1, 7] },
-        { "trigger": [8, 6], "encounter": [9, 6] },
-        { "trigger": [7, 4], "encounter": [8, 4] }
-      ],
+      "display_name": "Viridian Forest",
+      "gate_facing": "north",
       "funnel_cells": [[4, 1], [5, 1], [6, 1]],
-      "shops": {
-        "center": [4, 2],
-        "mart": [6, 2]
-      },
       "shop_windows": { "center": 1, "mart": 2 },
-      "blocked_cells": [
-        [0, 0], [1, 0], [2, 0], [3, 0], [4, 0], [6, 0], [7, 0], [8, 0], [9, 0], [10, 0],
-        [0, 10], [1, 10], [2, 10], [3, 10], [4, 10], [6, 10], [7, 10], [8, 10], [9, 10], [10, 10],
-        [0, 1], [0, 2], [0, 3], [0, 4], [0, 5], [0, 6], [0, 7], [0, 8], [0, 9],
-        [10, 1], [10, 2], [10, 3], [10, 4], [10, 5], [10, 6], [10, 7], [10, 8], [10, 9],
-        [3, 5], [3, 6], [4, 6], [5, 6], [6, 6], [7, 6], [7, 5],
-        [2, 4], [3, 4], [7, 7], [8, 7]
-      ],
-      "exit": [5, 0]
+      "grid": [
+        "#####X#####",
+        "#.........#",
+        "#...cLm...#",
+        "#.........#",
+        "#.##....w.#",
+        "#..#...#..#",
+        "#..#####.w#",
+        "#w.....##.#",
+        "#.........#",
+        "#....S....#",
+        "#####.#####"
+      ]
     },
     "pewter": {
       "id": "pewter",
       "template": "town_pocket",
-      "size": [13, 11],
-      "spawn": [6, 9],
-      "gate": {
-        "trigger": [6, 1],
-        "encounter": [6, 0],
-        "facing": "north"
-      },
-      "optional_spawns": [
-        { "trigger": [2, 7], "encounter": [2, 6] },
-        { "trigger": [10, 7], "encounter": [10, 6] },
-        { "trigger": [4, 6], "encounter": [3, 5] },
-        { "trigger": [9, 5], "encounter": [9, 4] }
-      ],
+      "display_name": "Pewter City",
+      "gym_name": "Pewter Gym",
+      "gate_facing": "north",
       "funnel_cells": [],
-      "shops": {
-        "center": [3, 7],
-        "mart": [9, 7]
-      },
       "shop_windows": { "center": 1, "mart": 2 },
-      "gym_door": [6, 3],
-      "gym_floor_cells": [
-        [5, 0], [6, 0], [7, 0],
-        [5, 1], [6, 1], [7, 1],
-        [5, 2], [6, 2], [7, 2]
-      ],
-      "blocked_cells": [
-        [0, 0], [1, 0], [2, 0], [3, 0], [4, 0], [8, 0], [9, 0], [10, 0], [11, 0], [12, 0],
-        [0, 1], [1, 1], [2, 1], [3, 1], [4, 1], [8, 1], [9, 1], [10, 1], [11, 1], [12, 1],
-        [0, 2], [1, 2], [2, 2], [3, 2], [4, 2], [8, 2], [9, 2], [10, 2], [11, 2], [12, 2],
-        [0, 3], [1, 3], [2, 3], [3, 3], [4, 3], [5, 3], [7, 3], [8, 3], [9, 3], [10, 3], [11, 3], [12, 3],
-        [0, 10], [1, 10], [2, 10], [3, 10], [4, 10], [5, 10], [7, 10], [8, 10], [9, 10], [10, 10], [11, 10], [12, 10],
-        [0, 4], [0, 5], [0, 6], [0, 7], [0, 8], [0, 9],
-        [12, 4], [12, 5], [12, 6], [12, 7], [12, 8], [12, 9]
-      ],
-      "exit": [6, 0]
+      "grid": [
+        "#####_L_#####",
+        "#####___#####",
+        "#####___#####",
+        "######D######",
+        "#........w..#",
+        "#..w........#",
+        "#.w.......w.#",
+        "#..c.....m..#",
+        "#...........#",
+        "#.....S.....#",
+        "######.######"
+      ]
     }
   }
 }

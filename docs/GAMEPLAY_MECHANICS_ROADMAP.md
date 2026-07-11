@@ -19,10 +19,14 @@ Last updated: 2026-07-10
 | `phase1-learnset-code` | **DONE** | XP award + add/replace learns, learnset UI, HUD XP; trimmed `starters.json`, removed STAB injection, cleaned draft pools (merged PR #6) |
 | `phase3-upgrades` | **DONE** | Rare Candy token (boss drop → evolve a deck card) + starter typed-card evolution damage milestones (committed `phase3-upgrades` branch) |
 | `phase4-bills-pc` | **IMPLEMENTED — pending approval** | Bill's PC at Centers after first badge: deposit/withdraw cards, 3 swaps/visit, 5g/swap, min deck 5 |
-| `phase5-gyms-content` | Pending | 8 gyms + E4 content and mechanics |
+| `phase5a-gym-engine` | **IMPLEMENTED — pending approval** | Data-driven N-gym run loop: uniform `segments[]`; every leader grants badge+signature+rare candy and **continues**, only the `is_final` leader ends the run; sim + validation scale to N. (world_builder zone/gym de-hardcoding deferred to `phase5-map-format`) |
+| `phase5-map-format` | **IMPLEMENTED — pending approval** | ASCII-grid-in-JSON layouts + parser; migrated the 3 stages; optional-wild count/placement now from the grid (`w` cells); zone names + gym anchors data-driven; reachability validation |
+| `phase5-map-editor` | **Planned** | In-engine paint tool (`--mapeditor`) over the grid format: terrain + encounter palettes, click-to-paint, load/save JSON, live spawn→gate reachability validation |
+| `phase5b-gym-mechanics` | Pending | New combat mechanics (stamina drain, multi-status/action, stacking poison+evasion, hand shuffle, arena lava tick, multi-phase boss, escalating Center costs) + badge-passive schema |
+| `phase5c-gym-content` | Pending | Author 8 gyms + E4 with the editor: Pokémon, leaders, badges, signature cards, draft pools, maze layouts; balance pass |
 | `phase6-telemetry` | Pending | Run log metrics + sim_check extensions |
 
-**Current next TODO:** `phase5-gyms-content` (Phase 4 implemented; awaiting sign-off)
+**Current next TODO:** `phase5-map-editor` (5a + map-format implemented, awaiting sign-off). Editor lands before `phase5c` content authoring.
 
 ---
 
@@ -212,21 +216,97 @@ After the first badge. `pc_ops.gd`, `bills_pc_ui.gd`, button in `shop_ui.gd` at 
 
 ## Phase 5 — 8 Gyms + Victory Road
 
-Extend `run_config.json` to 9 segments. Per gym: wild pool, leader, badge, signature card, draft pool, maze template, new combat mechanics where needed.
+Milestone-sized; split into 5a/5b/5c so each fits the one-TODO cadence.
 
-| Gym | Mechanic |
-|-----|----------|
-| Brock | Block cycling (mostly data) |
-| Misty | Heal + ignore-block |
-| Surge | Paralyze + stamina drain |
-| Erika | Multi-status per action |
-| Koga | Stacking poison + evasion |
-| Sabrina | Hand shuffle |
-| Blaine | Arena lava tick |
-| Giovanni | Multi-phase boss |
-| E4 | Boss rush, escalating Center costs |
+### 5a — Multi-gym run engine (IMPLEMENTED — pending approval)
+Generalized the hardcoded 3-stage-+-`pewter_encounter_sequence` build into a uniform
+`segments[]` in `run_config.json`. Each segment: `{id, wild_pool/wilds, wild_count,
+leader | leader_variants, leader_kind, leader_gold, badge_id?, signature_card?,
+reward_pool_key, shop_window, is_final}`.
 
-Extend badge schema beyond `outgoing_damage_mult` for late-game passives.
+| File | Change |
+|------|--------|
+| `run_config.json` | `segments[]` replaces `stages` + `pewter_encounter_sequence`; dropped legacy `evolution*` / top-level `badge_id`/`signature_card` (now per-segment) |
+| `run_manager.gd` | `_build_encounters` = one loop over segments (`_segment_wilds`, `_resolve_leader_id`, `_make_leader_gate`); `after_win` grants leader rewards via `Rewards.grant_leader_rewards`, only `is_final` ends the run; removed `evolution_applied` |
+| `rewards.gd` | `grant_leader_rewards(player, enc, bal)` — badge (dedup) + signature + rare candy (gym vs mid-boss by `leader_kind`); removed `grant_boss_rewards` + dead `apply_evolution_catalyst` |
+| `balance_db.gd` | `_validate_segments` (enemies/pools/badges/signature exist; exactly one `is_final`); dropped evolution/pewter checks |
+| `stage_layout.gd` | `stage_ids_in_order` + `validate` iterate segments; `_segment_optional_count` |
+| `learnset_ops.gd` | gym XP keyed on `leader_kind == "gym"` (not `is_final_boss`) |
+
+**Not touched (deferred to `phase5-map-format`):** `world_builder` still stamps the 3
+existing layouts by coordinates and keys gym visuals off `is_final_boss` / `stage_id ==
+"pewter"`. Encounter *placement* moves into the grid there, not here.
+
+**Verified:** simcheck 300 runs ~40% (no regression; same loss profile rival→bug
+catcher→onix/brock); balance validation passes at load; headless leader-reward test
+(12 assertions: gym vs trainer rewards, badge dedup, one-final-gate, gates==segments).
+
+### 5b — New combat mechanics + badge passives
+Add only the mechanics not already in the effect vocabulary, extend `badges.json` schema
+beyond `outgoing_damage_mult`.
+
+| Gym | Mechanic | New? |
+|-----|----------|------|
+| Brock | Block cycling | mostly data |
+| Misty | Heal + ignore-block | exists (heal, ignore_block) |
+| Surge | Paralyze + stamina drain | paralyze exists; **stamina drain new** |
+| Erika | Multi-status per action | **new** (multiple statuses/action) |
+| Koga | Stacking poison + evasion | poison exists; **evasion/stacking new** |
+| Sabrina | Hand shuffle | **new** |
+| Blaine | Arena lava tick | **new** (per-turn arena DoT) |
+| Giovanni | Multi-phase boss | **new** (phase transitions) |
+| E4 | Boss rush, escalating Center costs | **new** (Center cost scaling) |
+
+### 5c — Full content
+Author all 8 gyms + E4: Pokémon (enemies.json + sprites), leaders, badges, signature
+cards, draft pools, maze layouts. Balance pass via `sim_check` (+ Phase 6 telemetry).
+
+### Map-authoring tooling (DECIDED — ASCII-grid now → creator tool later)
+Walls today are **100% hand-authored** `blocked_cells` coordinate arrays (no procedural
+generation; `template` is decor only). Chosen path: an ASCII grid format hand-authored
+now, with a paint tool built later that reads/writes the **same** format.
+
+**Format** (`phase5-map-format` — IMPLEMENTED): geometry lives in `stage_layouts.json` as a
+`grid` array of equal-length strings (replacing `blocked_cells`/coordinate lists); stays
+valid JSON and diff-friendly. Legend (as shipped):
+- Terrain (walkable): `.` grass · `=` road · `,` dirt · `_` interior/gym floor
+- Terrain (barrier): `#` wall · `T` tree · `H` hedge · `^` mountain · `B` building
+- Objects (walkable cells): `S` spawn · `X` exit · `c` center · `m` mart · `w` wild ·
+  `L` leader gate · `D` gym door
+
+| File | Change |
+|------|--------|
+| `stage_layouts.json` | 3 stages migrated to `grid` + metadata (`template`, `display_name`, `gym_name`, `gate_facing`, `funnel_cells`, `shop_windows`); coordinate lists removed |
+| `stage_layout.gd` | grid parser (cached) → derives size/walkable/blocked/spawn/exit/shops/optionals/leader/gym; leader trigger + north facing derived; `optional_count`, `display_name`, `gym_display_name`; grid validation incl. spawn→leader + optional reachability (BFS) |
+| `run_manager.gd` | optional-wild count from `StageLayout.optional_count` (one per `w`); species from `wild_pool`; dropped `wild_count`/`wilds` |
+| `run_config.json` | segments keep `wild_pool` only (count/placement now in the grid) |
+| `world_builder.gd` | `zone_name_for_cell` reads `display_name`/`gym_name`; gym floor/door stamping de-hardcoded from `stage_id == "pewter"` (driven by grid `_`/`D`) |
+
+**Verified:** grids generated from the old coordinates (temp `--gridgen`, then removed) so
+geometry is faithful; simcheck ~34–37% with healthy maze traversal (4.6 optionals, ~48
+steps), reachability validation passes at load, no errors.
+
+**Balance side-effect (defer to 5c):** Pewter's pre-Brock wilds are now drawn randomly from
+`["geodude","zubat","onix"]` (per `w` cell) instead of the old fixed `[geodude,zubat,onix,
+geodude]`. Onix can now appear 0–4× per run instead of exactly once, so difficulty variance
+(and onix losses) rose — win rate dipped ~40%→~35%. The map/pool mechanic is correct; tune
+the Pewter pool (or make Onix a weighted/rare wild) during content balancing.
+
+**Deferred to the editor / later:** the optional cosmetic terrain layer (per-cell grass vs
+road, tree vs wall visuals) — the renderer still collapses barrier→wall and walkable→floor.
+
+**Decisions (locked):**
+- **Map owns encounter placement + type.** The grid declares where each encounter is and
+  its type (wild/trainer/rival/leader); the segment supplies the species *pool* per type.
+  `_build_encounters` reads counts/placement from the grid, not a `wild_count`.
+- **Single logical layer now.** Hand-authoring uses one grid (walkability + objects). A
+  cosmetic per-cell terrain layer (grass vs road, tree vs wall visuals) is optional and
+  added later by the tool; the renderer collapses subtypes to default floor/wall until
+  per-cell terrain rendering exists.
+
+**Editor** (`phase5-map-editor`): in-engine standalone scene (`--mapeditor`) reusing the
+`world_grid`/tile rendering — grid canvas, terrain + encounter palette sidebar,
+click-to-paint, load/save the JSON `grid`, live spawn→gate reachability validation.
 
 ---
 

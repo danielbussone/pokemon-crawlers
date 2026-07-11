@@ -1,5 +1,11 @@
 ## Reads stage_layouts.json and exposes maze/open-area geometry for world_builder.
 ## JSON coords: +x east, +y south. World grid: +x east, +y south (north = decreasing y).
+##
+## Phase 5 map format: geometry is a `grid` of equal-length strings. This file
+## parses each grid once (cached) into the same cell structures the builder has
+## always consumed, so world_builder is unchanged. Encounter placement lives in
+## the grid (`w` optional wilds, `L` leader gate); a leader's trigger cell and
+## north facing are derived from the south→north arc.
 
 const VALID_TEMPLATES := [
 	"open_field",
@@ -10,6 +16,12 @@ const VALID_TEMPLATES := [
 ]
 
 const VALID_FACINGS := ["north", "east", "south", "west"]
+
+const BARRIER_CHARS := ["#", "T", "H", "^", "B"]
+
+## Parsed grids, keyed by stage_id. Balance data loads once per session, so this
+## stays valid for the whole run.
+static var _cache: Dictionary = {}
 
 
 static func local_to_world(local_cell: Vector2i, stage_origin: Vector2i) -> Vector2i:
@@ -31,8 +43,66 @@ static func layout_for(bal, stage_id: String) -> Dictionary:
 	return layouts[stage_id]
 
 
+## Parse (and cache) a stage's grid into cell structures.
+static func parsed(bal, stage_id: String) -> Dictionary:
+	if _cache.has(stage_id):
+		return _cache[stage_id]
+	var layout := layout_for(bal, stage_id)
+	var grid: Array = layout["grid"]
+	var h := grid.size()
+	var w := String(grid[0]).length()
+
+	var walkable := {}
+	var blocked: Array[Vector2i] = []
+	var optionals: Array[Vector2i] = []
+	var gym_floor: Array[Vector2i] = []
+	var shops := {}
+	var spawn := Vector2i(-1, -1)
+	var exit_cell := Vector2i(-1, -1)
+	var leader := Vector2i(-1, -1)
+	var gym_door := Vector2i(-1, -1)
+
+	for y in h:
+		var row := String(grid[y])
+		for x in w:
+			var ch := row[x]
+			var cell := Vector2i(x, y)
+			if ch in BARRIER_CHARS:
+				blocked.append(cell)
+				continue
+			walkable[cell] = true
+			match ch:
+				"S": spawn = cell
+				"X": exit_cell = cell
+				"c": shops["center"] = cell
+				"m": shops["mart"] = cell
+				"w": optionals.append(cell)
+				"L": leader = cell
+				"D": gym_door = cell
+				"_": gym_floor.append(cell)
+
+	# Final stage: the leader sits on the (unused) exit cell.
+	if exit_cell == Vector2i(-1, -1):
+		exit_cell = leader
+
+	var result := {
+		"size": Vector2i(w, h),
+		"walkable": walkable,
+		"blocked": blocked,
+		"spawn": spawn,
+		"exit": exit_cell,
+		"leader": leader,
+		"shops": shops,
+		"optionals": optionals,
+		"gym_door": gym_door,
+		"gym_floor": gym_floor,
+	}
+	_cache[stage_id] = result
+	return result
+
+
 static func spawn_local(bal, stage_id: String) -> Vector2i:
-	return vec2_from_json(layout_for(bal, stage_id)["spawn"])
+	return parsed(bal, stage_id)["spawn"]
 
 
 static func spawn_world(bal, stage_id: String, stage_origin: Vector2i) -> Vector2i:
@@ -40,39 +110,40 @@ static func spawn_world(bal, stage_id: String, stage_origin: Vector2i) -> Vector
 
 
 static func gate_local(bal, stage_id: String) -> Dictionary:
-	var gate: Dictionary = layout_for(bal, stage_id)["gate"]
+	var leader: Vector2i = parsed(bal, stage_id)["leader"]
 	return {
-		"trigger": vec2_from_json(gate["trigger"]),
-		"encounter": vec2_from_json(gate["encounter"]),
-		"facing": String(gate.get("facing", "north")),
+		# South-of-leader is the approach tile; the arc always faces north.
+		"trigger": leader + Vector2i(0, 1),
+		"encounter": leader,
+		"facing": String(layout_for(bal, stage_id).get("gate_facing", "north")),
 	}
 
 
 static func optional_spawns_local(bal, stage_id: String) -> Array[Dictionary]:
+	var p := parsed(bal, stage_id)
 	var out: Array[Dictionary] = []
-	for entry in layout_for(bal, stage_id)["optional_spawns"]:
-		out.append({
-			"trigger": vec2_from_json(entry["trigger"]),
-			"encounter": vec2_from_json(entry["encounter"]),
-		})
+	for cell in p["optionals"]:
+		out.append({"trigger": _walkable_neighbor(p, cell), "encounter": cell})
 	return out
+
+
+## A walkable neighbor of `cell` to serve as the encounter's approach tile.
+static func _walkable_neighbor(p: Dictionary, cell: Vector2i) -> Vector2i:
+	for dir in [Vector2i(0, 1), Vector2i(0, -1), Vector2i(1, 0), Vector2i(-1, 0)]:
+		if p["walkable"].has(cell + dir):
+			return cell + dir
+	return cell
 
 
 static func funnel_cells_local(bal, stage_id: String) -> Array[Vector2i]:
 	var out: Array[Vector2i] = []
-	for pair in layout_for(bal, stage_id)["funnel_cells"]:
+	for pair in layout_for(bal, stage_id).get("funnel_cells", []):
 		out.append(vec2_from_json(pair))
 	return out
 
 
 static func shop_cells_local(bal, stage_id: String) -> Dictionary:
-	var shops: Dictionary = layout_for(bal, stage_id).get("shops", {})
-	var out := {}
-	if shops.has("center"):
-		out["center"] = vec2_from_json(shops["center"])
-	if shops.has("mart"):
-		out["mart"] = vec2_from_json(shops["mart"])
-	return out
+	return parsed(bal, stage_id)["shops"].duplicate()
 
 
 static func shop_windows_local(bal, stage_id: String) -> Dictionary:
@@ -86,104 +157,101 @@ static func shop_windows_local(bal, stage_id: String) -> Dictionary:
 
 
 static func gym_door_local(bal, stage_id: String) -> Vector2i:
-	var door = layout_for(bal, stage_id).get("gym_door", null)
-	if door == null:
-		return Vector2i(-1, -1)
-	return vec2_from_json(door)
+	return parsed(bal, stage_id)["gym_door"]
 
 
 static func blocked_cells_local(bal, stage_id: String) -> Array[Vector2i]:
-	var out: Array[Vector2i] = []
-	for pair in layout_for(bal, stage_id).get("blocked_cells", []):
-		out.append(vec2_from_json(pair))
-	return out
+	return parsed(bal, stage_id)["blocked"].duplicate()
 
 
 static func gym_floor_cells_local(bal, stage_id: String) -> Array[Vector2i]:
-	var out: Array[Vector2i] = []
-	for pair in layout_for(bal, stage_id).get("gym_floor_cells", []):
-		out.append(vec2_from_json(pair))
-	return out
+	return parsed(bal, stage_id)["gym_floor"].duplicate()
 
 
 static func exit_local(bal, stage_id: String) -> Vector2i:
-	return vec2_from_json(layout_for(bal, stage_id)["exit"])
+	return parsed(bal, stage_id)["exit"]
 
 
 static func size_local(bal, stage_id: String) -> Vector2i:
-	return vec2_from_json(layout_for(bal, stage_id)["size"])
+	return parsed(bal, stage_id)["size"]
 
 
 static func template_id(bal, stage_id: String) -> String:
 	return String(layout_for(bal, stage_id).get("template", "open_field"))
 
 
+static func display_name(bal, stage_id: String) -> String:
+	return String(layout_for(bal, stage_id).get("display_name", ""))
+
+
+## Zone title for the gym interior of whichever stage is a gym (the one with a
+## `gym_name`). Falls back to a generic label.
+static func gym_display_name(bal) -> String:
+	for stage_id in bal.stage_layouts:
+		var name := String(bal.stage_layouts[stage_id].get("gym_name", ""))
+		if name != "":
+			return name
+	return "Gym"
+
+
 static func stage_ids_in_order(bal) -> Array[String]:
 	var out: Array[String] = []
-	for stage in bal.run_config["stages"]:
-		out.append(String(stage["id"]))
-	out.append("pewter")
+	for segment in bal.run_config["segments"]:
+		out.append(String(segment["id"]))
 	return out
+
+
+## How many optional wilds a stage places (one per `w` cell). The run builder
+## draws that many species from the segment's wild pool.
+static func optional_count(bal, stage_id: String) -> int:
+	return parsed(bal, stage_id)["optionals"].size()
 
 
 static func validate(bal) -> void:
 	var layouts: Dictionary = bal.stage_layouts
-	for stage in bal.run_config["stages"]:
-		var stage_id := String(stage["id"])
-		_validate_stage(layouts, stage_id, int(stage["wild_count"]))
-	_validate_stage(layouts, "pewter", _pewter_optional_count(bal))
+	for segment in bal.run_config["segments"]:
+		_validate_stage(bal, layouts, String(segment["id"]))
 
 
-static func _pewter_optional_count(bal) -> int:
-	var count := 0
-	for enemy_id in bal.run_config["pewter_encounter_sequence"]:
-		if not bool(bal.enemies[String(enemy_id)].get("is_boss", false)):
-			count += 1
-	return count
-
-
-static func _validate_stage(layouts: Dictionary, stage_id: String, expected_optionals: int) -> void:
+static func _validate_stage(bal, layouts: Dictionary, stage_id: String) -> void:
 	assert(layouts.has(stage_id), "Missing stage layout for '%s'" % stage_id)
 	var layout: Dictionary = layouts[stage_id]
 	assert(String(layout.get("id", "")) == stage_id, "Layout id mismatch for '%s'" % stage_id)
 	var template := String(layout.get("template", ""))
 	assert(template in VALID_TEMPLATES, "Unknown template '%s' in stage '%s'" % [template, stage_id])
+	assert(String(layout.get("gate_facing", "north")) in VALID_FACINGS,
+			"Invalid gate_facing in stage '%s'" % stage_id)
 
-	var size := vec2_from_json(layout["size"])
-	assert(size.x > 0 and size.y > 0, "Invalid size for stage '%s'" % stage_id)
+	var grid: Array = layout.get("grid", [])
+	assert(not grid.is_empty(), "Stage '%s' has no grid" % stage_id)
+	var width := String(grid[0]).length()
+	assert(width > 0, "Stage '%s' grid row 0 is empty" % stage_id)
+	var s_count := 0
+	var l_count := 0
+	for row_v in grid:
+		var row := String(row_v)
+		assert(row.length() == width, "Stage '%s' has ragged grid rows" % stage_id)
+		s_count += row.count("S")
+		l_count += row.count("L")
+	assert(s_count == 1, "Stage '%s' must have exactly one spawn (S), found %d" % [stage_id, s_count])
+	assert(l_count == 1, "Stage '%s' must have exactly one leader (L), found %d" % [stage_id, l_count])
 
-	var gate: Dictionary = layout["gate"]
-	vec2_from_json(gate["trigger"])
-	vec2_from_json(gate["encounter"])
-	var facing := String(gate.get("facing", "north"))
-	assert(facing in VALID_FACINGS, "Invalid gate facing '%s' in stage '%s'" % [facing, stage_id])
+	# Reachability: spawn must reach the leader, and no optional wild may be sealed.
+	var p := parsed(bal, stage_id)
+	var reached := _flood(p, p["spawn"])
+	assert(reached.has(p["leader"]), "Stage '%s': leader unreachable from spawn" % stage_id)
+	for opt in p["optionals"]:
+		assert(reached.has(opt), "Stage '%s': optional wild at %s is sealed off" % [stage_id, opt])
 
-	var optionals: Array = layout["optional_spawns"]
-	assert(optionals.size() == expected_optionals,
-			"Stage '%s' expects %d optional spawns, layout has %d" % [
-				stage_id, expected_optionals, optionals.size()])
-	for entry in optionals:
-		vec2_from_json(entry["trigger"])
-		vec2_from_json(entry["encounter"])
 
-	for pair in layout["funnel_cells"]:
-		vec2_from_json(pair)
-
-	vec2_from_json(layout["spawn"])
-	vec2_from_json(layout["exit"])
-
-	for pair in layout.get("blocked_cells", []):
-		vec2_from_json(pair)
-
-	for pair in layout.get("gym_floor_cells", []):
-		vec2_from_json(pair)
-
-	var gym_door = layout.get("gym_door", null)
-	if gym_door != null:
-		vec2_from_json(gym_door)
-
-	var shops: Dictionary = layout.get("shops", {})
-	if shops.has("center"):
-		vec2_from_json(shops["center"])
-	if shops.has("mart"):
-		vec2_from_json(shops["mart"])
+static func _flood(p: Dictionary, start: Vector2i) -> Dictionary:
+	var seen := {start: true}
+	var frontier: Array[Vector2i] = [start]
+	while not frontier.is_empty():
+		var cell: Vector2i = frontier.pop_back()
+		for dir in [Vector2i(0, 1), Vector2i(0, -1), Vector2i(1, 0), Vector2i(-1, 0)]:
+			var n: Vector2i = cell + dir
+			if p["walkable"].has(n) and not seen.has(n):
+				seen[n] = true
+				frontier.append(n)
+	return seen

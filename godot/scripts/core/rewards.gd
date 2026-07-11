@@ -16,17 +16,20 @@ static func apply_draft_pick(player: PlayerState, card_id: String) -> void:
 	DeckOps.add_card_to_deck(player, card_id)
 
 
-static func apply_evolution_catalyst(player: PlayerState, bal) -> bool:
-	var evolution: Dictionary = bal.run_config["evolution"]
-	return DeckOps.apply_evolution(player, String(evolution["from"]), String(evolution["to"]))
-
-
-static func grant_boss_rewards(player: PlayerState, bal) -> void:
-	var badge_id := String(bal.run_config["badge_id"])
-	if not player.badge_ids.has(badge_id):
+## Rewards a beaten mandatory leader hands out (Phase 5a): its badge (if any),
+## signature card (if any), and rare candy (gym leaders drop more than trainers).
+## The reward data rides on the encounter dict. Returns rare candy granted.
+static func grant_leader_rewards(player: PlayerState, enc: Dictionary, bal) -> int:
+	var badge_id := String(enc.get("badge_id", ""))
+	if badge_id != "" and not player.badge_ids.has(badge_id):
 		player.badge_ids.append(badge_id)
-	DeckOps.add_card_to_deck(player, String(bal.run_config["signature_card"]))
-	player.rare_candy += bal.rare_candy_gym_boss()
+	var signature := String(enc.get("signature_card", ""))
+	if signature != "":
+		DeckOps.add_card_to_deck(player, signature)
+	var candy: int = bal.rare_candy_gym_boss() if String(enc.get("leader_kind", "")) == "gym" \
+			else bal.rare_candy_mid_boss()
+	player.rare_candy += candy
+	return candy
 
 
 static func _sample(pool: Array, count: int, rng: RandomNumberGenerator) -> Array[String]:

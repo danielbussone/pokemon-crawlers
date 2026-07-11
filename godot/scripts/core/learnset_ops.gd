@@ -12,7 +12,8 @@ class_name LearnsetOps
 static func xp_for_encounter(enc: Dictionary, bal) -> int:
 	if bool(enc.get("is_optional", false)):
 		return bal.xp_per_wild()
-	if bool(enc.get("is_final_boss", false)):
+	# Gym leaders award boss XP whether or not they're the final one (Phase 5a).
+	if String(enc.get("leader_kind", "")) == "gym":
 		return bal.xp_per_gym_boss()
 	return bal.xp_per_mid_boss()
 

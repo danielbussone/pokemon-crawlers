@@ -163,17 +163,37 @@ func _validate() -> void:
 	for pool_key in stage_rewards:
 		for cid in stage_rewards[pool_key]:
 			assert(cards.has(cid), "Unknown card '%s' in stage_rewards '%s'" % [cid, pool_key])
-	for eid in run_config["pewter_encounter_sequence"]:
-		assert(enemies.has(eid), "Unknown enemy '%s' in pewter sequence" % eid)
-	for stage in run_config["stages"]:
-		for eid in stage["wild_pool"]:
-			assert(enemies.has(eid), "Unknown enemy '%s' in stage '%s'" % [eid, stage["id"]])
-	assert(cards.has(run_config["signature_card"]), "Unknown signature card")
-	assert(cards.has(run_config["evolution"]["from"]), "Unknown evolution.from card")
-	assert(cards.has(run_config["evolution"]["to"]), "Unknown evolution.to card")
-	assert(badges.has(run_config["badge_id"]), "Unknown badge id")
+	_validate_segments()
 	_validate_starter_evolution()
 	StageLayout.validate(self)
+
+
+## Phase 5a: each gym segment references real enemies/pools, and exactly one
+## segment is the final (run-ending) leader.
+func _validate_segments() -> void:
+	var segments: Array = run_config["segments"]
+	assert(not segments.is_empty(), "run_config.segments is empty")
+	var final_count := 0
+	for seg in segments:
+		var seg_id := String(seg["id"])
+		for eid in seg.get("wilds", seg.get("wild_pool", [])):
+			assert(enemies.has(String(eid)), "Unknown wild '%s' in segment '%s'" % [eid, seg_id])
+		if seg.has("leader_variants"):
+			for eid in seg["leader_variants"]:
+				assert(enemies.has(String(eid)), "Unknown leader variant '%s' in '%s'" % [eid, seg_id])
+		else:
+			var leader := String(seg["leader"])
+			assert(leader == Rivals.RIVAL_SENTINEL or enemies.has(leader),
+					"Unknown leader '%s' in segment '%s'" % [leader, seg_id])
+		assert(stage_rewards.has(String(seg["reward_pool_key"])),
+				"Unknown reward pool '%s' in segment '%s'" % [seg.get("reward_pool_key"), seg_id])
+		var badge_id := String(seg.get("badge_id", ""))
+		assert(badge_id == "" or badges.has(badge_id), "Unknown badge '%s' in '%s'" % [badge_id, seg_id])
+		var sig := String(seg.get("signature_card", ""))
+		assert(sig == "" or cards.has(sig), "Unknown signature card '%s' in '%s'" % [sig, seg_id])
+		if bool(seg.get("is_final", false)):
+			final_count += 1
+	assert(final_count == 1, "run_config must have exactly one is_final segment, found %d" % final_count)
 
 
 ## Starter-evolution tiers (Phase 3): thresholds must be non-decreasing so the
