@@ -13,5 +13,30 @@
     "id": "thunder_badge",
     "name": "Thunder Badge",
     "max_stamina_bonus": 1
+  },
+  "rainbow_badge": {
+    "id": "rainbow_badge",
+    "name": "Rainbow Badge",
+    "heal_on_combat_start": 3
+  },
+  "soul_badge": {
+    "id": "soul_badge",
+    "name": "Soul Badge",
+    "status_immunity": ["poison"]
+  },
+  "marsh_badge": {
+    "id": "marsh_badge",
+    "name": "Marsh Badge",
+    "hand_size_bonus": 1
+  },
+  "volcano_badge": {
+    "id": "volcano_badge",
+    "name": "Volcano Badge",
+    "outgoing_damage_mult": 1.15
+  },
+  "earth_badge": {
+    "id": "earth_badge",
+    "name": "Earth Badge",
+    "max_hp_bonus": 5
   }
 }

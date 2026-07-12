@@ -114,6 +114,10 @@ func current_encounter() -> Dictionary:
 func begin_combat_at(flat_idx: int) -> CombatCtx:
 	_active_encounter_idx = flat_idx
 	prepare_between_encounters()
+	# Rainbow badge (Phase 5b): heal a little at the start of each fight.
+	var heal := BadgeOps.heal_on_combat_start(player.badge_ids, Balance)
+	if heal > 0:
+		player.hp = mini(player.max_hp, player.hp + heal)
 	var enc := encounter_at(flat_idx)
 	return CombatCtx.start(player, String(enc["enemy_id"]), Balance, rng)
 

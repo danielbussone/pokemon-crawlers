@@ -15,7 +15,12 @@
           "is_attack": true,
           "base_weight": 2,
           "preferred_phase": "any",
-          "effects": [{ "type": "damage", "magnitude": 6 }]
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 6
+            }
+          ]
         },
         {
           "id": "defense_curl",
@@ -23,7 +28,13 @@
           "is_attack": false,
           "base_weight": 3,
           "preferred_phase": "healthy",
-          "effects": [{ "type": "block", "magnitude": 5, "target": "self" }]
+          "effects": [
+            {
+              "type": "block",
+              "magnitude": 5,
+              "target": "self"
+            }
+          ]
         },
         {
           "id": "rock_throw",
@@ -31,7 +42,12 @@
           "is_attack": true,
           "base_weight": 3,
           "preferred_phase": "mid",
-          "effects": [{ "type": "damage", "magnitude": 10 }]
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 10
+            }
+          ]
         },
         {
           "id": "magnitude",
@@ -39,7 +55,13 @@
           "is_attack": true,
           "base_weight": 3,
           "preferred_phase": "desperate",
-          "effects": [{ "type": "damage", "magnitude": 8, "ignore_block": true }]
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 8,
+              "ignore_block": true
+            }
+          ]
         }
       ]
     },
@@ -59,8 +81,15 @@
           "base_weight": 2,
           "preferred_phase": "any",
           "effects": [
-            { "type": "damage", "magnitude": 5 },
-            { "type": "heal", "magnitude": 5, "target": "self" }
+            {
+              "type": "damage",
+              "magnitude": 5
+            },
+            {
+              "type": "heal",
+              "magnitude": 5,
+              "target": "self"
+            }
           ]
         },
         {
@@ -70,7 +99,12 @@
           "base_weight": 3,
           "preferred_phase": "healthy",
           "effects": [
-            { "type": "status", "status": "confuse", "duration": 2, "target": "enemy" }
+            {
+              "type": "status",
+              "status": "confuse",
+              "duration": 2,
+              "target": "enemy"
+            }
           ]
         },
         {
@@ -79,7 +113,12 @@
           "is_attack": true,
           "base_weight": 3,
           "preferred_phase": "mid",
-          "effects": [{ "type": "damage", "magnitude": 8 }]
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 8
+            }
+          ]
         },
         {
           "id": "string_shot",
@@ -88,7 +127,12 @@
           "base_weight": 2,
           "preferred_phase": "healthy",
           "effects": [
-            { "type": "apply_condition", "condition": "slow", "duration": 1, "target": "enemy" }
+            {
+              "type": "apply_condition",
+              "condition": "slow",
+              "duration": 1,
+              "target": "enemy"
+            }
           ]
         }
       ]
@@ -108,7 +152,12 @@
           "is_attack": true,
           "base_weight": 2,
           "preferred_phase": "any",
-          "effects": [{ "type": "damage", "magnitude": 9 }]
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 9
+            }
+          ]
         },
         {
           "id": "harden",
@@ -116,7 +165,13 @@
           "is_attack": false,
           "base_weight": 3,
           "preferred_phase": "healthy",
-          "effects": [{ "type": "block", "magnitude": 7, "target": "self" }]
+          "effects": [
+            {
+              "type": "block",
+              "magnitude": 7,
+              "target": "self"
+            }
+          ]
         },
         {
           "id": "screech",
@@ -125,7 +180,12 @@
           "base_weight": 2,
           "preferred_phase": "healthy",
           "effects": [
-            { "type": "apply_condition", "condition": "defenseless", "duration": 2, "target": "enemy" }
+            {
+              "type": "apply_condition",
+              "condition": "defenseless",
+              "duration": 2,
+              "target": "enemy"
+            }
           ]
         },
         {
@@ -134,7 +194,12 @@
           "is_attack": true,
           "base_weight": 1,
           "preferred_phase": "any",
-          "effects": [{ "type": "damage", "magnitude": 5 }]
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 5
+            }
+          ]
         },
         {
           "id": "rock_tomb",
@@ -143,8 +208,16 @@
           "base_weight": 3,
           "preferred_phase": "desperate",
           "effects": [
-            { "type": "damage", "magnitude": 11 },
-            { "type": "apply_condition", "condition": "slow", "duration": 1, "target": "enemy" }
+            {
+              "type": "damage",
+              "magnitude": 11
+            },
+            {
+              "type": "apply_condition",
+              "condition": "slow",
+              "duration": 1,
+              "target": "enemy"
+            }
           ]
         }
       ]
@@ -164,7 +237,12 @@
           "is_attack": true,
           "base_weight": 3,
           "preferred_phase": "any",
-          "effects": [{ "type": "damage", "magnitude": 5 }]
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 5
+            }
+          ]
         },
         {
           "id": "gust",
@@ -172,7 +250,12 @@
           "is_attack": true,
           "base_weight": 2,
           "preferred_phase": "mid",
-          "effects": [{ "type": "damage", "magnitude": 6 }]
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 6
+            }
+          ]
         }
       ]
     },
@@ -191,7 +274,12 @@
           "is_attack": true,
           "base_weight": 3,
           "preferred_phase": "any",
-          "effects": [{ "type": "damage", "magnitude": 4 }]
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 4
+            }
+          ]
         },
         {
           "id": "tail_whip",
@@ -200,7 +288,12 @@
           "base_weight": 2,
           "preferred_phase": "healthy",
           "effects": [
-            { "type": "apply_condition", "condition": "distracted", "duration": 2, "target": "enemy" }
+            {
+              "type": "apply_condition",
+              "condition": "distracted",
+              "duration": 2,
+              "target": "enemy"
+            }
           ]
         }
       ]
@@ -221,8 +314,17 @@
           "base_weight": 3,
           "preferred_phase": "any",
           "effects": [
-            { "type": "damage", "magnitude": 4 },
-            { "type": "status", "status": "poison", "magnitude": 3, "duration": 3, "target": "enemy" }
+            {
+              "type": "damage",
+              "magnitude": 4
+            },
+            {
+              "type": "status",
+              "status": "poison",
+              "magnitude": 3,
+              "duration": 3,
+              "target": "enemy"
+            }
           ]
         },
         {
@@ -231,7 +333,12 @@
           "is_attack": true,
           "base_weight": 2,
           "preferred_phase": "any",
-          "effects": [{ "type": "damage", "magnitude": 3 }]
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 3
+            }
+          ]
         }
       ]
     },
@@ -251,8 +358,17 @@
           "base_weight": 3,
           "preferred_phase": "any",
           "effects": [
-            { "type": "damage", "magnitude": 5 },
-            { "type": "status", "status": "poison", "magnitude": 4, "duration": 3, "target": "enemy" }
+            {
+              "type": "damage",
+              "magnitude": 5
+            },
+            {
+              "type": "status",
+              "status": "poison",
+              "magnitude": 4,
+              "duration": 3,
+              "target": "enemy"
+            }
           ]
         },
         {
@@ -261,7 +377,12 @@
           "is_attack": true,
           "base_weight": 2,
           "preferred_phase": "any",
-          "effects": [{ "type": "damage", "magnitude": 5 }]
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 5
+            }
+          ]
         }
       ]
     },
@@ -280,7 +401,12 @@
           "is_attack": true,
           "base_weight": 2,
           "preferred_phase": "any",
-          "effects": [{ "type": "damage", "magnitude": 3 }]
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 3
+            }
+          ]
         },
         {
           "id": "sleep_powder_wild",
@@ -289,7 +415,12 @@
           "base_weight": 2,
           "preferred_phase": "healthy",
           "effects": [
-            { "type": "status", "status": "sleep", "duration": 1, "target": "enemy" }
+            {
+              "type": "status",
+              "status": "sleep",
+              "duration": 1,
+              "target": "enemy"
+            }
           ]
         }
       ]
@@ -309,7 +440,13 @@
           "is_attack": false,
           "base_weight": 4,
           "preferred_phase": "any",
-          "effects": [{ "type": "block", "magnitude": 6, "target": "self" }]
+          "effects": [
+            {
+              "type": "block",
+              "magnitude": 6,
+              "target": "self"
+            }
+          ]
         },
         {
           "id": "tackle",
@@ -317,7 +454,12 @@
           "is_attack": true,
           "base_weight": 1,
           "preferred_phase": "desperate",
-          "effects": [{ "type": "damage", "magnitude": 4 }]
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 4
+            }
+          ]
         }
       ]
     },
@@ -337,8 +479,17 @@
           "base_weight": 3,
           "preferred_phase": "any",
           "effects": [
-            { "type": "damage", "magnitude": 4 },
-            { "type": "status", "status": "poison", "magnitude": 3, "duration": 2, "target": "enemy" }
+            {
+              "type": "damage",
+              "magnitude": 4
+            },
+            {
+              "type": "status",
+              "status": "poison",
+              "magnitude": 3,
+              "duration": 2,
+              "target": "enemy"
+            }
           ]
         },
         {
@@ -347,7 +498,13 @@
           "is_attack": false,
           "base_weight": 2,
           "preferred_phase": "healthy",
-          "effects": [{ "type": "block", "magnitude": 4, "target": "self" }]
+          "effects": [
+            {
+              "type": "block",
+              "magnitude": 4,
+              "target": "self"
+            }
+          ]
         }
       ]
     },
@@ -360,34 +517,59 @@
       "is_boss": false,
       "xp_reward": 0,
       "boss_pattern_loop_start": 1,
-      "boss_pattern": ["water_gun_rival", "growl", "quick_attack", "sand_attack"],
+      "boss_pattern": [
+        "water_gun_rival",
+        "growl",
+        "quick_attack",
+        "sand_attack"
+      ],
       "action_pool": [
         {
           "id": "water_gun_rival",
           "name": "Water Gun",
           "is_attack": true,
-          "effects": [{ "type": "damage", "magnitude": 8 }]
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 8
+            }
+          ]
         },
         {
           "id": "growl",
           "name": "Growl",
           "is_attack": false,
           "effects": [
-            { "type": "apply_condition", "condition": "intimidated", "duration": 2, "target": "enemy" }
+            {
+              "type": "apply_condition",
+              "condition": "intimidated",
+              "duration": 2,
+              "target": "enemy"
+            }
           ]
         },
         {
           "id": "quick_attack",
           "name": "Quick Attack",
           "is_attack": true,
-          "effects": [{ "type": "damage", "magnitude": 5 }]
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 5
+            }
+          ]
         },
         {
           "id": "sand_attack",
           "name": "Sand Attack",
           "is_attack": false,
           "effects": [
-            { "type": "apply_condition", "condition": "blinded", "duration": 2, "target": "enemy" }
+            {
+              "type": "apply_condition",
+              "condition": "blinded",
+              "duration": 2,
+              "target": "enemy"
+            }
           ]
         }
       ]
@@ -401,34 +583,59 @@
       "is_boss": false,
       "xp_reward": 0,
       "boss_pattern_loop_start": 1,
-      "boss_pattern": ["vine_whip_rival", "growl", "quick_attack", "sand_attack"],
+      "boss_pattern": [
+        "vine_whip_rival",
+        "growl",
+        "quick_attack",
+        "sand_attack"
+      ],
       "action_pool": [
         {
           "id": "vine_whip_rival",
           "name": "Vine Whip",
           "is_attack": true,
-          "effects": [{ "type": "damage", "magnitude": 8 }]
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 8
+            }
+          ]
         },
         {
           "id": "growl",
           "name": "Growl",
           "is_attack": false,
           "effects": [
-            { "type": "apply_condition", "condition": "intimidated", "duration": 2, "target": "enemy" }
+            {
+              "type": "apply_condition",
+              "condition": "intimidated",
+              "duration": 2,
+              "target": "enemy"
+            }
           ]
         },
         {
           "id": "quick_attack",
           "name": "Quick Attack",
           "is_attack": true,
-          "effects": [{ "type": "damage", "magnitude": 5 }]
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 5
+            }
+          ]
         },
         {
           "id": "sand_attack",
           "name": "Sand Attack",
           "is_attack": false,
           "effects": [
-            { "type": "apply_condition", "condition": "blinded", "duration": 2, "target": "enemy" }
+            {
+              "type": "apply_condition",
+              "condition": "blinded",
+              "duration": 2,
+              "target": "enemy"
+            }
           ]
         }
       ]
@@ -442,34 +649,59 @@
       "is_boss": false,
       "xp_reward": 0,
       "boss_pattern_loop_start": 1,
-      "boss_pattern": ["ember_rival", "growl", "quick_attack", "sand_attack"],
+      "boss_pattern": [
+        "ember_rival",
+        "growl",
+        "quick_attack",
+        "sand_attack"
+      ],
       "action_pool": [
         {
           "id": "ember_rival",
           "name": "Ember",
           "is_attack": true,
-          "effects": [{ "type": "damage", "magnitude": 8 }]
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 8
+            }
+          ]
         },
         {
           "id": "growl",
           "name": "Growl",
           "is_attack": false,
           "effects": [
-            { "type": "apply_condition", "condition": "intimidated", "duration": 2, "target": "enemy" }
+            {
+              "type": "apply_condition",
+              "condition": "intimidated",
+              "duration": 2,
+              "target": "enemy"
+            }
           ]
         },
         {
           "id": "quick_attack",
           "name": "Quick Attack",
           "is_attack": true,
-          "effects": [{ "type": "damage", "magnitude": 5 }]
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 5
+            }
+          ]
         },
         {
           "id": "sand_attack",
           "name": "Sand Attack",
           "is_attack": false,
           "effects": [
-            { "type": "apply_condition", "condition": "blinded", "duration": 2, "target": "enemy" }
+            {
+              "type": "apply_condition",
+              "condition": "blinded",
+              "duration": 2,
+              "target": "enemy"
+            }
           ]
         }
       ]
@@ -483,14 +715,22 @@
       "is_boss": false,
       "xp_reward": 0,
       "boss_pattern_loop_start": 0,
-      "boss_pattern": ["sleep_powder_boss", "confusion_boss"],
+      "boss_pattern": [
+        "sleep_powder_boss",
+        "confusion_boss"
+      ],
       "action_pool": [
         {
           "id": "sleep_powder_boss",
           "name": "Sleep Powder",
           "is_attack": false,
           "effects": [
-            { "type": "status", "status": "sleep", "duration": 1, "target": "enemy" }
+            {
+              "type": "status",
+              "status": "sleep",
+              "duration": 1,
+              "target": "enemy"
+            }
           ]
         },
         {
@@ -498,15 +738,28 @@
           "name": "Confusion",
           "is_attack": true,
           "effects": [
-            { "type": "damage", "magnitude": 8 },
-            { "type": "status", "status": "confuse", "duration": 2, "target": "enemy" }
+            {
+              "type": "damage",
+              "magnitude": 8
+            },
+            {
+              "type": "status",
+              "status": "confuse",
+              "duration": 2,
+              "target": "enemy"
+            }
           ]
         },
         {
           "id": "gust",
           "name": "Gust",
           "is_attack": true,
-          "effects": [{ "type": "damage", "magnitude": 6 }]
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 6
+            }
+          ]
         }
       ]
     },
@@ -519,21 +772,39 @@
       "is_boss": false,
       "xp_reward": 0,
       "boss_pattern_loop_start": 0,
-      "boss_pattern": ["fury_attack", "twineedle", "string_shot_boss"],
+      "boss_pattern": [
+        "fury_attack",
+        "twineedle",
+        "string_shot_boss"
+      ],
       "action_pool": [
         {
           "id": "fury_attack",
           "name": "Fury Attack",
           "is_attack": true,
-          "effects": [{ "type": "damage", "magnitude": 4 }]
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 4
+            }
+          ]
         },
         {
           "id": "twineedle",
           "name": "Twineedle",
           "is_attack": true,
           "effects": [
-            { "type": "damage", "magnitude": 6 },
-            { "type": "status", "status": "poison", "magnitude": 4, "duration": 2, "target": "enemy" }
+            {
+              "type": "damage",
+              "magnitude": 6
+            },
+            {
+              "type": "status",
+              "status": "poison",
+              "magnitude": 4,
+              "duration": 2,
+              "target": "enemy"
+            }
           ]
         },
         {
@@ -541,7 +812,12 @@
           "name": "String Shot",
           "is_attack": false,
           "effects": [
-            { "type": "apply_condition", "condition": "slow", "duration": 1, "target": "enemy" }
+            {
+              "type": "apply_condition",
+              "condition": "slow",
+              "duration": 1,
+              "target": "enemy"
+            }
           ]
         }
       ]
@@ -567,33 +843,60 @@
           "id": "rock_throw",
           "name": "Rock Throw",
           "is_attack": true,
-          "effects": [{ "type": "damage", "magnitude": 8 }]
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 8
+            }
+          ]
         },
         {
           "id": "screech",
           "name": "Screech",
           "is_attack": false,
           "effects": [
-            { "type": "apply_condition", "condition": "defenseless", "duration": 2, "target": "enemy" }
+            {
+              "type": "apply_condition",
+              "condition": "defenseless",
+              "duration": 2,
+              "target": "enemy"
+            }
           ]
         },
         {
           "id": "rock_slide",
           "name": "Rock Slide",
           "is_attack": true,
-          "effects": [{ "type": "damage", "magnitude": 15 }]
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 15
+            }
+          ]
         },
         {
           "id": "harden",
           "name": "Harden",
           "is_attack": false,
-          "effects": [{ "type": "block", "magnitude": 10, "target": "self" }]
+          "effects": [
+            {
+              "type": "block",
+              "magnitude": 10,
+              "target": "self"
+            }
+          ]
         },
         {
           "id": "defense_curl",
           "name": "Defense Curl",
           "is_attack": false,
-          "effects": [{ "type": "block", "magnitude": 6, "target": "self" }]
+          "effects": [
+            {
+              "type": "block",
+              "magnitude": 6,
+              "target": "self"
+            }
+          ]
         }
       ]
     },
@@ -612,7 +915,12 @@
           "is_attack": true,
           "base_weight": 3,
           "preferred_phase": "any",
-          "effects": [{ "type": "damage", "magnitude": 6 }]
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 6
+            }
+          ]
         },
         {
           "id": "water_gun",
@@ -620,7 +928,12 @@
           "is_attack": true,
           "base_weight": 3,
           "preferred_phase": "mid",
-          "effects": [{ "type": "damage", "magnitude": 8 }]
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 8
+            }
+          ]
         }
       ]
     },
@@ -639,7 +952,12 @@
           "is_attack": true,
           "base_weight": 3,
           "preferred_phase": "any",
-          "effects": [{ "type": "damage", "magnitude": 5 }]
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 5
+            }
+          ]
         },
         {
           "id": "double_slap",
@@ -647,7 +965,12 @@
           "is_attack": true,
           "base_weight": 3,
           "preferred_phase": "mid",
-          "effects": [{ "type": "damage", "magnitude": 7 }]
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 7
+            }
+          ]
         }
       ]
     },
@@ -666,7 +989,12 @@
           "is_attack": true,
           "base_weight": 3,
           "preferred_phase": "any",
-          "effects": [{ "type": "damage", "magnitude": 6 }]
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 6
+            }
+          ]
         },
         {
           "id": "horn_attack",
@@ -674,7 +1002,12 @@
           "is_attack": true,
           "base_weight": 2,
           "preferred_phase": "desperate",
-          "effects": [{ "type": "damage", "magnitude": 9 }]
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 9
+            }
+          ]
         }
       ]
     },
@@ -693,7 +1026,12 @@
           "is_attack": true,
           "base_weight": 3,
           "preferred_phase": "any",
-          "effects": [{ "type": "damage", "magnitude": 5 }]
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 5
+            }
+          ]
         },
         {
           "id": "withdraw",
@@ -701,7 +1039,13 @@
           "is_attack": false,
           "base_weight": 2,
           "preferred_phase": "healthy",
-          "effects": [{ "type": "block", "magnitude": 6, "target": "self" }]
+          "effects": [
+            {
+              "type": "block",
+              "magnitude": 6,
+              "target": "self"
+            }
+          ]
         },
         {
           "id": "clamp",
@@ -709,7 +1053,12 @@
           "is_attack": true,
           "base_weight": 3,
           "preferred_phase": "mid",
-          "effects": [{ "type": "damage", "magnitude": 8 }]
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 8
+            }
+          ]
         }
       ]
     },
@@ -734,31 +1083,59 @@
           "id": "water_gun_misty",
           "name": "Water Gun",
           "is_attack": true,
-          "effects": [{ "type": "damage", "magnitude": 9 }]
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 10
+            }
+          ]
         },
         {
           "id": "recover_misty",
           "name": "Recover",
           "is_attack": false,
-          "effects": [{ "type": "heal", "magnitude": 12, "target": "self" }]
+          "effects": [
+            {
+              "type": "heal",
+              "magnitude": 12,
+              "target": "self"
+            }
+          ]
         },
         {
           "id": "water_pulse_misty",
           "name": "Water Pulse",
           "is_attack": true,
-          "effects": [{ "type": "damage", "magnitude": 13, "ignore_block": true }]
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 14,
+              "ignore_block": true
+            }
+          ]
         },
         {
           "id": "harden_misty",
           "name": "Harden",
           "is_attack": false,
-          "effects": [{ "type": "block", "magnitude": 8, "target": "self" }]
+          "effects": [
+            {
+              "type": "block",
+              "magnitude": 8,
+              "target": "self"
+            }
+          ]
         },
         {
           "id": "bubble_beam_misty",
           "name": "Bubble Beam",
           "is_attack": true,
-          "effects": [{ "type": "damage", "magnitude": 11 }]
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 12
+            }
+          ]
         }
       ]
     },
@@ -771,8 +1148,32 @@
       "is_boss": false,
       "xp_reward": 10,
       "action_pool": [
-        { "id": "peck", "name": "Peck", "is_attack": true, "base_weight": 3, "preferred_phase": "any", "effects": [{ "type": "damage", "magnitude": 6 }] },
-        { "id": "fury_attack", "name": "Fury Attack", "is_attack": true, "base_weight": 2, "preferred_phase": "mid", "effects": [{ "type": "damage", "magnitude": 8 }] }
+        {
+          "id": "peck",
+          "name": "Peck",
+          "is_attack": true,
+          "base_weight": 3,
+          "preferred_phase": "any",
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 6
+            }
+          ]
+        },
+        {
+          "id": "fury_attack",
+          "name": "Fury Attack",
+          "is_attack": true,
+          "base_weight": 2,
+          "preferred_phase": "mid",
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 8
+            }
+          ]
+        }
       ]
     },
     {
@@ -784,8 +1185,32 @@
       "is_boss": false,
       "xp_reward": 10,
       "action_pool": [
-        { "id": "scratch", "name": "Scratch", "is_attack": true, "base_weight": 3, "preferred_phase": "any", "effects": [{ "type": "damage", "magnitude": 5 }] },
-        { "id": "bite", "name": "Bite", "is_attack": true, "base_weight": 3, "preferred_phase": "mid", "effects": [{ "type": "damage", "magnitude": 7 }] }
+        {
+          "id": "scratch",
+          "name": "Scratch",
+          "is_attack": true,
+          "base_weight": 3,
+          "preferred_phase": "any",
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 5
+            }
+          ]
+        },
+        {
+          "id": "bite",
+          "name": "Bite",
+          "is_attack": true,
+          "base_weight": 3,
+          "preferred_phase": "mid",
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 7
+            }
+          ]
+        }
       ]
     },
     {
@@ -797,8 +1222,32 @@
       "is_boss": false,
       "xp_reward": 10,
       "action_pool": [
-        { "id": "scratch", "name": "Scratch", "is_attack": true, "base_weight": 3, "preferred_phase": "any", "effects": [{ "type": "damage", "magnitude": 6 }] },
-        { "id": "karate_chop", "name": "Karate Chop", "is_attack": true, "base_weight": 2, "preferred_phase": "desperate", "effects": [{ "type": "damage", "magnitude": 8 }] }
+        {
+          "id": "scratch",
+          "name": "Scratch",
+          "is_attack": true,
+          "base_weight": 3,
+          "preferred_phase": "any",
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 6
+            }
+          ]
+        },
+        {
+          "id": "karate_chop",
+          "name": "Karate Chop",
+          "is_attack": true,
+          "base_weight": 2,
+          "preferred_phase": "desperate",
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 8
+            }
+          ]
+        }
       ]
     },
     {
@@ -810,8 +1259,32 @@
       "is_boss": false,
       "xp_reward": 10,
       "action_pool": [
-        { "id": "tackle", "name": "Tackle", "is_attack": true, "base_weight": 3, "preferred_phase": "any", "effects": [{ "type": "damage", "magnitude": 5 }] },
-        { "id": "thunder_shock", "name": "Thunder Shock", "is_attack": true, "base_weight": 3, "preferred_phase": "mid", "effects": [{ "type": "damage", "magnitude": 8 }] }
+        {
+          "id": "tackle",
+          "name": "Tackle",
+          "is_attack": true,
+          "base_weight": 3,
+          "preferred_phase": "any",
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 5
+            }
+          ]
+        },
+        {
+          "id": "thunder_shock",
+          "name": "Thunder Shock",
+          "is_attack": true,
+          "base_weight": 3,
+          "preferred_phase": "mid",
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 8
+            }
+          ]
+        }
       ]
     },
     {
@@ -823,8 +1296,32 @@
       "is_boss": false,
       "xp_reward": 10,
       "action_pool": [
-        { "id": "scratch", "name": "Scratch", "is_attack": true, "base_weight": 3, "preferred_phase": "any", "effects": [{ "type": "damage", "magnitude": 5 }] },
-        { "id": "dig", "name": "Dig", "is_attack": true, "base_weight": 2, "preferred_phase": "mid", "effects": [{ "type": "damage", "magnitude": 8 }] }
+        {
+          "id": "scratch",
+          "name": "Scratch",
+          "is_attack": true,
+          "base_weight": 3,
+          "preferred_phase": "any",
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 5
+            }
+          ]
+        },
+        {
+          "id": "dig",
+          "name": "Dig",
+          "is_attack": true,
+          "base_weight": 2,
+          "preferred_phase": "mid",
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 8
+            }
+          ]
+        }
       ]
     },
     {
@@ -836,9 +1333,47 @@
       "is_boss": false,
       "xp_reward": 10,
       "action_pool": [
-        { "id": "tackle", "name": "Tackle", "is_attack": true, "base_weight": 3, "preferred_phase": "any", "effects": [{ "type": "damage", "magnitude": 5 }] },
-        { "id": "spark", "name": "Spark", "is_attack": true, "base_weight": 3, "preferred_phase": "mid", "effects": [{ "type": "damage", "magnitude": 7 }] },
-        { "id": "screech", "name": "Screech", "is_attack": false, "base_weight": 2, "preferred_phase": "healthy", "effects": [{ "type": "apply_condition", "condition": "defenseless", "duration": 1, "target": "enemy" }] }
+        {
+          "id": "tackle",
+          "name": "Tackle",
+          "is_attack": true,
+          "base_weight": 3,
+          "preferred_phase": "any",
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 5
+            }
+          ]
+        },
+        {
+          "id": "spark",
+          "name": "Spark",
+          "is_attack": true,
+          "base_weight": 3,
+          "preferred_phase": "mid",
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 7
+            }
+          ]
+        },
+        {
+          "id": "screech",
+          "name": "Screech",
+          "is_attack": false,
+          "base_weight": 2,
+          "preferred_phase": "healthy",
+          "effects": [
+            {
+              "type": "apply_condition",
+              "condition": "defenseless",
+              "duration": 1,
+              "target": "enemy"
+            }
+          ]
+        }
       ]
     },
     {
@@ -850,12 +1385,58 @@
       "is_boss": true,
       "xp_reward": 30,
       "boss_pattern_loop_start": 1,
-      "boss_pattern": ["throw_punch", "water_gun_sailor", "harden_sailor", "headbutt"],
+      "boss_pattern": [
+        "throw_punch",
+        "water_gun_sailor",
+        "harden_sailor",
+        "headbutt"
+      ],
       "action_pool": [
-        { "id": "throw_punch", "name": "Throw Punch", "is_attack": true, "effects": [{ "type": "damage", "magnitude": 7 }] },
-        { "id": "water_gun_sailor", "name": "Water Gun", "is_attack": true, "effects": [{ "type": "damage", "magnitude": 8 }] },
-        { "id": "harden_sailor", "name": "Harden", "is_attack": false, "effects": [{ "type": "block", "magnitude": 6, "target": "self" }] },
-        { "id": "headbutt", "name": "Headbutt", "is_attack": true, "effects": [{ "type": "damage", "magnitude": 9 }] }
+        {
+          "id": "throw_punch",
+          "name": "Throw Punch",
+          "is_attack": true,
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 7
+            }
+          ]
+        },
+        {
+          "id": "water_gun_sailor",
+          "name": "Water Gun",
+          "is_attack": true,
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 8
+            }
+          ]
+        },
+        {
+          "id": "harden_sailor",
+          "name": "Harden",
+          "is_attack": false,
+          "effects": [
+            {
+              "type": "block",
+              "magnitude": 6,
+              "target": "self"
+            }
+          ]
+        },
+        {
+          "id": "headbutt",
+          "name": "Headbutt",
+          "is_attack": true,
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 9
+            }
+          ]
+        }
       ]
     },
     {
@@ -867,13 +1448,1690 @@
       "is_boss": true,
       "xp_reward": 90,
       "boss_pattern_loop_start": 1,
-      "boss_pattern": ["thunder_shock_surge", "thunder_wave", "spark_surge", "static", "thunderbolt_surge"],
+      "boss_pattern": [
+        "thunder_shock_surge",
+        "thunder_wave",
+        "spark_surge",
+        "static",
+        "thunderbolt_surge"
+      ],
       "action_pool": [
-        { "id": "thunder_shock_surge", "name": "Thunder Shock", "is_attack": true, "effects": [{ "type": "damage", "magnitude": 9 }] },
-        { "id": "thunder_wave", "name": "Thunder Wave", "is_attack": false, "effects": [{ "type": "status", "status": "paralyze", "duration": 2 }] },
-        { "id": "spark_surge", "name": "Spark", "is_attack": true, "effects": [{ "type": "damage", "magnitude": 8 }] },
-        { "id": "static", "name": "Static", "is_attack": false, "effects": [{ "type": "apply_condition", "condition": "slow", "duration": 2, "target": "enemy" }] },
-        { "id": "thunderbolt_surge", "name": "Thunderbolt", "is_attack": true, "effects": [{ "type": "damage", "magnitude": 13 }] }
+        {
+          "id": "thunder_shock_surge",
+          "name": "Thunder Shock",
+          "is_attack": true,
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 11
+            }
+          ]
+        },
+        {
+          "id": "thunder_wave",
+          "name": "Thunder Wave",
+          "is_attack": false,
+          "effects": [
+            {
+              "type": "status",
+              "status": "paralyze",
+              "duration": 2
+            }
+          ]
+        },
+        {
+          "id": "spark_surge",
+          "name": "Spark",
+          "is_attack": true,
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 10
+            }
+          ]
+        },
+        {
+          "id": "static",
+          "name": "Static",
+          "is_attack": false,
+          "effects": [
+            {
+              "type": "apply_condition",
+              "condition": "slow",
+              "duration": 2,
+              "target": "enemy"
+            }
+          ]
+        },
+        {
+          "id": "thunderbolt_surge",
+          "name": "Thunderbolt",
+          "is_attack": true,
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 16
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "oddish",
+      "name": "Oddish",
+      "pokemon_type": "GRASS",
+      "max_hp": 16,
+      "is_wild": true,
+      "is_boss": false,
+      "xp_reward": 10,
+      "action_pool": [
+        {
+          "id": "absorb",
+          "name": "Absorb",
+          "is_attack": true,
+          "base_weight": 3,
+          "preferred_phase": "any",
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 5
+            }
+          ]
+        },
+        {
+          "id": "acid",
+          "name": "Acid",
+          "is_attack": true,
+          "base_weight": 3,
+          "preferred_phase": "mid",
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bellsprout",
+      "name": "Bellsprout",
+      "pokemon_type": "GRASS",
+      "max_hp": 15,
+      "is_wild": true,
+      "is_boss": false,
+      "xp_reward": 10,
+      "action_pool": [
+        {
+          "id": "vine_whip_w",
+          "name": "Vine Whip",
+          "is_attack": true,
+          "base_weight": 3,
+          "preferred_phase": "any",
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 6
+            }
+          ]
+        },
+        {
+          "id": "wrap",
+          "name": "Wrap",
+          "is_attack": true,
+          "base_weight": 3,
+          "preferred_phase": "mid",
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 5
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "gloom",
+      "name": "Gloom",
+      "pokemon_type": "GRASS",
+      "max_hp": 18,
+      "is_wild": true,
+      "is_boss": false,
+      "xp_reward": 10,
+      "action_pool": [
+        {
+          "id": "absorb2",
+          "name": "Absorb",
+          "is_attack": true,
+          "base_weight": 3,
+          "preferred_phase": "any",
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 6
+            }
+          ]
+        },
+        {
+          "id": "acid2",
+          "name": "Acid",
+          "is_attack": true,
+          "base_weight": 3,
+          "preferred_phase": "mid",
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 8
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "growlithe",
+      "name": "Growlithe",
+      "pokemon_type": "FIRE",
+      "max_hp": 17,
+      "is_wild": true,
+      "is_boss": false,
+      "xp_reward": 10,
+      "action_pool": [
+        {
+          "id": "bite",
+          "name": "Bite",
+          "is_attack": true,
+          "base_weight": 3,
+          "preferred_phase": "any",
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 7
+            }
+          ]
+        },
+        {
+          "id": "ember_w",
+          "name": "Ember",
+          "is_attack": true,
+          "base_weight": 3,
+          "preferred_phase": "mid",
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 8
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "gastly",
+      "name": "Gastly",
+      "pokemon_type": "GHOST",
+      "max_hp": 15,
+      "is_wild": true,
+      "is_boss": false,
+      "xp_reward": 10,
+      "action_pool": [
+        {
+          "id": "lick",
+          "name": "Lick",
+          "is_attack": true,
+          "base_weight": 3,
+          "preferred_phase": "any",
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 5
+            }
+          ]
+        },
+        {
+          "id": "night_shade_w",
+          "name": "Night Shade",
+          "is_attack": true,
+          "base_weight": 3,
+          "preferred_phase": "mid",
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "drowzee",
+      "name": "Drowzee",
+      "pokemon_type": "PSYCHIC",
+      "max_hp": 17,
+      "is_wild": true,
+      "is_boss": false,
+      "xp_reward": 10,
+      "action_pool": [
+        {
+          "id": "pound",
+          "name": "Pound",
+          "is_attack": true,
+          "base_weight": 3,
+          "preferred_phase": "any",
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 6
+            }
+          ]
+        },
+        {
+          "id": "confusion_w",
+          "name": "Confusion",
+          "is_attack": true,
+          "base_weight": 3,
+          "preferred_phase": "mid",
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ponyta",
+      "name": "Ponyta",
+      "pokemon_type": "FIRE",
+      "max_hp": 16,
+      "is_wild": true,
+      "is_boss": false,
+      "xp_reward": 10,
+      "action_pool": [
+        {
+          "id": "stomp",
+          "name": "Stomp",
+          "is_attack": true,
+          "base_weight": 3,
+          "preferred_phase": "any",
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 6
+            }
+          ]
+        },
+        {
+          "id": "ember_w2",
+          "name": "Ember",
+          "is_attack": true,
+          "base_weight": 3,
+          "preferred_phase": "mid",
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 8
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tentacool",
+      "name": "Tentacool",
+      "pokemon_type": "WATER",
+      "max_hp": 15,
+      "is_wild": true,
+      "is_boss": false,
+      "xp_reward": 10,
+      "action_pool": [
+        {
+          "id": "acid3",
+          "name": "Acid",
+          "is_attack": true,
+          "base_weight": 3,
+          "preferred_phase": "any",
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 6
+            }
+          ]
+        },
+        {
+          "id": "wrap2",
+          "name": "Wrap",
+          "is_attack": true,
+          "base_weight": 3,
+          "preferred_phase": "mid",
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 5
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ekans",
+      "name": "Ekans",
+      "pokemon_type": "POISON",
+      "max_hp": 16,
+      "is_wild": true,
+      "is_boss": false,
+      "xp_reward": 10,
+      "action_pool": [
+        {
+          "id": "wrap3",
+          "name": "Wrap",
+          "is_attack": true,
+          "base_weight": 3,
+          "preferred_phase": "any",
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 5
+            }
+          ]
+        },
+        {
+          "id": "poison_sting_w",
+          "name": "Poison Sting",
+          "is_attack": true,
+          "base_weight": 3,
+          "preferred_phase": "mid",
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sandshrew",
+      "name": "Sandshrew",
+      "pokemon_type": "GROUND",
+      "max_hp": 17,
+      "is_wild": true,
+      "is_boss": false,
+      "xp_reward": 10,
+      "action_pool": [
+        {
+          "id": "scratch_w",
+          "name": "Scratch",
+          "is_attack": true,
+          "base_weight": 3,
+          "preferred_phase": "any",
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 6
+            }
+          ]
+        },
+        {
+          "id": "sand_attack_w",
+          "name": "Sand Attack",
+          "is_attack": false,
+          "base_weight": 2,
+          "preferred_phase": "healthy",
+          "effects": [
+            {
+              "type": "apply_condition",
+              "condition": "defenseless",
+              "duration": 1,
+              "target": "enemy"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "machop",
+      "name": "Machop",
+      "pokemon_type": "FIGHTING",
+      "max_hp": 18,
+      "is_wild": true,
+      "is_boss": false,
+      "xp_reward": 10,
+      "action_pool": [
+        {
+          "id": "low_kick_w",
+          "name": "Low Kick",
+          "is_attack": true,
+          "base_weight": 3,
+          "preferred_phase": "any",
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 7
+            }
+          ]
+        },
+        {
+          "id": "karate_chop_w",
+          "name": "Karate Chop",
+          "is_attack": true,
+          "base_weight": 3,
+          "preferred_phase": "mid",
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 8
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "golbat",
+      "name": "Golbat",
+      "pokemon_type": "POISON",
+      "max_hp": 18,
+      "is_wild": true,
+      "is_boss": false,
+      "xp_reward": 10,
+      "action_pool": [
+        {
+          "id": "bite2",
+          "name": "Bite",
+          "is_attack": true,
+          "base_weight": 3,
+          "preferred_phase": "any",
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 7
+            }
+          ]
+        },
+        {
+          "id": "wing_attack_w",
+          "name": "Wing Attack",
+          "is_attack": true,
+          "base_weight": 3,
+          "preferred_phase": "mid",
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 8
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "gambler",
+      "name": "Gambler",
+      "pokemon_type": "NORMAL",
+      "max_hp": 30,
+      "is_wild": false,
+      "is_boss": true,
+      "xp_reward": 30,
+      "boss_pattern_loop_start": 1,
+      "boss_pattern": [
+        "tackle_t",
+        "coin_toss",
+        "harden_t",
+        "headbutt_t"
+      ],
+      "action_pool": [
+        {
+          "id": "tackle_t",
+          "name": "Tackle",
+          "is_attack": true,
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 6
+            }
+          ]
+        },
+        {
+          "id": "coin_toss",
+          "name": "Coin Toss",
+          "is_attack": true,
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 7
+            }
+          ]
+        },
+        {
+          "id": "harden_t",
+          "name": "Harden",
+          "is_attack": false,
+          "effects": [
+            {
+              "type": "block",
+              "magnitude": 6,
+              "target": "self"
+            }
+          ]
+        },
+        {
+          "id": "headbutt_t",
+          "name": "Headbutt",
+          "is_attack": true,
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 9
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "rocket_grunt",
+      "name": "Team Rocket Grunt",
+      "pokemon_type": "POISON",
+      "max_hp": 32,
+      "is_wild": false,
+      "is_boss": true,
+      "xp_reward": 30,
+      "boss_pattern_loop_start": 1,
+      "boss_pattern": [
+        "tackle_r",
+        "poison_sting_r",
+        "screech_r",
+        "bite_r"
+      ],
+      "action_pool": [
+        {
+          "id": "tackle_r",
+          "name": "Tackle",
+          "is_attack": true,
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 6
+            }
+          ]
+        },
+        {
+          "id": "poison_sting_r",
+          "name": "Poison Sting",
+          "is_attack": true,
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 6
+            },
+            {
+              "type": "status",
+              "status": "poison",
+              "duration": 2,
+              "magnitude": 2
+            }
+          ]
+        },
+        {
+          "id": "screech_r",
+          "name": "Screech",
+          "is_attack": false,
+          "effects": [
+            {
+              "type": "apply_condition",
+              "condition": "defenseless",
+              "duration": 2,
+              "target": "enemy"
+            }
+          ]
+        },
+        {
+          "id": "bite_r",
+          "name": "Bite",
+          "is_attack": true,
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 8
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "biker",
+      "name": "Biker",
+      "pokemon_type": "POISON",
+      "max_hp": 34,
+      "is_wild": false,
+      "is_boss": true,
+      "xp_reward": 30,
+      "boss_pattern_loop_start": 1,
+      "boss_pattern": [
+        "tackle_bi",
+        "headbutt_bi",
+        "harden_bi",
+        "ram_bi"
+      ],
+      "action_pool": [
+        {
+          "id": "tackle_bi",
+          "name": "Tackle",
+          "is_attack": true,
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 6
+            }
+          ]
+        },
+        {
+          "id": "headbutt_bi",
+          "name": "Headbutt",
+          "is_attack": true,
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 8
+            }
+          ]
+        },
+        {
+          "id": "harden_bi",
+          "name": "Harden",
+          "is_attack": false,
+          "effects": [
+            {
+              "type": "block",
+              "magnitude": 6,
+              "target": "self"
+            }
+          ]
+        },
+        {
+          "id": "ram_bi",
+          "name": "Ram",
+          "is_attack": true,
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 10
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "snorlax",
+      "name": "Snorlax",
+      "pokemon_type": "NORMAL",
+      "max_hp": 60,
+      "is_wild": false,
+      "is_boss": true,
+      "xp_reward": 30,
+      "boss_pattern_loop_start": 0,
+      "boss_pattern": [
+        "body_slam_sn",
+        "rest_sn",
+        "headbutt_sn",
+        "harden_sn"
+      ],
+      "action_pool": [
+        {
+          "id": "body_slam_sn",
+          "name": "Body Slam",
+          "is_attack": true,
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 10
+            }
+          ]
+        },
+        {
+          "id": "rest_sn",
+          "name": "Rest",
+          "is_attack": false,
+          "effects": [
+            {
+              "type": "heal",
+              "magnitude": 14,
+              "target": "self"
+            }
+          ]
+        },
+        {
+          "id": "headbutt_sn",
+          "name": "Headbutt",
+          "is_attack": true,
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 8
+            }
+          ]
+        },
+        {
+          "id": "harden_sn",
+          "name": "Harden",
+          "is_attack": false,
+          "effects": [
+            {
+              "type": "block",
+              "magnitude": 10,
+              "target": "self"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "swimmer",
+      "name": "Swimmer",
+      "pokemon_type": "WATER",
+      "max_hp": 32,
+      "is_wild": false,
+      "is_boss": true,
+      "xp_reward": 30,
+      "boss_pattern_loop_start": 1,
+      "boss_pattern": [
+        "tackle_sw",
+        "water_gun_sw",
+        "harden_sw",
+        "headbutt_sw"
+      ],
+      "action_pool": [
+        {
+          "id": "tackle_sw",
+          "name": "Tackle",
+          "is_attack": true,
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 6
+            }
+          ]
+        },
+        {
+          "id": "water_gun_sw",
+          "name": "Water Gun",
+          "is_attack": true,
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 8
+            }
+          ]
+        },
+        {
+          "id": "harden_sw",
+          "name": "Harden",
+          "is_attack": false,
+          "effects": [
+            {
+              "type": "block",
+              "magnitude": 6,
+              "target": "self"
+            }
+          ]
+        },
+        {
+          "id": "headbutt_sw",
+          "name": "Headbutt",
+          "is_attack": true,
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 9
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "burglar",
+      "name": "Burglar",
+      "pokemon_type": "FIRE",
+      "max_hp": 34,
+      "is_wild": false,
+      "is_boss": true,
+      "xp_reward": 30,
+      "boss_pattern_loop_start": 1,
+      "boss_pattern": [
+        "tackle_bu",
+        "ember_bu",
+        "harden_bu",
+        "fire_punch_bu"
+      ],
+      "action_pool": [
+        {
+          "id": "tackle_bu",
+          "name": "Tackle",
+          "is_attack": true,
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 6
+            }
+          ]
+        },
+        {
+          "id": "ember_bu",
+          "name": "Ember",
+          "is_attack": true,
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 8
+            }
+          ]
+        },
+        {
+          "id": "harden_bu",
+          "name": "Harden",
+          "is_attack": false,
+          "effects": [
+            {
+              "type": "block",
+              "magnitude": 6,
+              "target": "self"
+            }
+          ]
+        },
+        {
+          "id": "fire_punch_bu",
+          "name": "Fire Punch",
+          "is_attack": true,
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 10
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "rocket_admin",
+      "name": "Team Rocket Admin",
+      "pokemon_type": "POISON",
+      "max_hp": 38,
+      "is_wild": false,
+      "is_boss": true,
+      "xp_reward": 30,
+      "boss_pattern_loop_start": 1,
+      "boss_pattern": [
+        "tackle_ra",
+        "sludge_ra",
+        "screech_ra",
+        "bite_ra"
+      ],
+      "action_pool": [
+        {
+          "id": "tackle_ra",
+          "name": "Tackle",
+          "is_attack": true,
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 7
+            }
+          ]
+        },
+        {
+          "id": "sludge_ra",
+          "name": "Sludge",
+          "is_attack": true,
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 9
+            }
+          ]
+        },
+        {
+          "id": "screech_ra",
+          "name": "Screech",
+          "is_attack": false,
+          "effects": [
+            {
+              "type": "apply_condition",
+              "condition": "defenseless",
+              "duration": 2,
+              "target": "enemy"
+            }
+          ]
+        },
+        {
+          "id": "bite_ra",
+          "name": "Bite",
+          "is_attack": true,
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 9
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cool_trainer",
+      "name": "Cool Trainer",
+      "pokemon_type": "NORMAL",
+      "max_hp": 40,
+      "is_wild": false,
+      "is_boss": true,
+      "xp_reward": 30,
+      "boss_pattern_loop_start": 1,
+      "boss_pattern": [
+        "tackle_ct",
+        "slash_ct",
+        "harden_ct",
+        "body_slam_ct"
+      ],
+      "action_pool": [
+        {
+          "id": "tackle_ct",
+          "name": "Tackle",
+          "is_attack": true,
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 7
+            }
+          ]
+        },
+        {
+          "id": "slash_ct",
+          "name": "Slash",
+          "is_attack": true,
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 9
+            }
+          ]
+        },
+        {
+          "id": "harden_ct",
+          "name": "Harden",
+          "is_attack": false,
+          "effects": [
+            {
+              "type": "block",
+              "magnitude": 8,
+              "target": "self"
+            }
+          ]
+        },
+        {
+          "id": "body_slam_ct",
+          "name": "Body Slam",
+          "is_attack": true,
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 10
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "erika",
+      "name": "Erika",
+      "pokemon_type": "GRASS",
+      "max_hp": 58,
+      "is_wild": false,
+      "is_boss": true,
+      "xp_reward": 90,
+      "boss_pattern_loop_start": 1,
+      "boss_pattern": [
+        "vine_whip_e",
+        "poison_powder_e",
+        "mega_drain_e",
+        "razor_leaf_e"
+      ],
+      "action_pool": [
+        {
+          "id": "vine_whip_e",
+          "name": "Vine Whip",
+          "is_attack": true,
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 12
+            }
+          ]
+        },
+        {
+          "id": "poison_powder_e",
+          "name": "Powder Cloud",
+          "is_attack": false,
+          "effects": [
+            {
+              "type": "status",
+              "status": "poison",
+              "duration": 3,
+              "magnitude": 3
+            },
+            {
+              "type": "status",
+              "status": "sleep",
+              "duration": 1
+            }
+          ]
+        },
+        {
+          "id": "mega_drain_e",
+          "name": "Mega Drain",
+          "is_attack": true,
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 10
+            },
+            {
+              "type": "heal",
+              "magnitude": 6,
+              "target": "self"
+            }
+          ]
+        },
+        {
+          "id": "razor_leaf_e",
+          "name": "Razor Leaf",
+          "is_attack": true,
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 14
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "koga",
+      "name": "Koga",
+      "pokemon_type": "POISON",
+      "max_hp": 60,
+      "is_wild": false,
+      "is_boss": true,
+      "xp_reward": 90,
+      "boss_pattern_loop_start": 1,
+      "boss_pattern": [
+        "sludge_ko",
+        "toxic_ko",
+        "minimize_ko",
+        "sludge_bomb_ko"
+      ],
+      "action_pool": [
+        {
+          "id": "sludge_ko",
+          "name": "Sludge",
+          "is_attack": true,
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 13
+            }
+          ]
+        },
+        {
+          "id": "toxic_ko",
+          "name": "Toxic",
+          "is_attack": false,
+          "effects": [
+            {
+              "type": "status",
+              "status": "poison",
+              "duration": 5,
+              "magnitude": 5
+            }
+          ]
+        },
+        {
+          "id": "minimize_ko",
+          "name": "Minimize",
+          "is_attack": false,
+          "effects": [
+            {
+              "type": "block",
+              "magnitude": 10,
+              "target": "self"
+            }
+          ]
+        },
+        {
+          "id": "sludge_bomb_ko",
+          "name": "Sludge Bomb",
+          "is_attack": true,
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 17
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sabrina",
+      "name": "Sabrina",
+      "pokemon_type": "PSYCHIC",
+      "max_hp": 58,
+      "is_wild": false,
+      "is_boss": true,
+      "xp_reward": 90,
+      "boss_pattern_loop_start": 1,
+      "boss_pattern": [
+        "confusion_sa",
+        "psychic_sa",
+        "hand_disrupt",
+        "psybeam_sa"
+      ],
+      "action_pool": [
+        {
+          "id": "confusion_sa",
+          "name": "Confusion",
+          "is_attack": false,
+          "effects": [
+            {
+              "type": "status",
+              "status": "confuse",
+              "duration": 2
+            }
+          ]
+        },
+        {
+          "id": "psychic_sa",
+          "name": "Psychic",
+          "is_attack": true,
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 20
+            }
+          ]
+        },
+        {
+          "id": "hand_disrupt",
+          "name": "Kinesis",
+          "is_attack": false,
+          "effects": [
+            {
+              "type": "shuffle_hand"
+            }
+          ]
+        },
+        {
+          "id": "psybeam_sa",
+          "name": "Psybeam",
+          "is_attack": true,
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 15
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "blaine",
+      "name": "Blaine",
+      "pokemon_type": "FIRE",
+      "max_hp": 60,
+      "is_wild": false,
+      "is_boss": true,
+      "xp_reward": 90,
+      "boss_pattern_loop_start": 1,
+      "boss_pattern": [
+        "ember_bl",
+        "fire_spin_bl",
+        "flamethrower_bl",
+        "smokescreen_bl"
+      ],
+      "action_pool": [
+        {
+          "id": "ember_bl",
+          "name": "Ember",
+          "is_attack": true,
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 14
+            }
+          ]
+        },
+        {
+          "id": "fire_spin_bl",
+          "name": "Fire Spin",
+          "is_attack": true,
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 11
+            },
+            {
+              "type": "status",
+              "status": "poison",
+              "duration": 3,
+              "magnitude": 3
+            }
+          ]
+        },
+        {
+          "id": "flamethrower_bl",
+          "name": "Flamethrower",
+          "is_attack": true,
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 21
+            }
+          ]
+        },
+        {
+          "id": "smokescreen_bl",
+          "name": "Smokescreen",
+          "is_attack": false,
+          "effects": [
+            {
+              "type": "apply_condition",
+              "condition": "blinded",
+              "duration": 2,
+              "target": "enemy"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "giovanni",
+      "name": "Giovanni",
+      "pokemon_type": "GROUND",
+      "max_hp": 65,
+      "is_wild": false,
+      "is_boss": true,
+      "xp_reward": 90,
+      "boss_pattern_loop_start": 1,
+      "boss_pattern": [
+        "bone_club_g",
+        "dig_g",
+        "tail_whip_g",
+        "earthquake_g"
+      ],
+      "action_pool": [
+        {
+          "id": "bone_club_g",
+          "name": "Bone Club",
+          "is_attack": true,
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 15
+            }
+          ]
+        },
+        {
+          "id": "dig_g",
+          "name": "Dig",
+          "is_attack": true,
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 17
+            }
+          ]
+        },
+        {
+          "id": "tail_whip_g",
+          "name": "Tail Whip",
+          "is_attack": false,
+          "effects": [
+            {
+              "type": "apply_condition",
+              "condition": "defenseless",
+              "duration": 2,
+              "target": "enemy"
+            }
+          ]
+        },
+        {
+          "id": "earthquake_g",
+          "name": "Earthquake",
+          "is_attack": true,
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 22,
+              "ignore_block": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lorelei",
+      "name": "Lorelei",
+      "pokemon_type": "ICE",
+      "max_hp": 60,
+      "is_wild": false,
+      "is_boss": true,
+      "xp_reward": 90,
+      "boss_pattern_loop_start": 1,
+      "boss_pattern": [
+        "aurora_beam_l",
+        "rest_l",
+        "ice_beam_l",
+        "blizzard_l"
+      ],
+      "action_pool": [
+        {
+          "id": "aurora_beam_l",
+          "name": "Aurora Beam",
+          "is_attack": true,
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 16
+            }
+          ]
+        },
+        {
+          "id": "rest_l",
+          "name": "Rest",
+          "is_attack": false,
+          "effects": [
+            {
+              "type": "heal",
+              "magnitude": 12,
+              "target": "self"
+            }
+          ]
+        },
+        {
+          "id": "ice_beam_l",
+          "name": "Ice Beam",
+          "is_attack": true,
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 20
+            }
+          ]
+        },
+        {
+          "id": "blizzard_l",
+          "name": "Blizzard",
+          "is_attack": true,
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 23
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bruno",
+      "name": "Bruno",
+      "pokemon_type": "FIGHTING",
+      "max_hp": 62,
+      "is_wild": false,
+      "is_boss": true,
+      "xp_reward": 90,
+      "boss_pattern_loop_start": 1,
+      "boss_pattern": [
+        "karate_chop_br",
+        "rock_slide_br",
+        "harden_br",
+        "seismic_toss_br"
+      ],
+      "action_pool": [
+        {
+          "id": "karate_chop_br",
+          "name": "Karate Chop",
+          "is_attack": true,
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 20
+            }
+          ]
+        },
+        {
+          "id": "rock_slide_br",
+          "name": "Rock Slide",
+          "is_attack": true,
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 18
+            }
+          ]
+        },
+        {
+          "id": "harden_br",
+          "name": "Harden",
+          "is_attack": false,
+          "effects": [
+            {
+              "type": "block",
+              "magnitude": 8,
+              "target": "self"
+            }
+          ]
+        },
+        {
+          "id": "seismic_toss_br",
+          "name": "Seismic Toss",
+          "is_attack": true,
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 22,
+              "ignore_block": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "agatha",
+      "name": "Agatha",
+      "pokemon_type": "GHOST",
+      "max_hp": 60,
+      "is_wild": false,
+      "is_boss": true,
+      "xp_reward": 90,
+      "boss_pattern_loop_start": 1,
+      "boss_pattern": [
+        "night_shade_ag",
+        "toxic_ag",
+        "confuse_ray_ag",
+        "dream_eater_ag"
+      ],
+      "action_pool": [
+        {
+          "id": "night_shade_ag",
+          "name": "Night Shade",
+          "is_attack": true,
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 18
+            }
+          ]
+        },
+        {
+          "id": "toxic_ag",
+          "name": "Toxic",
+          "is_attack": false,
+          "effects": [
+            {
+              "type": "status",
+              "status": "poison",
+              "duration": 4,
+              "magnitude": 4
+            }
+          ]
+        },
+        {
+          "id": "confuse_ray_ag",
+          "name": "Confuse Ray",
+          "is_attack": false,
+          "effects": [
+            {
+              "type": "status",
+              "status": "confuse",
+              "duration": 2
+            }
+          ]
+        },
+        {
+          "id": "dream_eater_ag",
+          "name": "Dream Eater",
+          "is_attack": true,
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 20
+            },
+            {
+              "type": "heal",
+              "magnitude": 6,
+              "target": "self"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lance",
+      "name": "Lance",
+      "pokemon_type": "DRAGON",
+      "max_hp": 65,
+      "is_wild": false,
+      "is_boss": true,
+      "xp_reward": 90,
+      "boss_pattern_loop_start": 1,
+      "boss_pattern": [
+        "wing_attack_la",
+        "dragon_rage_la",
+        "harden_la",
+        "hyper_beam_la"
+      ],
+      "action_pool": [
+        {
+          "id": "wing_attack_la",
+          "name": "Wing Attack",
+          "is_attack": true,
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 16
+            }
+          ]
+        },
+        {
+          "id": "dragon_rage_la",
+          "name": "Dragon Rage",
+          "is_attack": true,
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 22
+            }
+          ]
+        },
+        {
+          "id": "harden_la",
+          "name": "Harden",
+          "is_attack": false,
+          "effects": [
+            {
+              "type": "block",
+              "magnitude": 8,
+              "target": "self"
+            }
+          ]
+        },
+        {
+          "id": "hyper_beam_la",
+          "name": "Hyper Beam",
+          "is_attack": true,
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 27
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "champion",
+      "name": "Champion",
+      "pokemon_type": "NORMAL",
+      "max_hp": 68,
+      "is_wild": false,
+      "is_boss": true,
+      "xp_reward": 100,
+      "boss_pattern_loop_start": 1,
+      "boss_pattern": [
+        "slash_ch",
+        "body_slam_ch",
+        "harden_ch",
+        "hyper_beam_ch"
+      ],
+      "action_pool": [
+        {
+          "id": "slash_ch",
+          "name": "Slash",
+          "is_attack": true,
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 20
+            }
+          ]
+        },
+        {
+          "id": "body_slam_ch",
+          "name": "Body Slam",
+          "is_attack": true,
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 22
+            }
+          ]
+        },
+        {
+          "id": "harden_ch",
+          "name": "Harden",
+          "is_attack": false,
+          "effects": [
+            {
+              "type": "block",
+              "magnitude": 10,
+              "target": "self"
+            }
+          ]
+        },
+        {
+          "id": "hyper_beam_ch",
+          "name": "Hyper Beam",
+          "is_attack": true,
+          "effects": [
+            {
+              "type": "damage",
+              "magnitude": 27
+            }
+          ]
+        }
       ]
     }
   ]

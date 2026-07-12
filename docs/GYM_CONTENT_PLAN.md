@@ -193,6 +193,24 @@ Signature/card marked *(new)* needs authoring; otherwise it exists.
 
 ---
 
+## Canon alignment (FireRed walkthrough — record)
+
+Checked `level_outline.yaml` against the FireRed TOC. Badge order + gym roster are
+correct; the deviations below are **recorded but not yet applied** (only the Snorlax
+add was applied):
+
+| Level | Canon | Outline | Status |
+|-------|-------|---------|--------|
+| 1 Pewter | Pallet → **Viridian City** → Viridian Forest → Pewter | Route 1 → Forest → Pewter | skips Viridian City (first Center) — *deferred* |
+| 4 Celadon | **Rock Tunnel → Lavender → Rocket Hideout (Giovanni #1)** → Celadon | Route 6/7 → Game Corner | geography *deferred* |
+| 5 Fuchsia | Pokémon Tower → **Snorlax (Silence Bridge)** → Cycling Road → Fuchsia | Cycling Road → **Snorlax** ✅ | Snorlax **applied**; Tower deferred |
+| 8 Viridian | *just* the gym (tiny section) | 2 approach areas | trim to gym-only — *deferred* |
+| 9 E4 | Gary #7 on Route 22 → Victory Road → E4 → Champion (Gary #8) | Victory Road → E4 rush | move Gary #7 to L9 — *deferred* |
+
+**Recurring-villain idea (deferred):** Giovanni at Celadon Rocket Hideout (L4) → Silph
+Co (L6) → Viridian gym boss (L8). **Rival (Gary) cadence (deferred):** #2 Route 22, #3
+Cerulean, #4 S.S. Anne, #6 Silph, #7 Victory Road, #8 Champion, team evolving each time.
+
 ## Signature cards to author (new)
 
 `thunderbolt` (Electric), `sludge_bomb` (Poison), `psybeam` (Psychic),

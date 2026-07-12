@@ -23,6 +23,11 @@ static func grant_leader_rewards(player: PlayerState, enc: Dictionary, bal) -> i
 	var badge_id := String(enc.get("badge_id", ""))
 	if badge_id != "" and not player.badge_ids.has(badge_id):
 		player.badge_ids.append(badge_id)
+		# One-time max-HP badges (Earth): raise the cap and heal into it.
+		var hp_bonus := int(bal.badges.get(badge_id, {}).get("max_hp_bonus", 0))
+		if hp_bonus > 0:
+			player.max_hp += hp_bonus
+			player.hp += hp_bonus
 	var signature := String(enc.get("signature_card", ""))
 	if signature != "":
 		DeckOps.add_card_to_deck(player, signature)

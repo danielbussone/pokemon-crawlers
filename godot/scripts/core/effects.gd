@@ -167,9 +167,15 @@ static func resolve_effects(effects: Array, attacker: Combatant, defender: Comba
 			results.append({"type": "heal", "target_is_player": is_target_player}.merged(heal))
 		elif eff_type == "status":
 			if eff.has("status") and eff.has("duration"):
-				var status := apply_status(target, String(eff["status"]), int(eff["duration"]),
-						int(eff.get("magnitude", 0)))
-				results.append({"type": "status", "target_is_player": is_target_player}.merged(status))
+				# Badge status immunity (Phase 5b, e.g. Soul → poison): the player
+				# shrugs off the status entirely.
+				if is_target_player and player != null \
+						and BadgeOps.is_status_immune(player.badge_ids, bal, String(eff["status"])):
+					results.append({"type": "status", "target_is_player": true, "immune": true})
+				else:
+					var status := apply_status(target, String(eff["status"]), int(eff["duration"]),
+							int(eff.get("magnitude", 0)))
+					results.append({"type": "status", "target_is_player": is_target_player}.merged(status))
 		elif eff_type == "apply_condition":
 			if eff.has("condition"):
 				var cond := apply_condition(target, String(eff["condition"]), bal,
@@ -177,7 +183,15 @@ static func resolve_effects(effects: Array, attacker: Combatant, defender: Comba
 				results.append({"type": "apply_condition", "target_is_player": is_target_player}.merged(cond))
 		elif eff_type == "draw":
 			if player != null and is_player_attacker and int(eff.get("magnitude", 0)) > 0:
-				DeckOps.draw_cards(player, int(eff["magnitude"]), bal.hand_size(), rng)
+				DeckOps.draw_cards(player, int(eff["magnitude"]),
+						bal.hand_size() + BadgeOps.hand_size_bonus(player.badge_ids, bal), rng)
+		elif eff_type == "shuffle_hand":
+			# Sabrina's mechanic: dump the player's hand back and redraw a fresh one.
+			if player != null:
+				DeckOps.discard_hand(player)
+				DeckOps.draw_to_hand(player, bal.hand_size()
+						+ BadgeOps.hand_size_bonus(player.badge_ids, bal), rng)
+				results.append({"type": "shuffle_hand", "target_is_player": true})
 
 	return results
 

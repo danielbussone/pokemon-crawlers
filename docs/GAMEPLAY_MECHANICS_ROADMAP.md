@@ -22,11 +22,11 @@ Last updated: 2026-07-10
 | `phase5a-gym-engine` | **IMPLEMENTED — pending approval** | Data-driven N-gym run loop: uniform `segments[]`; every leader grants badge+signature+rare candy and **continues**, only the `is_final` leader ends the run; sim + validation scale to N. (world_builder zone/gym de-hardcoding deferred to `phase5-map-format`) |
 | `phase5-map-format` | **IMPLEMENTED — pending approval** | ASCII-grid-in-JSON layouts + parser; migrated the 3 stages; optional-wild count/placement now from the grid (`w` cells); zone names + gym anchors data-driven; reachability validation |
 | `phase5-map-editor` | **IMPLEMENTED — pending approval** | In-engine paint tool (`--mapeditor`): full terrain+encounter palette, click/drag paint, metadata panel, stage picker / new / resize, save to JSON, live validation. Gate funnel now auto-derived (no hand-authoring) |
-| `phase5b-gym-mechanics` | **In progress** | **Typed badge schema DONE** (`BadgeOps`: outgoing/incoming/max_stamina; Boulder→defensive). Surge's paralyze+stamina-drain reused existing vocab. Remaining new mechanics land with their gyms (multi-status, poison-stack+evasion, hand shuffle, lava tick; multi-phase deferred) |
-| `phase5c-gym-content` | **2/8 — pending approval** | Gym 2 Cerulean/Misty + Gym 3 Vermilion/Surge authored end-to-end (3-gym arc live). Gyms 4–8 + E4 remain. See [GYM_CONTENT_PLAN.md](GYM_CONTENT_PLAN.md) |
+| `phase5b-gym-mechanics` | **IMPLEMENTED — pending approval** | Full typed badge schema (`BadgeOps`: outgoing/incoming/stamina/hand-size/max-hp/heal/status-immunity) + `shuffle_hand` effect (Sabrina). Erika multi-status, Koga stacking-poison, Blaine lava-DoT, Giovanni ignore-block all via existing/minimal vocab. Multi-phase + true evasion deferred |
+| `phase5c-gym-content` | **8/8 gyms + E4 — pending approval** | **Full 9-level Kanto arc playable end-to-end** (Brock → Misty → Surge → Erika → Koga → Sabrina → Blaine → Giovanni → E4 → Champion). Snorlax mid-boss. simcheck completes the arc (~20%); **front-loaded balance** (late game trivial once snowballed) needs a tuning pass. See [level_outline.yaml](level_outline.yaml) |
 | `phase6-telemetry` | Pending | Run log metrics + sim_check extensions |
 
-**Current next TODO:** `phase5b-gym-mechanics` (5a + map-format + editor implemented, awaiting sign-off). Content (`phase5c`) can now be authored with the editor.
+**Current next TODO:** balance pass on the full 9-level arc (front-loaded difficulty; late game trivial once snowballed), then `phase6-telemetry`. All of Phase 5 (5a→5c + map tools + 5b mechanics) implemented, awaiting sign-off.
 
 ---
 

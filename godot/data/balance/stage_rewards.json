@@ -62,5 +62,11 @@
     "body_slam",
     "rain_dance",
     "bubble"
-  ]
+  ],
+  "stage8": ["quick_attack", "harden", "recover", "body_slam", "protect", "supersonic"],
+  "stage9": ["quick_attack", "harden", "recover", "body_slam", "protect", "sand_attack"],
+  "stage10": ["quick_attack", "harden", "recover", "body_slam", "protect", "defense_curl"],
+  "stage11": ["quick_attack", "harden", "recover", "body_slam", "protect", "rain_dance"],
+  "stage12": ["quick_attack", "harden", "recover", "body_slam", "protect", "bubble"],
+  "stage13": ["quick_attack", "harden", "recover", "body_slam", "protect", "withdraw"]
 }

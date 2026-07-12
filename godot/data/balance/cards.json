@@ -662,6 +662,45 @@
         { "type": "damage", "magnitude": 18 },
         { "type": "status", "status": "paralyze", "duration": 1 }
       ]
+    },
+    {
+      "id": "sludge_bomb",
+      "name": "Sludge Bomb",
+      "pokemon": "Koga",
+      "card_type": "attack",
+      "pokemon_type": "POISON",
+      "cost": 3,
+      "power": 16,
+      "rarity": "signature",
+      "effects": [
+        { "type": "damage", "magnitude": 16 },
+        { "type": "status", "status": "poison", "duration": 3, "magnitude": 3 }
+      ]
+    },
+    {
+      "id": "psybeam",
+      "name": "Psybeam",
+      "pokemon": "Sabrina",
+      "card_type": "attack",
+      "pokemon_type": "PSYCHIC",
+      "cost": 3,
+      "power": 17,
+      "rarity": "signature",
+      "effects": [
+        { "type": "damage", "magnitude": 17 },
+        { "type": "status", "status": "confuse", "duration": 1 }
+      ]
+    },
+    {
+      "id": "earthquake",
+      "name": "Earthquake",
+      "pokemon": "Giovanni",
+      "card_type": "attack",
+      "pokemon_type": "GROUND",
+      "cost": 3,
+      "power": 18,
+      "rarity": "signature",
+      "effects": [{ "type": "damage", "magnitude": 18, "ignore_block": true }]
     }
   ]
 }

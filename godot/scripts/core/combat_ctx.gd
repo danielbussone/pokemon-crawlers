@@ -75,7 +75,7 @@ func player_turn_begin() -> String:
 	if outcome != ONGOING:
 		return outcome
 
-	DeckOps.draw_to_hand(player, bal.hand_size(), rng)
+	DeckOps.draw_to_hand(player, bal.hand_size() + BadgeOps.hand_size_bonus(player.badge_ids, bal), rng)
 	return ONGOING
 
 

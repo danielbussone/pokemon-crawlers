@@ -135,6 +135,33 @@
         "#.....S.....#",
         "######.######"
       ]
-    }
+    },
+
+    "route6_7": { "id": "route6_7", "template": "open_field", "display_name": "Route 6", "gate_facing": "north", "grid": ["####X####", "#.......#", "#...L...#", "#.w...w.#", "#.......#", "#...S...#", "####.####"] },
+    "game_corner": { "id": "game_corner", "template": "cave_branches", "display_name": "Celadon Game Corner", "gate_facing": "north", "grid": ["####X####", "#.......#", "#...L...#", "#.w...w.#", "#.......#", "#...S...#", "####.####"] },
+    "celadon": { "id": "celadon", "template": "town_pocket", "display_name": "Celadon City", "gym_name": "Celadon Gym", "gate_facing": "north", "shop_windows": { "center": 1, "mart": 2 }, "grid": ["####_L_####", "#####D#####", "#.w.....w.#", "#.........#", "#..c...m..#", "#.........#", "#....S....#", "#####.#####"] },
+
+    "cycling_road": { "id": "cycling_road", "template": "open_field", "display_name": "Cycling Road", "gate_facing": "north", "grid": ["####X####", "#.......#", "#...L...#", "#.w...w.#", "#.......#", "#...S...#", "####.####"] },
+    "silence_bridge": { "id": "silence_bridge", "template": "open_field", "display_name": "Route 12 — Silence Bridge", "gate_facing": "north", "grid": ["####X####", "#.......#", "#...L...#", "#.w...w.#", "#.......#", "#...S...#", "####.####"] },
+    "fuchsia": { "id": "fuchsia", "template": "town_pocket", "display_name": "Fuchsia City", "gym_name": "Fuchsia Gym", "gate_facing": "north", "shop_windows": { "center": 1, "mart": 2 }, "grid": ["####_L_####", "#####D#####", "#.w.....w.#", "#.........#", "#..c...m..#", "#.........#", "#....S....#", "#####.#####"] },
+
+    "silph_lower": { "id": "silph_lower", "template": "cave_branches", "display_name": "Silph Co. — Lower", "gate_facing": "north", "grid": ["####X####", "#.......#", "#...L...#", "#.w...w.#", "#.......#", "#...S...#", "####.####"] },
+    "silph_upper": { "id": "silph_upper", "template": "cave_branches", "display_name": "Silph Co. — Upper", "gate_facing": "north", "grid": ["####X####", "#.......#", "#...L...#", "#.w...w.#", "#.......#", "#...S...#", "####.####"] },
+    "saffron": { "id": "saffron", "template": "town_pocket", "display_name": "Saffron City", "gym_name": "Saffron Gym", "gate_facing": "north", "shop_windows": { "center": 1, "mart": 2 }, "grid": ["####_L_####", "#####D#####", "#.w.....w.#", "#.........#", "#..c...m..#", "#.........#", "#....S....#", "#####.#####"] },
+
+    "sea_route": { "id": "sea_route", "template": "open_field", "display_name": "Route 20 — Sea", "gate_facing": "north", "grid": ["####X####", "#.......#", "#...L...#", "#.w...w.#", "#.......#", "#...S...#", "####.####"] },
+    "mansion": { "id": "mansion", "template": "cave_branches", "display_name": "Pokémon Mansion", "gate_facing": "north", "grid": ["####X####", "#.......#", "#...L...#", "#.w...w.#", "#.......#", "#...S...#", "####.####"] },
+    "cinnabar": { "id": "cinnabar", "template": "town_pocket", "display_name": "Cinnabar Island", "gym_name": "Cinnabar Gym", "gate_facing": "north", "shop_windows": { "center": 1, "mart": 2 }, "grid": ["####_L_####", "#####D#####", "#.w.....w.#", "#.........#", "#..c...m..#", "#.........#", "#....S....#", "#####.#####"] },
+
+    "route22": { "id": "route22", "template": "open_field", "display_name": "Route 22", "gate_facing": "north", "grid": ["####X####", "#.......#", "#...L...#", "#.w...w.#", "#.......#", "#...S...#", "####.####"] },
+    "viridian_front": { "id": "viridian_front", "template": "open_field", "display_name": "Viridian Approach", "gate_facing": "north", "grid": ["####X####", "#.......#", "#...L...#", "#.w...w.#", "#.......#", "#...S...#", "####.####"] },
+    "viridian": { "id": "viridian", "template": "town_pocket", "display_name": "Viridian City", "gym_name": "Viridian Gym", "gate_facing": "north", "shop_windows": { "center": 1, "mart": 2 }, "grid": ["####_L_####", "#####D#####", "#.w.....w.#", "#.........#", "#..c...m..#", "#.........#", "#....S....#", "#####.#####"] },
+
+    "victory_road": { "id": "victory_road", "template": "cave_branches", "display_name": "Victory Road", "gate_facing": "north", "grid": ["####X####", "#.......#", "#...L...#", "#.w...w.#", "#.......#", "#...S...#", "####.####"] },
+    "e4_lorelei": { "id": "e4_lorelei", "template": "gym_arena", "display_name": "Indigo Plateau — Lorelei", "gym_name": "Elite Four", "gate_facing": "north", "grid": ["##_L_##", "#.....#", "#.....#", "#..S..#", "###.###"] },
+    "e4_bruno": { "id": "e4_bruno", "template": "gym_arena", "display_name": "Indigo Plateau — Bruno", "gym_name": "Elite Four", "gate_facing": "north", "grid": ["##_L_##", "#.....#", "#.....#", "#..S..#", "###.###"] },
+    "e4_agatha": { "id": "e4_agatha", "template": "gym_arena", "display_name": "Indigo Plateau — Agatha", "gym_name": "Elite Four", "gate_facing": "north", "grid": ["##_L_##", "#.....#", "#.....#", "#..S..#", "###.###"] },
+    "e4_lance": { "id": "e4_lance", "template": "gym_arena", "display_name": "Indigo Plateau — Lance", "gym_name": "Elite Four", "gate_facing": "north", "grid": ["##_L_##", "#.....#", "#.....#", "#..S..#", "###.###"] },
+    "e4_champion": { "id": "e4_champion", "template": "gym_arena", "display_name": "Indigo Plateau — Champion", "gym_name": "Champion", "gate_facing": "north", "grid": ["##_L_##", "#.....#", "#.....#", "#..S..#", "###.###"] }
   }
 }

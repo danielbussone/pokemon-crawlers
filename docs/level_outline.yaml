@@ -96,7 +96,7 @@ levels:
   - id: 4
     region: Celadon
     gym_type: Grass
-    status: planned
+    status: built
     areas:
       - name: Route 6/7
         wild_pool: [oddish, bellsprout, meowth, mankey]
@@ -121,18 +121,18 @@ levels:
   - id: 5
     region: Fuchsia
     gym_type: Poison
-    status: planned
+    status: built
     areas:
       - name: Cycling Road
         wild_pool: [doduo, spearow, grimer, koffing]
         mid_boss:
           trainer: Biker
           pokemon: [Koffing, Grimer]
-      - name: Route 15
-        wild_pool: [gloom, venonat, oddish, doduo]
+      - name: Route 12 — Silence Bridge
+        wild_pool: [oddish, gloom, venonat, farfetchd]
         mid_boss:
-          trainer: Juggler
-          pokemon: [Drowzee, Kadabra]
+          wild_boss: Snorlax           # road-blocker woken by the Poké Flute (tanky wall)
+          pokemon: [Snorlax]
     gym:
       city: Fuchsia City
       wild_pool: [koffing, grimer, venonat]
@@ -146,7 +146,7 @@ levels:
   - id: 6
     region: Saffron
     gym_type: Psychic
-    status: planned
+    status: built
     areas:
       - name: Silph Co. (lower)
         wild_pool: [abra, drowzee, gastly, meowth]
@@ -171,7 +171,7 @@ levels:
   - id: 7
     region: Cinnabar
     gym_type: Fire
-    status: planned
+    status: built
     areas:
       - name: Sea Route 19-20
         wild_pool: [tentacool, horsea, staryu, krabby]
@@ -196,7 +196,7 @@ levels:
   - id: 8
     region: Viridian
     gym_type: Ground
-    status: planned
+    status: built
     areas:
       - name: Route 22
         wild_pool: [spearow, rattata, mankey, nidoran_m]
@@ -221,7 +221,7 @@ levels:
   - id: 9
     region: Victory Road / Indigo Plateau
     gym_type: Elite Four + Champion
-    status: planned
+    status: built
     areas:
       - name: Victory Road
         wild_pool: [machop, geodude, graveler, onix, golbat, marowak]
