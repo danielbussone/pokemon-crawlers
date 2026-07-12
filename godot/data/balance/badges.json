@@ -3,5 +3,10 @@
     "id": "boulder_badge",
     "name": "Boulder Badge",
     "outgoing_damage_mult": 1.1
+  },
+  "cascade_badge": {
+    "id": "cascade_badge",
+    "name": "Cascade Badge",
+    "outgoing_damage_mult": 1.1
   }
 }

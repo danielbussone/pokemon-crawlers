@@ -27,5 +27,15 @@
     "stun_spore",
     "sleep_powder",
     "string_shot"
+  ],
+  "stage4": [
+    "bubble",
+    "withdraw",
+    "recover",
+    "protect",
+    "body_slam",
+    "quick_attack",
+    "harden",
+    "rain_dance"
   ]
 }

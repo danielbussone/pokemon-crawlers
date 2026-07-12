@@ -23,7 +23,7 @@ Last updated: 2026-07-10
 | `phase5-map-format` | **IMPLEMENTED — pending approval** | ASCII-grid-in-JSON layouts + parser; migrated the 3 stages; optional-wild count/placement now from the grid (`w` cells); zone names + gym anchors data-driven; reachability validation |
 | `phase5-map-editor` | **IMPLEMENTED — pending approval** | In-engine paint tool (`--mapeditor`): full terrain+encounter palette, click/drag paint, metadata panel, stage picker / new / resize, save to JSON, live validation. Gate funnel now auto-derived (no hand-authoring) |
 | `phase5b-gym-mechanics` | Pending | New combat mechanics (stamina drain, multi-status/action, stacking poison+evasion, hand shuffle, arena lava tick, multi-phase boss, escalating Center costs) + badge-passive schema |
-| `phase5c-gym-content` | Pending | Author 8 gyms + E4 with the editor: Pokémon, leaders, badges, signature cards, draft pools, maze layouts; balance pass |
+| `phase5c-gym-content` | **1/8 (vertical slice) — pending approval** | Cerulean/Misty gym authored end-to-end (proves the pipeline + multi-gym continuation). 7 gyms + E4 remain |
 | `phase6-telemetry` | Pending | Run log metrics + sim_check extensions |
 
 **Current next TODO:** `phase5b-gym-mechanics` (5a + map-format + editor implemented, awaiting sign-off). Content (`phase5c`) can now be authored with the editor.
@@ -260,6 +260,22 @@ beyond `outgoing_damage_mult`.
 ### 5c — Full content
 Author all 8 gyms + E4: Pokémon (enemies.json + sprites), leaders, badges, signature
 cards, draft pools, maze layouts. Balance pass via `sim_check` (+ Phase 6 telemetry).
+
+**Gym 2 — Cerulean/Misty (DONE, vertical slice):** first real second gym, proving the
+whole toolchain and finally exercising the multi-gym "badge and continue" loop in-game.
+- `run_config.json`: Pewter `is_final` → false (Brock now grants his badge and continues);
+  new `cerulean` segment is the finale.
+- `enemies.json`: `misty` (WATER boss, hp 50, xp 90 — heal + ignore-block, her Phase-5b
+  mechanic, both already in the vocabulary) + 4 water wilds (psyduck/poliwag/goldeen/shellder;
+  all have BW sprites). `badges.json`: `cascade_badge`. `stage_rewards.json`: `stage4` pool.
+  Signature = existing `water_pulse`.
+- `stage_layouts.json`: `cerulean` grid (town + gym).
+- `world_builder.gd`: gym floor/zone + BOSS marker now key on `is_gym` (not `is_final_boss`),
+  so a non-final gym (Brock) keeps gym styling.
+- Verified: simcheck traverses all 4 segments and reaches/fights Misty (she + Cerulean wilds
+  appear in the loss table); ~32% win (longer run; Charmander struggles into rock+water, as
+  in canon). Misty's trainer art falls back to procedural until a `misty.png` is dropped in.
+- **Not yet done for this gym:** proper `misty.png` art; a balance pass on the longer arc.
 
 ### Map-authoring tooling (DECIDED — ASCII-grid now → creator tool later)
 Walls today are **100% hand-authored** `blocked_cells` coordinate arrays (no procedural

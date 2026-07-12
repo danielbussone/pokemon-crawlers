@@ -596,6 +596,171 @@
           "effects": [{ "type": "block", "magnitude": 6, "target": "self" }]
         }
       ]
+    },
+    {
+      "id": "psyduck",
+      "name": "Psyduck",
+      "pokemon_type": "WATER",
+      "max_hp": 16,
+      "is_wild": true,
+      "is_boss": false,
+      "xp_reward": 10,
+      "action_pool": [
+        {
+          "id": "scratch",
+          "name": "Scratch",
+          "is_attack": true,
+          "base_weight": 3,
+          "preferred_phase": "any",
+          "effects": [{ "type": "damage", "magnitude": 6 }]
+        },
+        {
+          "id": "water_gun",
+          "name": "Water Gun",
+          "is_attack": true,
+          "base_weight": 3,
+          "preferred_phase": "mid",
+          "effects": [{ "type": "damage", "magnitude": 8 }]
+        }
+      ]
+    },
+    {
+      "id": "poliwag",
+      "name": "Poliwag",
+      "pokemon_type": "WATER",
+      "max_hp": 15,
+      "is_wild": true,
+      "is_boss": false,
+      "xp_reward": 10,
+      "action_pool": [
+        {
+          "id": "bubble",
+          "name": "Bubble",
+          "is_attack": true,
+          "base_weight": 3,
+          "preferred_phase": "any",
+          "effects": [{ "type": "damage", "magnitude": 5 }]
+        },
+        {
+          "id": "double_slap",
+          "name": "Double Slap",
+          "is_attack": true,
+          "base_weight": 3,
+          "preferred_phase": "mid",
+          "effects": [{ "type": "damage", "magnitude": 7 }]
+        }
+      ]
+    },
+    {
+      "id": "goldeen",
+      "name": "Goldeen",
+      "pokemon_type": "WATER",
+      "max_hp": 17,
+      "is_wild": true,
+      "is_boss": false,
+      "xp_reward": 10,
+      "action_pool": [
+        {
+          "id": "peck",
+          "name": "Peck",
+          "is_attack": true,
+          "base_weight": 3,
+          "preferred_phase": "any",
+          "effects": [{ "type": "damage", "magnitude": 6 }]
+        },
+        {
+          "id": "horn_attack",
+          "name": "Horn Attack",
+          "is_attack": true,
+          "base_weight": 2,
+          "preferred_phase": "desperate",
+          "effects": [{ "type": "damage", "magnitude": 9 }]
+        }
+      ]
+    },
+    {
+      "id": "shellder",
+      "name": "Shellder",
+      "pokemon_type": "WATER",
+      "max_hp": 14,
+      "is_wild": true,
+      "is_boss": false,
+      "xp_reward": 10,
+      "action_pool": [
+        {
+          "id": "tackle",
+          "name": "Tackle",
+          "is_attack": true,
+          "base_weight": 3,
+          "preferred_phase": "any",
+          "effects": [{ "type": "damage", "magnitude": 5 }]
+        },
+        {
+          "id": "withdraw",
+          "name": "Withdraw",
+          "is_attack": false,
+          "base_weight": 2,
+          "preferred_phase": "healthy",
+          "effects": [{ "type": "block", "magnitude": 6, "target": "self" }]
+        },
+        {
+          "id": "clamp",
+          "name": "Clamp",
+          "is_attack": true,
+          "base_weight": 3,
+          "preferred_phase": "mid",
+          "effects": [{ "type": "damage", "magnitude": 8 }]
+        }
+      ]
+    },
+    {
+      "id": "misty",
+      "name": "Misty",
+      "pokemon_type": "WATER",
+      "max_hp": 50,
+      "is_wild": false,
+      "is_boss": true,
+      "xp_reward": 90,
+      "boss_pattern_loop_start": 1,
+      "boss_pattern": [
+        "water_gun_misty",
+        "recover_misty",
+        "water_pulse_misty",
+        "harden_misty",
+        "bubble_beam_misty"
+      ],
+      "action_pool": [
+        {
+          "id": "water_gun_misty",
+          "name": "Water Gun",
+          "is_attack": true,
+          "effects": [{ "type": "damage", "magnitude": 9 }]
+        },
+        {
+          "id": "recover_misty",
+          "name": "Recover",
+          "is_attack": false,
+          "effects": [{ "type": "heal", "magnitude": 12, "target": "self" }]
+        },
+        {
+          "id": "water_pulse_misty",
+          "name": "Water Pulse",
+          "is_attack": true,
+          "effects": [{ "type": "damage", "magnitude": 13, "ignore_block": true }]
+        },
+        {
+          "id": "harden_misty",
+          "name": "Harden",
+          "is_attack": false,
+          "effects": [{ "type": "block", "magnitude": 8, "target": "self" }]
+        },
+        {
+          "id": "bubble_beam_misty",
+          "name": "Bubble Beam",
+          "is_attack": true,
+          "effects": [{ "type": "damage", "magnitude": 11 }]
+        }
+      ]
     }
   ]
 }

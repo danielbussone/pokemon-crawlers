@@ -199,7 +199,7 @@ func _stamp_stage(g, stage_id: String, origin: Vector2i,
 				opt_idx += 1
 		elif bool(enc.get("is_mandatory", false)):
 			var gate := StageLayout.gate_local(Balance, stage_id)
-			var enc_zone := "gym" if bool(enc.get("is_final_boss", false)) else zone_id
+			var enc_zone := "gym" if bool(enc.get("is_gym", false)) else zone_id
 			_place_mandatory_gate(g, gate, origin, enc_zone, flat_i, enc, stage_id)
 
 	_stamp_shops(g, stage_id, origin, zone_id)
@@ -849,7 +849,7 @@ func _build_markers(encounters: Array[Dictionary]) -> void:
 
 
 func _marker_kind_for(enc: Dictionary) -> int:
-	if bool(enc.get("is_final_boss", false)):
+	if bool(enc.get("is_gym", false)):
 		return EncounterMarker.MarkerKind.BOSS
 	if bool(enc.get("is_mandatory", false)):
 		return EncounterMarker.MarkerKind.GATE

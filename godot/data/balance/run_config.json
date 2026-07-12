@@ -33,6 +33,18 @@
       "signature_card": "rock_slide",
       "reward_pool_key": "stage3",
       "shop_window": 0,
+      "is_final": false
+    },
+    {
+      "id": "cerulean",
+      "wild_pool": ["psyduck", "poliwag", "goldeen", "shellder"],
+      "leader": "misty",
+      "leader_kind": "gym",
+      "leader_gold": "",
+      "badge_id": "cascade_badge",
+      "signature_card": "water_pulse",
+      "reward_pool_key": "stage4",
+      "shop_window": 0,
       "is_final": true
     }
   ]
