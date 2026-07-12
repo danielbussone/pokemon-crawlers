@@ -1,0 +1,244 @@
+# Pokémon Crawlers — level outline (companion to GYM_CONTENT_PLAN.md)
+#
+# Structure per level: approach `areas` (each a segment with a wild pool + a
+# mandatory mid-boss) then the `gym` (city segment + leader). Default 3 segments
+# per level (2 approach + gym); tunable.
+#
+# NOTE ON "pokemon": the engine fights ONE enemy per gate (single-phase ace-boss).
+# The `pokemon:` lists are the canonical teams — used for flavor + move sourcing,
+# and for a future multi-phase upgrade. Built levels reflect the actual data.
+#
+# status: built = in the game now | partial = gym only | planned = design only
+
+levels:
+  - id: 1
+    region: Pewter
+    gym_type: Rock
+    status: built
+    areas:
+      - name: Route 1
+        segment_id: route_viridian
+        wild_pool: [pidgey, rattata, weedle, nidoran_m]
+        mid_boss:
+          trainer: Rival
+          pokemon: [starter_counter]   # Squirtle/Bulbasaur/Charmander vs player's pick
+      - name: Viridian Forest
+        segment_id: viridian_forest
+        wild_pool: [caterpie, metapod, kakuna, weedle]
+        mid_boss:
+          trainer: Bug Catcher
+          pokemon: [Butterfree, Beedrill]   # one variant per run
+    gym:
+      city: Pewter City
+      segment_id: pewter
+      wild_pool: [geodude, zubat, onix]
+      boss:
+        leader: Brock
+        mechanic: block cycling
+        badge: Boulder (-10% incoming)
+        signature: rock_slide
+        pokemon: [Geodude, Onix]
+
+  - id: 2
+    region: Cerulean
+    gym_type: Water
+    status: partial          # gym built; approach areas planned
+    areas:
+      - name: Route 3          # planned
+        wild_pool: [spearow, jigglypuff, ekans, sandshrew]
+        mid_boss:
+          trainer: Lass
+          pokemon: [Rattata, Pidgey]
+      - name: Mt. Moon         # planned
+        wild_pool: [zubat, geodude, paras, clefairy]
+        mid_boss:
+          trainer: Team Rocket Grunt
+          pokemon: [Sandshrew, Rattata, Zubat]
+    gym:
+      city: Cerulean City
+      segment_id: cerulean
+      wild_pool: [psyduck, poliwag, goldeen, shellder]
+      boss:
+        leader: Misty
+        mechanic: heal + ignore-block
+        badge: Cascade (+10% outgoing)
+        signature: water_pulse
+        pokemon: [Staryu, Starmie]
+
+  - id: 3
+    region: Vermilion
+    gym_type: Electric
+    status: built
+    areas:
+      - name: Route 5
+        segment_id: route_vermilion
+        wild_pool: [spearow, meowth, mankey, magnemite]
+        mid_boss:
+          trainer: Sailor
+          pokemon: [Machop, Shellder]
+      - name: S.S. Anne
+        segment_id: ss_anne
+        wild_pool: [meowth, magnemite, diglett]
+        mid_boss:
+          trainer: Rival
+          pokemon: [starter_counter]
+    gym:
+      city: Vermilion City
+      segment_id: vermilion
+      wild_pool: [magnemite, voltorb]
+      boss:
+        leader: Lt. Surge
+        mechanic: paralyze + stamina drain
+        badge: Thunder (+1 stamina)
+        signature: thunderbolt
+        pokemon: [Voltorb, Pikachu, Raichu]
+
+  - id: 4
+    region: Celadon
+    gym_type: Grass
+    status: planned
+    areas:
+      - name: Route 6/7
+        wild_pool: [oddish, bellsprout, meowth, mankey]
+        mid_boss:
+          trainer: Gambler
+          pokemon: [Poliwag, Growlithe]
+      - name: Rocket Game Corner
+        wild_pool: [growlithe, abra, grimer, koffing]
+        mid_boss:
+          trainer: Team Rocket Grunt
+          pokemon: [Koffing, Zubat, Raticate]
+    gym:
+      city: Celadon City
+      wild_pool: [oddish, bellsprout, gloom]
+      boss:
+        leader: Erika
+        mechanic: multi-status per action
+        badge: Rainbow (heal each fight)
+        signature: giga_drain
+        pokemon: [Tangela, Weepinbell, Vileplume]
+
+  - id: 5
+    region: Fuchsia
+    gym_type: Poison
+    status: planned
+    areas:
+      - name: Cycling Road
+        wild_pool: [doduo, spearow, grimer, koffing]
+        mid_boss:
+          trainer: Biker
+          pokemon: [Koffing, Grimer]
+      - name: Route 15
+        wild_pool: [gloom, venonat, oddish, doduo]
+        mid_boss:
+          trainer: Juggler
+          pokemon: [Drowzee, Kadabra]
+    gym:
+      city: Fuchsia City
+      wild_pool: [koffing, grimer, venonat]
+      boss:
+        leader: Koga
+        mechanic: stacking poison + evasion
+        badge: Soul (poison immunity)
+        signature: sludge_bomb
+        pokemon: [Koffing, Muk, Weezing]
+
+  - id: 6
+    region: Saffron
+    gym_type: Psychic
+    status: planned
+    areas:
+      - name: Silph Co. (lower)
+        wild_pool: [abra, drowzee, gastly, meowth]
+        mid_boss:
+          trainer: Team Rocket Grunt
+          pokemon: [Koffing, Cubone, Zubat]
+      - name: Silph Co. (upper)
+        wild_pool: [drowzee, gastly, haunter]
+        mid_boss:
+          trainer: Rival
+          pokemon: [starter_counter_evolved, Growlithe, Kadabra]
+    gym:
+      city: Saffron City
+      wild_pool: [abra, drowzee, gastly]
+      boss:
+        leader: Sabrina
+        mechanic: hand shuffle
+        badge: Marsh (+1 hand size)
+        signature: psybeam
+        pokemon: [Kadabra, Mr. Mime, Venomoth, Alakazam]
+
+  - id: 7
+    region: Cinnabar
+    gym_type: Fire
+    status: planned
+    areas:
+      - name: Sea Route 19-20
+        wild_pool: [tentacool, horsea, staryu, krabby]
+        mid_boss:
+          trainer: Swimmer
+          pokemon: [Shellder, Tentacool]
+      - name: Pokémon Mansion
+        wild_pool: [growlithe, ponyta, koffing, grimer]
+        mid_boss:
+          trainer: Burglar
+          pokemon: [Growlithe, Ponyta]
+    gym:
+      city: Cinnabar Island
+      wild_pool: [growlithe, ponyta, magmar]
+      boss:
+        leader: Blaine
+        mechanic: arena lava tick
+        badge: Volcano (+15% damage)
+        signature: flamethrower
+        pokemon: [Growlithe, Ponyta, Rapidash, Arcanine]
+
+  - id: 8
+    region: Viridian
+    gym_type: Ground
+    status: planned
+    areas:
+      - name: Route 22
+        wild_pool: [spearow, rattata, mankey, nidoran_m]
+        mid_boss:
+          trainer: Rival
+          pokemon: [starter_counter_final, Pidgeot, Rhyhorn]
+      - name: Viridian Gym (front)
+        wild_pool: [ekans, sandshrew, spearow]
+        mid_boss:
+          trainer: Team Rocket Admin
+          pokemon: [Golbat, Machoke]
+    gym:
+      city: Viridian City
+      wild_pool: [sandshrew, ekans, mankey]
+      boss:
+        leader: Giovanni
+        mechanic: single-phase (multi-phase deferred)
+        badge: Earth (+5 max HP)
+        signature: earthquake
+        pokemon: [Rhyhorn, Dugtrio, Nidoqueen, Nidoking, Rhydon]
+
+  - id: 9
+    region: Victory Road / Indigo Plateau
+    gym_type: Elite Four + Champion
+    status: planned
+    areas:
+      - name: Victory Road
+        wild_pool: [machop, geodude, graveler, onix, golbat, marowak]
+        mid_boss:
+          trainer: Cool Trainer
+          pokemon: [Machoke, Graveler]
+    gym:
+      city: Indigo Plateau
+      note: 5-boss rush, NO Centers/Marts (heal only from pre-bought inventory)
+      wild_pool: []
+      boss:
+        leader: Elite Four + Champion (sequential, single-phase)
+        mechanic: boss rush, no shops
+        badge: null   # Champion win = run victory
+        members:
+          - { name: Lorelei, type: Ice/Water, pokemon: [Dewgong, Cloyster, Slowbro, Jynx, Lapras] }
+          - { name: Bruno,   type: Fighting/Rock, pokemon: [Onix, Hitmonchan, Hitmonlee, Onix, Machamp] }
+          - { name: Agatha,  type: Ghost/Poison, pokemon: [Gengar, Golbat, Haunter, Arbok, Gengar] }
+          - { name: Lance,   type: Dragon, pokemon: [Gyarados, Dragonair, Dragonair, Aerodactyl, Dragonite] }
+          - { name: Champion, type: rival, pokemon: [starter_final, Pidgeot, Alakazam, Rhydon, and_2_more] }
