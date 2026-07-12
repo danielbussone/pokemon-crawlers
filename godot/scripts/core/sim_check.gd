@@ -8,6 +8,7 @@ class_name SimCheck
 
 const WG = preload("res://scripts/world/world_grid.gd")
 const RareCandyOps = preload("res://scripts/core/rare_candy_ops.gd")
+const StageLayout = preload("res://scripts/world/stage_layout.gd")
 
 ## Fraction of reachable optional wilds the sim chooses to fight per stage.
 const DEFAULT_ENGAGEMENT := 0.6
@@ -22,16 +23,18 @@ static func run_batch(runs: int, run_mgr, bal, engagement_rate: float = DEFAULT_
 	var total_engaged := 0
 	var total_steps := 0
 	var total_candy_spent := 0
+	var total_heals := 0
 
 	for i in runs:
 		var starter: String = starters[i % starters.size()]
 		run_mgr.start_run(starter)
 		var maze := _build_maze(run_mgr)
-		var stats := {"engaged": 0, "steps": 0, "candy_spent": 0}
+		var stats := {"engaged": 0, "steps": 0, "candy_spent": 0, "heals": 0}
 		var result := _play_run(run_mgr, bal, maze, engagement_rate, run_mgr.rng, stats, spend_candy)
 		total_engaged += int(stats["engaged"])
 		total_steps += int(stats["steps"])
 		total_candy_spent += int(stats["candy_spent"])
+		total_heals += int(stats["heals"])
 		if result == "win":
 			wins += 1
 			wins_by_starter[starter] = int(wins_by_starter[starter]) + 1
@@ -43,9 +46,9 @@ static func run_batch(runs: int, run_mgr, bal, engagement_rate: float = DEFAULT_
 			policy, runs, wins, 100.0 * wins / runs, engagement_rate])
 	print("  Wins by starter: ", wins_by_starter)
 	print("  Losses by enemy: ", loss_by_enemy)
-	print("  Avg optionals engaged: %.1f, avg maze steps: %.1f, avg candy spent: %.2f" % [
+	print("  Avg optionals engaged: %.1f, avg maze steps: %.1f, avg candy spent: %.2f, avg Center heals: %.2f" % [
 			float(total_engaged) / runs, float(total_steps) / runs,
-			float(total_candy_spent) / runs])
+			float(total_candy_spent) / runs, float(total_heals) / runs])
 
 
 ## Builds the stage grid + encounter cell positions for pathfinding, with no
@@ -131,6 +134,12 @@ static func _walk_to(grid, from_cell: Vector2i, to_cell: Vector2i, stats: Dictio
 
 static func _fight(run_mgr, bal, idx: int, spend_candy: bool = false,
 		stats: Dictionary = {}) -> String:
+	# Model a real player topping up at the city Poké Center before any mandatory
+	# boss fight (rival/trainer/gym) when the stage has an unlocked Center.
+	var enc: Dictionary = run_mgr.encounters[idx]
+	if bool(enc.get("is_mandatory", false)):
+		_heal_at_city_center(run_mgr, bal, String(enc["stage_id"]), stats)
+
 	var ctx: CombatCtx = run_mgr.begin_combat_at(idx)
 	var outcome := _play_combat(ctx)
 	if outcome != CombatCtx.WIN:
@@ -145,6 +154,22 @@ static func _fight(run_mgr, bal, idx: int, spend_candy: bool = false,
 	if int(result["shop_window"]) > 0:
 		ShopOps.purchase_center(run_mgr.player, bal)
 	return ""
+
+
+## Heal at the current stage's Poké Center if it exists, is unlocked, the player
+## is hurt, and they can afford it — the "stock up before the gym" a human does.
+static func _heal_at_city_center(run_mgr, bal, stage_id: String, stats: Dictionary) -> void:
+	var player = run_mgr.player
+	if player.hp >= player.max_hp:
+		return
+	var shops := StageLayout.shop_cells_local(bal, stage_id)
+	if not shops.has("center"):
+		return
+	var window := int(StageLayout.shop_windows_local(bal, stage_id).get("center", 1))
+	if run_mgr.unlocked_shop_window < window:
+		return
+	if ShopOps.purchase_center(player, bal) and not stats.is_empty():
+		stats["heals"] = int(stats.get("heals", 0)) + 1
 
 
 ## SPEND policy: while a token and an eligible card exist, evolve the card whose
