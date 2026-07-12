@@ -45,6 +45,38 @@
       "signature_card": "water_pulse",
       "reward_pool_key": "stage4",
       "shop_window": 0,
+      "is_final": false
+    },
+    {
+      "id": "route_vermilion",
+      "wild_pool": ["spearow", "meowth", "mankey", "magnemite"],
+      "leader": "sailor",
+      "leader_kind": "trainer",
+      "leader_gold": "midboss",
+      "reward_pool_key": "stage5",
+      "shop_window": 0,
+      "is_final": false
+    },
+    {
+      "id": "ss_anne",
+      "wild_pool": ["meowth", "magnemite", "diglett"],
+      "leader": "rival_blue",
+      "leader_kind": "rival",
+      "leader_gold": "midboss",
+      "reward_pool_key": "stage6",
+      "shop_window": 0,
+      "is_final": false
+    },
+    {
+      "id": "vermilion",
+      "wild_pool": ["magnemite", "voltorb"],
+      "leader": "surge",
+      "leader_kind": "gym",
+      "leader_gold": "",
+      "badge_id": "thunder_badge",
+      "signature_card": "thunderbolt",
+      "reward_pool_key": "stage7",
+      "shop_window": 0,
       "is_final": true
     }
   ]

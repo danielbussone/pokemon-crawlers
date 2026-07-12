@@ -761,6 +761,120 @@
           "effects": [{ "type": "damage", "magnitude": 11 }]
         }
       ]
+    },
+    {
+      "id": "spearow",
+      "name": "Spearow",
+      "pokemon_type": "FLYING",
+      "max_hp": 15,
+      "is_wild": true,
+      "is_boss": false,
+      "xp_reward": 10,
+      "action_pool": [
+        { "id": "peck", "name": "Peck", "is_attack": true, "base_weight": 3, "preferred_phase": "any", "effects": [{ "type": "damage", "magnitude": 6 }] },
+        { "id": "fury_attack", "name": "Fury Attack", "is_attack": true, "base_weight": 2, "preferred_phase": "mid", "effects": [{ "type": "damage", "magnitude": 8 }] }
+      ]
+    },
+    {
+      "id": "meowth",
+      "name": "Meowth",
+      "pokemon_type": "NORMAL",
+      "max_hp": 14,
+      "is_wild": true,
+      "is_boss": false,
+      "xp_reward": 10,
+      "action_pool": [
+        { "id": "scratch", "name": "Scratch", "is_attack": true, "base_weight": 3, "preferred_phase": "any", "effects": [{ "type": "damage", "magnitude": 5 }] },
+        { "id": "bite", "name": "Bite", "is_attack": true, "base_weight": 3, "preferred_phase": "mid", "effects": [{ "type": "damage", "magnitude": 7 }] }
+      ]
+    },
+    {
+      "id": "mankey",
+      "name": "Mankey",
+      "pokemon_type": "FIGHTING",
+      "max_hp": 16,
+      "is_wild": true,
+      "is_boss": false,
+      "xp_reward": 10,
+      "action_pool": [
+        { "id": "scratch", "name": "Scratch", "is_attack": true, "base_weight": 3, "preferred_phase": "any", "effects": [{ "type": "damage", "magnitude": 6 }] },
+        { "id": "karate_chop", "name": "Karate Chop", "is_attack": true, "base_weight": 2, "preferred_phase": "desperate", "effects": [{ "type": "damage", "magnitude": 8 }] }
+      ]
+    },
+    {
+      "id": "magnemite",
+      "name": "Magnemite",
+      "pokemon_type": "ELECTRIC",
+      "max_hp": 15,
+      "is_wild": true,
+      "is_boss": false,
+      "xp_reward": 10,
+      "action_pool": [
+        { "id": "tackle", "name": "Tackle", "is_attack": true, "base_weight": 3, "preferred_phase": "any", "effects": [{ "type": "damage", "magnitude": 5 }] },
+        { "id": "thunder_shock", "name": "Thunder Shock", "is_attack": true, "base_weight": 3, "preferred_phase": "mid", "effects": [{ "type": "damage", "magnitude": 8 }] }
+      ]
+    },
+    {
+      "id": "diglett",
+      "name": "Diglett",
+      "pokemon_type": "GROUND",
+      "max_hp": 13,
+      "is_wild": true,
+      "is_boss": false,
+      "xp_reward": 10,
+      "action_pool": [
+        { "id": "scratch", "name": "Scratch", "is_attack": true, "base_weight": 3, "preferred_phase": "any", "effects": [{ "type": "damage", "magnitude": 5 }] },
+        { "id": "dig", "name": "Dig", "is_attack": true, "base_weight": 2, "preferred_phase": "mid", "effects": [{ "type": "damage", "magnitude": 8 }] }
+      ]
+    },
+    {
+      "id": "voltorb",
+      "name": "Voltorb",
+      "pokemon_type": "ELECTRIC",
+      "max_hp": 16,
+      "is_wild": true,
+      "is_boss": false,
+      "xp_reward": 10,
+      "action_pool": [
+        { "id": "tackle", "name": "Tackle", "is_attack": true, "base_weight": 3, "preferred_phase": "any", "effects": [{ "type": "damage", "magnitude": 5 }] },
+        { "id": "spark", "name": "Spark", "is_attack": true, "base_weight": 3, "preferred_phase": "mid", "effects": [{ "type": "damage", "magnitude": 7 }] },
+        { "id": "screech", "name": "Screech", "is_attack": false, "base_weight": 2, "preferred_phase": "healthy", "effects": [{ "type": "apply_condition", "condition": "defenseless", "duration": 1, "target": "enemy" }] }
+      ]
+    },
+    {
+      "id": "sailor",
+      "name": "Sailor",
+      "pokemon_type": "WATER",
+      "max_hp": 32,
+      "is_wild": false,
+      "is_boss": true,
+      "xp_reward": 30,
+      "boss_pattern_loop_start": 1,
+      "boss_pattern": ["throw_punch", "water_gun_sailor", "harden_sailor", "headbutt"],
+      "action_pool": [
+        { "id": "throw_punch", "name": "Throw Punch", "is_attack": true, "effects": [{ "type": "damage", "magnitude": 7 }] },
+        { "id": "water_gun_sailor", "name": "Water Gun", "is_attack": true, "effects": [{ "type": "damage", "magnitude": 8 }] },
+        { "id": "harden_sailor", "name": "Harden", "is_attack": false, "effects": [{ "type": "block", "magnitude": 6, "target": "self" }] },
+        { "id": "headbutt", "name": "Headbutt", "is_attack": true, "effects": [{ "type": "damage", "magnitude": 9 }] }
+      ]
+    },
+    {
+      "id": "surge",
+      "name": "Lt. Surge",
+      "pokemon_type": "ELECTRIC",
+      "max_hp": 55,
+      "is_wild": false,
+      "is_boss": true,
+      "xp_reward": 90,
+      "boss_pattern_loop_start": 1,
+      "boss_pattern": ["thunder_shock_surge", "thunder_wave", "spark_surge", "static", "thunderbolt_surge"],
+      "action_pool": [
+        { "id": "thunder_shock_surge", "name": "Thunder Shock", "is_attack": true, "effects": [{ "type": "damage", "magnitude": 9 }] },
+        { "id": "thunder_wave", "name": "Thunder Wave", "is_attack": false, "effects": [{ "type": "status", "status": "paralyze", "duration": 2 }] },
+        { "id": "spark_surge", "name": "Spark", "is_attack": true, "effects": [{ "type": "damage", "magnitude": 8 }] },
+        { "id": "static", "name": "Static", "is_attack": false, "effects": [{ "type": "apply_condition", "condition": "slow", "duration": 2, "target": "enemy" }] },
+        { "id": "thunderbolt_surge", "name": "Thunderbolt", "is_attack": true, "effects": [{ "type": "damage", "magnitude": 13 }] }
+      ]
     }
   ]
 }

@@ -648,6 +648,20 @@
       "power": 16,
       "rarity": "uncommon",
       "effects": [{ "type": "damage", "magnitude": 16 }]
+    },
+    {
+      "id": "thunderbolt",
+      "name": "Thunderbolt",
+      "pokemon": "Surge",
+      "card_type": "attack",
+      "pokemon_type": "ELECTRIC",
+      "cost": 3,
+      "power": 18,
+      "rarity": "signature",
+      "effects": [
+        { "type": "damage", "magnitude": 18 },
+        { "type": "status", "status": "paralyze", "duration": 1 }
+      ]
     }
   ]
 }

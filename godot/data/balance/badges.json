@@ -2,11 +2,16 @@
   "boulder_badge": {
     "id": "boulder_badge",
     "name": "Boulder Badge",
-    "outgoing_damage_mult": 1.1
+    "incoming_damage_mult": 0.9
   },
   "cascade_badge": {
     "id": "cascade_badge",
     "name": "Cascade Badge",
     "outgoing_damage_mult": 1.1
+  },
+  "thunder_badge": {
+    "id": "thunder_badge",
+    "name": "Thunder Badge",
+    "max_stamina_bonus": 1
   }
 }

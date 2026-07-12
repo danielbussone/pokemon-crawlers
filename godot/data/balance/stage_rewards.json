@@ -37,5 +37,30 @@
     "quick_attack",
     "harden",
     "rain_dance"
+  ],
+  "stage5": [
+    "quick_attack",
+    "harden",
+    "recover",
+    "body_slam",
+    "sand_attack",
+    "defense_curl"
+  ],
+  "stage6": [
+    "quick_attack",
+    "harden",
+    "recover",
+    "protect",
+    "body_slam",
+    "supersonic"
+  ],
+  "stage7": [
+    "quick_attack",
+    "harden",
+    "recover",
+    "protect",
+    "body_slam",
+    "rain_dance",
+    "bubble"
   ]
 }

@@ -22,8 +22,8 @@ Last updated: 2026-07-10
 | `phase5a-gym-engine` | **IMPLEMENTED — pending approval** | Data-driven N-gym run loop: uniform `segments[]`; every leader grants badge+signature+rare candy and **continues**, only the `is_final` leader ends the run; sim + validation scale to N. (world_builder zone/gym de-hardcoding deferred to `phase5-map-format`) |
 | `phase5-map-format` | **IMPLEMENTED — pending approval** | ASCII-grid-in-JSON layouts + parser; migrated the 3 stages; optional-wild count/placement now from the grid (`w` cells); zone names + gym anchors data-driven; reachability validation |
 | `phase5-map-editor` | **IMPLEMENTED — pending approval** | In-engine paint tool (`--mapeditor`): full terrain+encounter palette, click/drag paint, metadata panel, stage picker / new / resize, save to JSON, live validation. Gate funnel now auto-derived (no hand-authoring) |
-| `phase5b-gym-mechanics` | Pending | New combat mechanics (stamina drain, multi-status/action, stacking poison+evasion, hand shuffle, arena lava tick, multi-phase boss, escalating Center costs) + badge-passive schema |
-| `phase5c-gym-content` | **1/8 (vertical slice) — pending approval** | Cerulean/Misty gym authored end-to-end (proves the pipeline + multi-gym continuation). 7 gyms + E4 remain |
+| `phase5b-gym-mechanics` | **In progress** | **Typed badge schema DONE** (`BadgeOps`: outgoing/incoming/max_stamina; Boulder→defensive). Surge's paralyze+stamina-drain reused existing vocab. Remaining new mechanics land with their gyms (multi-status, poison-stack+evasion, hand shuffle, lava tick; multi-phase deferred) |
+| `phase5c-gym-content` | **2/8 — pending approval** | Gym 2 Cerulean/Misty + Gym 3 Vermilion/Surge authored end-to-end (3-gym arc live). Gyms 4–8 + E4 remain. See [GYM_CONTENT_PLAN.md](GYM_CONTENT_PLAN.md) |
 | `phase6-telemetry` | Pending | Run log metrics + sim_check extensions |
 
 **Current next TODO:** `phase5b-gym-mechanics` (5a + map-format + editor implemented, awaiting sign-off). Content (`phase5c`) can now be authored with the editor.

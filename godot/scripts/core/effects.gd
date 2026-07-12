@@ -48,11 +48,13 @@ static func apply_damage(base_amount: int, attacker_type: String, defender: Comb
 		if has_condition(defender, condition_id):
 			amount = int(amount * float(bal.conditions[condition_id].get("incoming_damage_mult", 1.0)))
 
-	var badge_mult := 1.0
-	for badge_id in attacker_badge_ids:
-		if bal.badges.has(badge_id):
-			badge_mult *= float(bal.badges[badge_id].get("outgoing_damage_mult", 1.0))
-	# `outgoing_mult` carries the starter-evolution buff (Phase 3) for starter-line cards.
+	# Defender's badges can reduce incoming damage (Phase 5b typed passives, e.g.
+	# Boulder Badge −10%). Only the player carries badges.
+	if defender is PlayerState:
+		amount = int(amount * BadgeOps.incoming_mult(defender.badge_ids, bal))
+	# Attacker's badges scale outgoing damage; `outgoing_mult` carries the
+	# starter-evolution buff (Phase 3) for starter-line cards.
+	var badge_mult := BadgeOps.outgoing_mult(attacker_badge_ids, bal)
 	amount = int(amount * badge_mult * outgoing_mult)
 	amount = maxi(0, amount)
 
@@ -220,8 +222,9 @@ static func apply_confuse_self_damage(c: Combatant, amount: int) -> int:
 
 
 static func apply_player_turn_start_modifiers(player: PlayerState, bal) -> void:
-	## Reset stamina for the turn including Slow penalty and prior-turn Slow-on-enemy bonus.
-	var base := player.base_max_stamina
+	## Reset stamina for the turn including badge bonus, Slow penalty and prior-turn
+	## Slow-on-enemy bonus.
+	var base := player.base_max_stamina + BadgeOps.max_stamina_bonus(player.badge_ids, bal)
 	var bonus := player.stamina_bonus_next_turn
 	player.stamina_bonus_next_turn = 0
 

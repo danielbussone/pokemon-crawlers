@@ -53,6 +53,7 @@ single-phase first and can be upgraded later.
 | Draft pool | one `stageN` reward pool per segment, from existing cards |
 | Difficulty | leader HP ≈ 45 + 8·(gym#−1); wild HP/dmg drift up slowly; validate via simcheck |
 | Trainer art | species use BW scrape; **leaders need a `<name>.png`** flat file (else procedural) |
+| Centers/Marts | **city-only** (Pewter, Cerulean, Vermilion, …), mid-city on the player's path — **not** routes/forests (matches canon; avoids locked/hidden phantom shops). Shops still gate by window progression |
 
 ---
 
@@ -117,13 +118,25 @@ Signature/card marked *(new)* needs authoring; otherwise it exists.
 - **Trainers:** — (none yet; add a Mt. Moon Rocket grunt if we expand).
 - **Gym:** Misty (Staryu, **Starmie**). Mechanic: heal + ignore-block. Signature: `water_pulse`. Badge: Cascade.
 
-### Level 3 — Vermilion (Lt. Surge) · Electric
-- **Segments:** Route 5–6 / SS Anne (rival OR Rocket grunt) → Vermilion (Surge).
-- **Wilds:** spearow, meowth, mankey, diglett, magnemite.
-- **Trainers:** sailor / gentleman; rival cameo on SS Anne.
-- **Gym:** Surge (Voltorb, Pikachu, **Raichu**). Mechanic: **paralyze + stamina drain**
-  (Thunder Wave = paralyze; "Static" = −1 player stamina next turn; Thunderbolt = dmg).
-  Signature: `thunderbolt` *(new electric card)*. Badge: Thunder.
+### Level 3 — Vermilion (Lt. Surge) · Electric · **DONE**
+- **Segments (3):** `route_vermilion` (Sailor) → `ss_anne` (rival cameo) → `vermilion` (Surge, final).
+- **Wilds:** spearow, meowth, mankey, magnemite (route); meowth, magnemite, diglett (SS Anne); magnemite, voltorb (Vermilion).
+- **Trainers:** Sailor mid-boss; rival cameo on the SS Anne (reuses rival enemies).
+- **Gym:** Surge (**Raichu** ace). Mechanic: **paralyze + stamina drain** — Thunder Wave =
+  `status paralyze` (paralyzed player can't play attacks); Static = `apply_condition slow`
+  (reuses slow's −1 player stamina, so no new vocab); Thunderbolt = big dmg. Signature:
+  `thunderbolt` *(new electric card w/ paralyze rider)*. Badge: Thunder (+1 stamina).
+- **5b landed here:** typed badge schema — `BadgeOps` aggregates `outgoing_damage_mult`,
+  `incoming_damage_mult`, `max_stamina_bonus`; wired into `apply_damage` (attacker outgoing,
+  player-defender incoming) + turn-start stamina. **Boulder re-typed to −10% incoming**
+  (defensive), Cascade +10% outgoing, Thunder +1 stamina. Verified: 8-check headless test
+  (aggregation + Boulder cuts 10→9 dmg) + simcheck reaches/fights Surge. **~32% win** once
+  the sim models a player healing at city Centers before boss fights (was a misleading 17%
+  when the bot never healed); remaining difficulty is Level-1 early game (onix, bug catcher),
+  not the gyms.
+- **Not done:** `surge.png`/`sailor.png` art (procedural fallback); balance pass on the
+  now-much-longer 3-gym run; remaining typed-badge fields (hand/heal/immunity/max_hp) land
+  with their gyms.
 
 ### Level 4 — Celadon (Erika) · Grass
 - **Segments:** Route 7–8 (gambler / Rocket) → Celadon (Erika).
