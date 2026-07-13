@@ -13,11 +13,18 @@ const VALID_TEMPLATES := [
 	"cave_branches",
 	"town_pocket",
 	"gym_arena",
+	"big_city",
+	"ship_interior",
+	"corporate",
+	"mansion",
+	"volcanic",
+	"bridge",
+	"plateau",
 ]
 
 const VALID_FACINGS := ["north", "east", "south", "west"]
 
-const BARRIER_CHARS := ["#", "T", "H", "^", "B"]
+const BARRIER_CHARS := ["#", "T", "H", "^", "B", "b", "+", "O", "~", "*", "I"]
 
 ## Parsed grids, keyed by stage_id. Balance data loads once per session, so this
 ## stays valid for the whole run.
@@ -61,12 +68,16 @@ static func parsed(bal, stage_id: String) -> Dictionary:
 	var exit_cell := Vector2i(-1, -1)
 	var leader := Vector2i(-1, -1)
 	var gym_door := Vector2i(-1, -1)
+	# Cosmetic terrain material per cell (Phase 7): override char, else theme default.
+	var theme := String(layout.get("template", "open_field"))
+	var material := {}
 
 	for y in h:
 		var row := String(grid[y])
 		for x in w:
 			var ch := row[x]
 			var cell := Vector2i(x, y)
+			material[cell] = ThemePalette.material_for(theme, ch)
 			if ch in BARRIER_CHARS:
 				blocked.append(cell)
 				continue
@@ -96,6 +107,7 @@ static func parsed(bal, stage_id: String) -> Dictionary:
 		"optionals": optionals,
 		"gym_door": gym_door,
 		"gym_floor": gym_floor,
+		"material": material,
 	}
 	_cache[stage_id] = result
 	return result
@@ -159,6 +171,11 @@ static func blocked_cells_local(bal, stage_id: String) -> Array[Vector2i]:
 
 static func gym_floor_cells_local(bal, stage_id: String) -> Array[Vector2i]:
 	return parsed(bal, stage_id)["gym_floor"].duplicate()
+
+
+## local cell -> cosmetic material name (Phase 7).
+static func material_local(bal, stage_id: String) -> Dictionary:
+	return parsed(bal, stage_id)["material"]
 
 
 static func exit_local(bal, stage_id: String) -> Vector2i:

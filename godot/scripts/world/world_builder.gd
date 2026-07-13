@@ -169,10 +169,12 @@ func _stamp_stage(g, stage_id: String, origin: Vector2i,
 		blocked[cell] = true
 
 	var zone_id := stage_id
+	var materials := StageLayout.material_local(Balance, stage_id)
 	for ly in range(size.y):
 		for lx in range(size.x):
 			var local_cell := Vector2i(lx, ly)
 			var world_cell := StageLayout.local_to_world(local_cell, origin)
+			g.material_of[world_cell] = String(materials.get(local_cell, "grass"))
 			if blocked.has(local_cell):
 				g.set_tile(world_cell, WG.TileKind.WALL, zone_id)
 			else:
@@ -266,12 +268,14 @@ func _gate_block_cells(g, mandatory_slot: int, cells: Array) -> void:
 func _instance_tile(cell: Vector2i, kind: int) -> void:
 	var zone_id := String(grid.zone_of.get(cell, "route_viridian"))
 	var pos := WG.world_pos(cell)
+	var mat_name := String(grid.material_of.get(cell, "grass"))
 
 	var floor_mesh := MeshInstance3D.new()
 	var floor_box := BoxMesh.new()
 	floor_box.size = Vector3(WG.TILE_SIZE, 0.1, WG.TILE_SIZE)
 	floor_mesh.mesh = floor_box
-	floor_mesh.material_override = _flat_material(_floor_color(zone_id))
+	# Cosmetic terrain material (Phase 7) drives the floor colour.
+	floor_mesh.material_override = _flat_material(ThemePalette.color_of(mat_name))
 	floor_mesh.position = pos + Vector3(0, -0.05, 0)
 	add_child(floor_mesh)
 
@@ -284,11 +288,12 @@ func _instance_tile(cell: Vector2i, kind: int) -> void:
 		ceil_mesh.position = pos + Vector3(0, WG.WALL_HEIGHT, 0)
 		add_child(ceil_mesh)
 
-	var wall_tex := _wall_texture(zone_id)
+	# Walls take the colour of the barrier cell they face (its terrain material).
 	for dir_idx in 4:
 		var dir: Vector2i = WG.FACING_DIR[dir_idx]
-		if grid.kind_at(cell + dir) == WG.TileKind.WALL:
-			_place_wall(pos, dir, wall_tex)
+		var ncell: Vector2i = cell + dir
+		if grid.kind_at(ncell) == WG.TileKind.WALL:
+			_place_wall(pos, dir, ThemePalette.color_of(String(grid.material_of.get(ncell, "wall"))))
 
 	if kind == WG.TileKind.SHOP_DOOR:
 		var shop_kind := String(grid.tile_meta.get(cell, {}).get("shop_kind", "center"))
@@ -297,16 +302,15 @@ func _instance_tile(cell: Vector2i, kind: int) -> void:
 		_dress_gym_door(pos)
 
 
-func _place_wall(tile_pos: Vector3, dir: Vector2i, tex: ImageTexture) -> void:
+func _place_wall(tile_pos: Vector3, dir: Vector2i, color: Color) -> void:
 	var wall := MeshInstance3D.new()
 	var mesh := PlaneMesh.new()
 	mesh.size = Vector2(WG.TILE_SIZE, WG.WALL_HEIGHT)
 	wall.mesh = mesh
 	var mat := StandardMaterial3D.new()
-	mat.albedo_texture = tex
-	mat.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
+	mat.albedo_color = color
+	mat.roughness = 0.95
 	mat.cull_mode = BaseMaterial3D.CULL_DISABLED
-	mat.uv1_scale = Vector3(3.0, 3.0, 1.0)
 	wall.material_override = mat
 
 	var offset := Vector3(dir.x, 0, dir.y) * (WG.TILE_SIZE / 2.0)

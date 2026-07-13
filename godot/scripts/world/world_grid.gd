@@ -27,6 +27,7 @@ var tiles: Dictionary = {}          # Vector2i -> TileKind
 var gate_encounter: Dictionary = {} # Vector2i -> int (encounter index that must be cleared)
 var tile_meta: Dictionary = {}      # Vector2i -> Dictionary ({encounter_index} or {shop_window})
 var zone_of: Dictionary = {}        # Vector2i -> String (zone id, for wall texture/name lookup)
+var material_of: Dictionary = {}    # Vector2i -> String (cosmetic terrain material, Phase 7)
 
 var run_ref  # Run autoload, injected so is_walkable can check live clear state
 
