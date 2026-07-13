@@ -16,26 +16,36 @@ func _ready() -> void:
 	add_child(_hit_flash)
 
 
-func popup(text: String, color: Color, screen_pos: Vector2) -> void:
+func popup(text: String, color: Color, screen_pos: Vector2, size: int = 22) -> void:
 	var label := Label.new()
 	label.text = text
 	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	label.add_theme_font_size_override("font_size", 22)
+	label.add_theme_font_size_override("font_size", size)
 	label.add_theme_color_override("font_color", color)
+	label.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.7))
+	label.add_theme_constant_override("outline_size", 5)
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	label.position = screen_pos - Vector2(40, 10)
+	label.pivot_offset = Vector2(40, size * 0.5)
+	label.scale = Vector2(0.6, 0.6)
 	add_child(label)
 
 	var tween := create_tween()
-	tween.tween_property(label, "position", label.position + Vector2(0, -40), 0.9) \
+	# Rise, with a quick "pop" scale-in running alongside.
+	tween.tween_property(label, "position", label.position + Vector2(0, -44), 0.9) \
 			.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
-	tween.tween_interval(0.5)
+	tween.parallel().tween_property(label, "scale", Vector2(1, 1), 0.14) \
+			.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tween.tween_interval(0.4)
 	tween.tween_property(label, "modulate:a", 0.0, 0.4)
 	tween.tween_callback(label.queue_free)
 
 
+## Damage numbers grow and redden with magnitude, so big hits read as big.
 func damage_popup(amount: int, screen_pos: Vector2) -> void:
-	popup("-%d" % amount, Color(1.0, 0.45, 0.35), screen_pos)
+	var size := 22 + clampi(amount, 0, 26)
+	var color := Color(1.0, 0.55, 0.30) if amount < 12 else Color(1.0, 0.30, 0.24)
+	popup("-%d" % amount, color, screen_pos, size)
 
 
 func blocked_popup(screen_pos: Vector2) -> void:
@@ -67,10 +77,26 @@ func fly_effect(pokemon_type: String, from_screen: Vector2, to_screen: Vector2) 
 	return tween.finished
 
 
-func flash_player_hit() -> void:
+func flash_player_hit(strength: float = 0.35) -> void:
 	var tween := create_tween()
-	tween.tween_property(_hit_flash, "color", Color(0.85, 0.1, 0.1, 0.35), 0.05)
+	tween.tween_property(_hit_flash, "color", Color(0.85, 0.1, 0.1, strength), 0.05)
 	tween.tween_property(_hit_flash, "color", Color(0.85, 0.1, 0.1, 0.0), 0.25)
+
+
+## Brief camera shake for impact. Safe during combat (the player is frozen, so
+## nothing else is driving the camera). Intensity is in world units.
+func screen_shake(intensity: float, duration: float = 0.22) -> void:
+	var cam := get_viewport().get_camera_3d()
+	if cam == null:
+		return
+	var base := cam.position
+	var steps := 5
+	var step := duration / float(steps + 1)
+	var tween := create_tween()
+	for i in steps:
+		var off := Vector3(randf_range(-1.0, 1.0), randf_range(-1.0, 1.0), 0.0) * intensity
+		tween.tween_property(cam, "position", base + off, step)
+	tween.tween_property(cam, "position", base, step)
 
 
 func tween_enemy_hp(bar: ProgressBar, new_value: float, duration := 0.35) -> void:

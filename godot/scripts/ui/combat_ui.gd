@@ -166,22 +166,25 @@ func _play_effect_log(log: Array, is_player_attacker: bool, attacker_ptype: Stri
 
 		match eff_type:
 			"damage":
+				var dmg := int(entry.get("hp_damage", 0))
 				if on_player:
-					_fx.flash_player_hit()
+					_fx.flash_player_hit(clampf(0.28 + dmg * 0.02, 0.28, 0.6))
 					if entry.get("missed_blinded", false):
 						_fx.missed_popup(popup_pos)
 					elif entry.get("blocked", false):
 						_fx.blocked_popup(popup_pos)
-					elif int(entry.get("hp_damage", 0)) > 0:
-						_fx.damage_popup(int(entry["hp_damage"]), popup_pos)
+					elif dmg > 0:
+						_fx.screen_shake(clampf(dmg * 0.014, 0.05, 0.28))
+						_fx.damage_popup(dmg, popup_pos)
 				else:
 					_marker.hit_flash()
 					if entry.get("missed_blinded", false):
 						_fx.missed_popup(popup_pos)
 					elif entry.get("blocked", false):
 						_fx.blocked_popup(popup_pos)
-					elif int(entry.get("hp_damage", 0)) > 0:
-						_fx.damage_popup(int(entry["hp_damage"]), popup_pos)
+					elif dmg > 0:
+						_fx.screen_shake(clampf(dmg * 0.014, 0.05, 0.28))
+						_fx.damage_popup(dmg, popup_pos)
 			"heal":
 				if int(entry.get("amount", 0)) > 0:
 					_fx.popup("+%d" % int(entry["amount"]), Color(0.45, 1.0, 0.55), popup_pos)
