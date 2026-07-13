@@ -131,6 +131,12 @@ static func spawn_world(bal, stage_id: String, stage_origin: Vector2i) -> Vector
 	return local_to_world(spawn_local(bal, stage_id), stage_origin)
 
 
+## Whether the stage's map places a leader (`L`). Stages without one are pure
+## navigation connectors — no mandatory fight, no gate (Phase 7).
+static func has_leader(bal, stage_id: String) -> bool:
+	return parsed(bal, stage_id)["leader"] != Vector2i(-1, -1)
+
+
 static func gate_local(bal, stage_id: String) -> Dictionary:
 	var leader: Vector2i = parsed(bal, stage_id)["leader"]
 	return {
@@ -259,12 +265,14 @@ static func _validate_stage(bal, layouts: Dictionary, stage_id: String) -> void:
 		s_count += row.count("S")
 		l_count += row.count("L")
 	assert(s_count == 1, "Stage '%s' must have exactly one spawn (S), found %d" % [stage_id, s_count])
-	assert(l_count == 1, "Stage '%s' must have exactly one leader (L), found %d" % [stage_id, l_count])
+	# A stage places at most one leader; zero = a connector authors gate by hand.
+	assert(l_count <= 1, "Stage '%s' has %d leaders (L); at most one allowed" % [stage_id, l_count])
 
-	# Reachability: spawn must reach the leader, and no optional wild may be sealed.
+	# Reachability: spawn must reach the leader (if any), and no wild may be sealed.
 	var p := parsed(bal, stage_id)
 	var reached := _flood(p, p["spawn"])
-	assert(reached.has(p["leader"]), "Stage '%s': leader unreachable from spawn" % stage_id)
+	if l_count == 1:
+		assert(reached.has(p["leader"]), "Stage '%s': leader unreachable from spawn" % stage_id)
 	for opt in p["optionals"]:
 		assert(reached.has(opt), "Stage '%s': optional wild at %s is sealed off" % [stage_id, opt])
 

@@ -228,11 +228,15 @@ func _build_encounters() -> void:
 		# Placement/count come from the map grid (Phase 5 map format): one optional
 		# wild per `w` cell, its species drawn from the segment's wild pool.
 		var pool: Array = segment["wild_pool"]
-		for _i in StageLayout.optional_count(Balance, seg_id):
-			var wild_id := String(pool[rng.randi_range(0, pool.size() - 1)])
-			_append_encounter(_make_optional_wild(wild_id, seg_id, reward_key, seg_id))
-		_append_encounter(_make_leader_gate(segment, _resolve_leader_id(segment), mandatory_slot))
-		mandatory_slot += 1
+		# `w` cells with an empty pool = decorative wild markers (nav testing); skip.
+		if not pool.is_empty():
+			for _i in StageLayout.optional_count(Balance, seg_id):
+				var wild_id := String(pool[rng.randi_range(0, pool.size() - 1)])
+				_append_encounter(_make_optional_wild(wild_id, seg_id, reward_key, seg_id))
+		# A stage with no `L` in its map is a connector — walk through, no gate.
+		if StageLayout.has_leader(Balance, seg_id):
+			_append_encounter(_make_leader_gate(segment, _resolve_leader_id(segment), mandatory_slot))
+			mandatory_slot += 1
 
 
 func _append_encounter(enc: Dictionary) -> void:

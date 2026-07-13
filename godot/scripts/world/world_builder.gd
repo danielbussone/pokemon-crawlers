@@ -231,14 +231,10 @@ func _place_mandatory_gate(g, gate: Dictionary, origin: Vector2i, zone_id: Strin
 	g.tile_meta[encounter_world] = {"encounter_index": flat_idx}
 	_encounter_cells[flat_idx] = encounter_world
 
-	# Auto-funnel (Phase 5 map-editor): block the gate cell plus every walkable
-	# cell north of it (progression direction) until this gate clears, so the
-	# player can't slip around it to the exit. Replaces hand-listed funnel_cells.
-	var enc_local: Vector2i = gate["encounter"]
+	# Manual gating (Phase 7): a leader blocks only its own tile until cleared.
+	# Authors gate progression with map chokepoints, so there is no auto-funnel
+	# blocking the region north of the leader.
 	_gate_block_cells(g, mandatory_slot, [encounter_world])
-	for cell in StageLayout.parsed(Balance, stage_id)["walkable"]:
-		if cell.y < enc_local.y:
-			_gate_block_cells(g, mandatory_slot, [StageLayout.local_to_world(cell, origin)])
 
 
 func _stamp_shops(g, stage_id: String, origin: Vector2i, zone_id: String) -> void:
