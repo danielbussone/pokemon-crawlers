@@ -170,11 +170,13 @@ func _stamp_stage(g, stage_id: String, origin: Vector2i,
 
 	var zone_id := stage_id
 	var materials := StageLayout.material_local(Balance, stage_id)
+	var floor_materials := StageLayout.floor_material_local(Balance, stage_id)
 	for ly in range(size.y):
 		for lx in range(size.x):
 			var local_cell := Vector2i(lx, ly)
 			var world_cell := StageLayout.local_to_world(local_cell, origin)
 			g.material_of[world_cell] = String(materials.get(local_cell, "grass"))
+			g.floor_material_of[world_cell] = String(floor_materials.get(local_cell, "grass"))
 			if blocked.has(local_cell):
 				g.set_tile(world_cell, WG.TileKind.WALL, zone_id)
 			else:
@@ -274,8 +276,9 @@ func _instance_tile(cell: Vector2i, kind: int) -> void:
 	var floor_box := BoxMesh.new()
 	floor_box.size = Vector3(WG.TILE_SIZE, 0.1, WG.TILE_SIZE)
 	floor_mesh.mesh = floor_box
-	# Cosmetic terrain material (Phase 7) drives the floor colour.
-	floor_mesh.material_override = _flat_material(ThemePalette.color_of(mat_name))
+	# Floor shows the ground rendered under this cell (grass under a tree, etc).
+	floor_mesh.material_override = _flat_material(
+			ThemePalette.color_of(String(grid.floor_material_of.get(cell, "grass"))))
 	floor_mesh.position = pos + Vector3(0, -0.05, 0)
 	add_child(floor_mesh)
 
@@ -288,12 +291,10 @@ func _instance_tile(cell: Vector2i, kind: int) -> void:
 		ceil_mesh.position = pos + Vector3(0, WG.WALL_HEIGHT, 0)
 		add_child(ceil_mesh)
 
-	# Walls take the colour of the barrier cell they face (its terrain material).
-	for dir_idx in 4:
-		var dir: Vector2i = WG.FACING_DIR[dir_idx]
-		var ncell: Vector2i = cell + dir
-		if grid.kind_at(ncell) == WG.TileKind.WALL:
-			_place_wall(pos, dir, ThemePalette.color_of(String(grid.material_of.get(ncell, "wall"))))
+	# Barrier cells become 3D props (tree / building / boulder / pillar / water…);
+	# walkable cells stay open so the props enclose the corridors (Phase 7 slice 2).
+	if kind == WG.TileKind.WALL:
+		_place_barrier_prop(pos, mat_name)
 
 	if kind == WG.TileKind.SHOP_DOOR:
 		var shop_kind := String(grid.tile_meta.get(cell, {}).get("shop_kind", "center"))
@@ -302,28 +303,43 @@ func _instance_tile(cell: Vector2i, kind: int) -> void:
 		_dress_gym_door(pos)
 
 
-func _place_wall(tile_pos: Vector3, dir: Vector2i, color: Color) -> void:
-	var wall := MeshInstance3D.new()
-	var mesh := PlaneMesh.new()
-	mesh.size = Vector2(WG.TILE_SIZE, WG.WALL_HEIGHT)
-	wall.mesh = mesh
+## A barrier cell rendered as a 3D prop, shaped + sized by its terrain material.
+func _place_barrier_prop(pos: Vector3, material: String) -> void:
+	var h := ThemePalette.height_of(material) * WG.WALL_HEIGHT
+	var color := ThemePalette.color_of(material)
+	var emissive := ThemePalette.is_emissive(material)
+	var t := WG.TILE_SIZE
+	match ThemePalette.shape_of(material):
+		"tree":
+			_add_terrain_box(pos + Vector3(0, h * 0.28, 0), Vector3(0.5, h * 0.56, 0.5),
+					Color(0.34, 0.23, 0.13), false)          # trunk
+			_add_terrain_box(pos + Vector3(0, h * 0.72, 0), Vector3(t * 0.9, h * 0.6, t * 0.9),
+					color, false)                            # canopy
+		"boulder":
+			_add_terrain_box(pos + Vector3(0, h * 0.5, 0), Vector3(t * 0.82, h, t * 0.82), color, false)
+		"pillar":
+			_add_terrain_box(pos + Vector3(0, h * 0.5, 0), Vector3(0.7, h, 0.7), color, false)
+		"flat":  # water / lava — low pool covering the tile
+			_add_terrain_box(pos + Vector3(0, 0.12, 0), Vector3(t, 0.14, t), color, emissive)
+		_:  # block — wall / building / mountain / hedge / railing
+			_add_terrain_box(pos + Vector3(0, h * 0.5, 0), Vector3(t, h, t), color, emissive)
+
+
+func _add_terrain_box(center: Vector3, size: Vector3, color: Color, emissive: bool) -> void:
+	var mi := MeshInstance3D.new()
+	var box := BoxMesh.new()
+	box.size = size
+	mi.mesh = box
 	var mat := StandardMaterial3D.new()
 	mat.albedo_color = color
-	mat.roughness = 0.95
-	mat.cull_mode = BaseMaterial3D.CULL_DISABLED
-	wall.material_override = mat
-
-	var offset := Vector3(dir.x, 0, dir.y) * (WG.TILE_SIZE / 2.0)
-	wall.position = tile_pos + offset + Vector3(0, WG.WALL_HEIGHT / 2.0, 0)
-	if dir == Vector2i(0, -1):
-		wall.rotation_degrees = Vector3(90, 0, 0)
-	elif dir == Vector2i(0, 1):
-		wall.rotation_degrees = Vector3(-90, 0, 0)
-	elif dir == Vector2i(1, 0):
-		wall.rotation_degrees = Vector3(0, 0, 90)
-	elif dir == Vector2i(-1, 0):
-		wall.rotation_degrees = Vector3(0, 0, -90)
-	add_child(wall)
+	mat.roughness = 0.9
+	if emissive:
+		mat.emission_enabled = true
+		mat.emission = color
+		mat.emission_energy_multiplier = 0.7
+	mi.material_override = mat
+	mi.position = center
+	add_child(mi)
 
 
 func _build_shop_building(cell: Vector2i, pos: Vector3, shop_kind: String) -> void:

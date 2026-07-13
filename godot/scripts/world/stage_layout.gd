@@ -69,8 +69,11 @@ static func parsed(bal, stage_id: String) -> Dictionary:
 	var leader := Vector2i(-1, -1)
 	var gym_door := Vector2i(-1, -1)
 	# Cosmetic terrain material per cell (Phase 7): override char, else theme default.
+	# `material` = the cell itself (barrier prop for barriers); `floor_material` =
+	# the ground rendered under it (theme ground under a tree, theme floor under `_`).
 	var theme := String(layout.get("template", "open_field"))
 	var material := {}
+	var floor_material := {}
 
 	for y in h:
 		var row := String(grid[y])
@@ -78,6 +81,12 @@ static func parsed(bal, stage_id: String) -> Dictionary:
 			var ch := row[x]
 			var cell := Vector2i(x, y)
 			material[cell] = ThemePalette.material_for(theme, ch)
+			if ch == "_":
+				floor_material[cell] = ThemePalette.theme_floor(theme)
+			elif ch in BARRIER_CHARS:
+				floor_material[cell] = ThemePalette.theme_ground(theme)
+			else:
+				floor_material[cell] = material[cell]
 			if ch in BARRIER_CHARS:
 				blocked.append(cell)
 				continue
@@ -108,6 +117,7 @@ static func parsed(bal, stage_id: String) -> Dictionary:
 		"gym_door": gym_door,
 		"gym_floor": gym_floor,
 		"material": material,
+		"floor_material": floor_material,
 	}
 	_cache[stage_id] = result
 	return result
@@ -173,9 +183,14 @@ static func gym_floor_cells_local(bal, stage_id: String) -> Array[Vector2i]:
 	return parsed(bal, stage_id)["gym_floor"].duplicate()
 
 
-## local cell -> cosmetic material name (Phase 7).
+## local cell -> cosmetic material name (barrier prop / ground) (Phase 7).
 static func material_local(bal, stage_id: String) -> Dictionary:
 	return parsed(bal, stage_id)["material"]
+
+
+## local cell -> floor material rendered under the cell (Phase 7 slice 2).
+static func floor_material_local(bal, stage_id: String) -> Dictionary:
+	return parsed(bal, stage_id)["floor_material"]
 
 
 static func exit_local(bal, stage_id: String) -> Vector2i:

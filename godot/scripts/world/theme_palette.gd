@@ -57,7 +57,15 @@ const MATERIALS := {
 	"building_small": { "color": Color(0.52, 0.40, 0.34), "height": 1.2, "barrier": true },
 	"water":          { "color": Color(0.20, 0.40, 0.70), "height": 0.15, "barrier": true },
 	"lava":           { "color": Color(0.85, 0.35, 0.10), "height": 0.15, "barrier": true, "emissive": true },
-	"pillar":         { "color": Color(0.70, 0.68, 0.64), "height": 1.6, "barrier": true },
+	"pillar":         { "color": Color(0.70, 0.68, 0.64), "height": 1.6, "barrier": true, "shape": "pillar" },
+}
+
+## Barrier prop shapes (Phase 7 slice 2). Materials without a `shape` render as a
+## full-cell block. Others: tree (trunk+canopy), boulder (squat), pillar (column),
+## flat (low pool — water/lava), post (low thin — fence/railing).
+const SHAPES := {
+	"tree": "tree", "boulder": "boulder", "hedge": "block",
+	"railing": "post", "water": "flat", "lava": "flat", "pillar": "pillar",
 }
 
 const DEFAULT_GROUND := "grass"
@@ -90,3 +98,15 @@ static func is_barrier(material: String) -> bool:
 
 static func is_emissive(material: String) -> bool:
 	return bool(MATERIALS.get(material, {}).get("emissive", false))
+
+
+static func shape_of(material: String) -> String:
+	return String(SHAPES.get(material, "block"))
+
+
+static func theme_ground(theme: String) -> String:
+	return String(THEMES.get(theme, THEMES["open_field"])["ground"])
+
+
+static func theme_floor(theme: String) -> String:
+	return String(THEMES.get(theme, THEMES["open_field"])["floor"])
