@@ -7,9 +7,11 @@ extends Control
 ## at run time, so there is nothing funnel-related to author here.
 
 const LAYOUTS_PATH := "res://data/balance/stage_layouts.json"
+const RUN_CONFIG_PATH := "res://data/balance/run_config.json"
 
 const BARRIER_CHARS := ["#", "T", "H", "^", "B"]
-const TEMPLATES := ["open_field", "forest_maze", "cave_branches", "town_pocket", "gym_arena"]
+const TEMPLATES := ["open_field", "forest_maze", "cave_branches", "town_pocket", "gym_arena",
+	"big_city", "ship_interior", "corporate", "mansion", "volcanic", "bridge", "plateau"]
 const FACINGS := ["north", "east", "south", "west"]
 
 ## char -> {name, color, group}. Order within a group drives palette layout.
@@ -37,6 +39,7 @@ const PALETTE := [
 
 var _all: Dictionary = {}          # full parsed stage_layouts.json
 var _stages: Dictionary = {}       # stage_id -> layout dict
+var _run_config: Dictionary = {}   # full parsed run_config.json (for run/segment order)
 var _stage_id: String = ""
 var _grid: Array = []              # Array[Array[String]] (single chars)
 var _active_char := "#"
@@ -45,6 +48,8 @@ var _active_char := "#"
 var _canvas: GridCanvas
 var _stage_picker: OptionButton
 var _status: Label
+var _id_edit: LineEdit
+var _run_pos: Label
 var _name_edit: LineEdit
 var _gym_name_edit: LineEdit
 var _template_pick: OptionButton
@@ -112,6 +117,21 @@ func _build_toolbar() -> Control:
 	bar.add_child(new_btn)
 
 	bar.add_child(VSeparator.new())
+	bar.add_child(_label("Run order:"))
+	var up_btn := Button.new()
+	up_btn.text = "◀ Earlier"
+	up_btn.pressed.connect(_move_stage.bind(-1))
+	bar.add_child(up_btn)
+	var down_btn := Button.new()
+	down_btn.text = "Later ▶"
+	down_btn.pressed.connect(_move_stage.bind(1))
+	bar.add_child(down_btn)
+	var add_btn := Button.new()
+	add_btn.text = "Add to run"
+	add_btn.pressed.connect(_on_add_to_run)
+	bar.add_child(add_btn)
+
+	bar.add_child(VSeparator.new())
 	bar.add_child(_label("Rows:"))
 	_rows_spin = _spin(3, 60, 9)
 	bar.add_child(_rows_spin)
@@ -156,6 +176,14 @@ func _build_sidebar() -> Control:
 	box.add_child(HSeparator.new())
 
 	# Metadata
+	box.add_child(_meta_label("Stage id (rename — key + segment)"))
+	_id_edit = LineEdit.new()
+	_id_edit.text_submitted.connect(func(_t):
+		_commit_metadata_from_ui()
+		_sync_stage_picker(_stage_id))
+	box.add_child(_id_edit)
+	_run_pos = _meta_label("")
+	box.add_child(_run_pos)
 	box.add_child(_meta_label("Display name"))
 	_name_edit = LineEdit.new()
 	box.add_child(_name_edit)
@@ -220,15 +248,18 @@ func _paint_cell(cell: Vector2i) -> void:
 
 
 func _on_stage_picked(idx: int) -> void:
-	_select_stage(_stage_picker.get_item_text(idx))
+	_select_stage(String(_stage_picker.get_item_metadata(idx)))
 
 
 func _select_stage(stage_id: String) -> void:
 	if not _stages.has(stage_id):
 		return
-	_commit_metadata_from_ui()  # keep edits to the previously selected stage
+	_commit_metadata_from_ui()  # keep edits (incl. rename) to the previously selected stage
+	if not _stages.has(stage_id):  # commit may have renamed it
+		stage_id = _stage_id if _stages.has(_stage_id) else _stages.keys()[0]
 	_stage_id = stage_id
 	var layout: Dictionary = _stages[stage_id]
+	_id_edit.text = stage_id
 	_grid = _grid_from_rows(layout.get("grid", []))
 	_name_edit.text = String(layout.get("display_name", ""))
 	_gym_name_edit.text = String(layout.get("gym_name", ""))
@@ -264,6 +295,54 @@ func _on_new_stage() -> void:
 	_select_stage(id)
 
 
+func _apply_rename(old_id: String, new_id: String) -> void:
+	var layout: Dictionary = _stages[old_id]
+	layout["id"] = new_id
+	_stages.erase(old_id)
+	_stages[new_id] = layout
+	var idx := _segment_index(old_id)
+	if idx >= 0:
+		_segments()[idx]["id"] = new_id
+
+
+## Move the current stage earlier/later in the run (reorders run_config segments).
+func _move_stage(delta: int) -> void:
+	_commit_metadata_from_ui()
+	var idx := _segment_index(_stage_id)
+	if idx < 0:
+		_status.text = "'%s' isn't in the run — click 'Add to run' first." % _stage_id
+		_status.modulate = Color(1.0, 0.7, 0.5)
+		return
+	var segs := _segments()
+	var j := idx + delta
+	if j < 0 or j >= segs.size():
+		return
+	var tmp: Variant = segs[idx]
+	segs[idx] = segs[j]
+	segs[j] = tmp
+	_sync_stage_picker(_stage_id)
+	_status.text = "Moved '%s' to run position %d / %d." % [_stage_id, j + 1, segs.size()]
+	_status.modulate = Color(0.6, 1.0, 0.6)
+
+
+## Add the current (orphan) stage to the run as a stub segment. Leader/pool are
+## placeholders the author fills in run_config.json; keeps the run loadable.
+func _on_add_to_run() -> void:
+	_commit_metadata_from_ui()
+	if _segment_index(_stage_id) >= 0:
+		_status.text = "'%s' is already in the run." % _stage_id
+		return
+	if not _run_config.has("segments"):
+		_run_config["segments"] = []
+	_run_config["segments"].append({
+		"id": _stage_id, "wild_pool": [], "leader": "brock", "leader_kind": "trainer",
+		"leader_gold": "midboss", "reward_pool_key": "stage1", "shop_window": 0, "is_final": false,
+	})
+	_sync_stage_picker(_stage_id)
+	_status.text = "Added '%s' to run (stub — set leader/wild_pool/badge in run_config.json)." % _stage_id
+	_status.modulate = Color(0.85, 0.9, 0.6)
+
+
 func _on_resize() -> void:
 	var rows := int(_rows_spin.value)
 	var cols := int(_cols_spin.value)
@@ -293,13 +372,25 @@ func _on_save() -> void:
 		return
 	f.store_string(JSON.stringify(_all, "  "))
 	f.close()
-	_status.text = "Saved %d stages to %s" % [_stages.size(), LAYOUTS_PATH]
+	# Persist run order + any renames back to run_config.json.
+	if not _run_config.is_empty():
+		var rf := FileAccess.open(RUN_CONFIG_PATH, FileAccess.WRITE)
+		if rf != null:
+			rf.store_string(JSON.stringify(_run_config, "  "))
+			rf.close()
+	_status.text = "Saved %d stages + run order." % _stages.size()
 	_status.modulate = Color(0.6, 1.0, 0.6)
 
 
 func _commit_metadata_from_ui() -> void:
 	if _stage_id == "" or not _stages.has(_stage_id):
 		return
+	# Rename (stage id): update the layout key + id and the matching run segment.
+	if _id_edit != null:
+		var new_id := _id_edit.text.strip_edges()
+		if new_id != "" and new_id != _stage_id and not _stages.has(new_id):
+			_apply_rename(_stage_id, new_id)
+			_stage_id = new_id
 	var layout: Dictionary = _stages[_stage_id]
 	layout["id"] = _stage_id
 	layout["grid"] = _rows_from_grid(_grid)
@@ -351,11 +442,12 @@ static func _validate(grid: Array) -> Array:
 				"w": wilds.append(cell)
 	if s != 1:
 		issues.append("need exactly 1 spawn (S), have %d" % s)
-	if l != 1:
-		issues.append("need exactly 1 leader (L), have %d" % l)
-	if s == 1 and l == 1:
+	if l > 1:
+		issues.append("at most 1 leader (L), have %d" % l)
+	# 0 leaders = a connector stage (nav only). Gyms/final need one — checked at load.
+	if s == 1:
 		var reached := _flood(walkable, spawn)
-		if not reached.has(leader):
+		if l == 1 and not reached.has(leader):
 			issues.append("leader unreachable from spawn")
 		for wcell in wilds:
 			if not reached.has(wcell):
@@ -389,18 +481,64 @@ func _load_file() -> void:
 	if parsed is Dictionary:
 		_all = parsed
 		_stages = _all.get("stages", {})
+	var rf := FileAccess.open(RUN_CONFIG_PATH, FileAccess.READ)
+	if rf != null:
+		var rc: Variant = JSON.parse_string(rf.get_as_text())
+		rf.close()
+		if rc is Dictionary:
+			_run_config = rc
 
 
+# --- Run order (run_config.json segments) ---
+
+func _segments() -> Array:
+	return _run_config.get("segments", [])
+
+
+func _segment_index(stage_id: String) -> int:
+	var segs := _segments()
+	for i in segs.size():
+		if String(segs[i].get("id", "")) == stage_id:
+			return i
+	return -1
+
+
+## Stage ids in run order first, then any orphan layouts (no segment) at the end.
+func _ordered_ids() -> Array:
+	var out: Array = []
+	for seg in _segments():
+		var sid := String(seg.get("id", ""))
+		if _stages.has(sid):
+			out.append(sid)
+	for sid in _stages:
+		if not out.has(String(sid)):
+			out.append(String(sid))
+	return out
+
+
+## Stage picker, ordered by run position; orphans marked "(not in run)".
 func _sync_stage_picker(selected_id: String) -> void:
 	_stage_picker.clear()
-	var idx := 0
 	var sel := 0
-	for sid in _stages:
-		_stage_picker.add_item(String(sid))
-		if String(sid) == selected_id:
-			sel = idx
-		idx += 1
+	var i := 0
+	for sid in _ordered_ids():
+		var seg_i := _segment_index(sid)
+		var label := "%d. %s" % [seg_i + 1, sid] if seg_i >= 0 else "•  %s (not in run)" % sid
+		_stage_picker.add_item(label)
+		_stage_picker.set_item_metadata(i, sid)
+		if sid == selected_id:
+			sel = i
+		i += 1
 	_stage_picker.select(sel)
+	_update_run_pos()
+
+
+func _update_run_pos() -> void:
+	if _run_pos == null:
+		return
+	var idx := _segment_index(_stage_id)
+	var total := _segments().size()
+	_run_pos.text = "In run: %d / %d" % [idx + 1, total] if idx >= 0 else "Not in the run"
 
 
 static func _grid_from_rows(rows: Array) -> Array:
