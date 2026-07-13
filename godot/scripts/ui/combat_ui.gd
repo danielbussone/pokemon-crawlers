@@ -213,7 +213,7 @@ static func _status_label(status_type: String) -> String:
 
 func _build_ui() -> void:
 	# Enemy panel (top right).
-	var enemy_panel := PanelContainer.new()
+	var enemy_panel := UITheme.make_panel(10)
 	enemy_panel.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
 	enemy_panel.offset_right = -14
 	enemy_panel.offset_top = 14
@@ -252,11 +252,7 @@ func _build_ui() -> void:
 	bottom.offset_right = -8
 	bottom.offset_bottom = 0
 	bottom.grow_vertical = Control.GROW_DIRECTION_BEGIN
-	var bottom_style := StyleBoxFlat.new()
-	bottom_style.bg_color = Color(0.08, 0.08, 0.1, 0.75)
-	bottom_style.set_corner_radius_all(8)
-	bottom_style.set_content_margin_all(4)
-	bottom.add_theme_stylebox_override("panel", bottom_style)
+	bottom.add_theme_stylebox_override("panel", UITheme.panel_style(Color(0.07, 0.08, 0.11, 0.82), 6))
 	add_child(bottom)
 
 	var vbox := VBoxContainer.new()
@@ -315,9 +311,11 @@ func _make_hp_bar(fill_color: Color) -> ProgressBar:
 	bar.show_percentage = false
 	var fill := StyleBoxFlat.new()
 	fill.bg_color = fill_color
+	fill.set_corner_radius_all(4)
 	bar.add_theme_stylebox_override("fill", fill)
 	var background := StyleBoxFlat.new()
-	background.bg_color = Color(0.12, 0.12, 0.14)
+	background.bg_color = Color(0.14, 0.15, 0.18)
+	background.set_corner_radius_all(4)
 	bar.add_theme_stylebox_override("background", background)
 	return bar
 

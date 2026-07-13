@@ -14,6 +14,8 @@ const LAYER_ABOVE_COMBAT := 11  # CombatUI sits at layer 10
 var minimap: Minimap
 
 var _stats: Label
+var _hp_bar: ProgressBar
+var _hp_label: Label
 var _zone: Label
 var _toast_box: VBoxContainer
 var _minimap_wrap: VBoxContainer
@@ -23,14 +25,21 @@ var _party_layer: CanvasLayer
 func _ready() -> void:
 	layer = 5
 
-	var panel := PanelContainer.new()
+	var panel := UITheme.make_panel(10)
 	panel.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
 	panel.offset_left = 12
 	panel.offset_top = 12
+	panel.custom_minimum_size = Vector2(198, 0)
 	add_child(panel)
-	_stats = Label.new()
-	_stats.add_theme_font_size_override("font_size", 16)
-	panel.add_child(_stats)
+	var col := VBoxContainer.new()
+	col.add_theme_constant_override("separation", 4)
+	panel.add_child(col)
+	_hp_label = UITheme.label("HP", UITheme.FONT_SMALL, UITheme.TEXT_DIM)
+	col.add_child(_hp_label)
+	_hp_bar = UITheme.make_bar(UITheme.GOOD)
+	col.add_child(_hp_bar)
+	_stats = UITheme.label("", UITheme.FONT_BODY)
+	col.add_child(_stats)
 
 	_zone = Label.new()
 	_zone.set_anchors_and_offsets_preset(Control.PRESET_CENTER_TOP)
@@ -120,9 +129,10 @@ func refresh() -> void:
 	var evo_tier := StarterEvo.tier(Run.player.xp, Balance)
 	if evo_tier > 0:
 		candy_text += "\nStarter evo: tier %d" % evo_tier
-	_stats.text = "HP %d/%d\nGold %dg\nDeck %d cards\n%s%s\nBag: %s\nBadges: %s" % [
-		Run.player.hp, Run.player.max_hp, Run.player.gold,
-		Run.deck_size(), _xp_line(), candy_text, inventory_text, badge_text,
+	UITheme.set_bar(_hp_bar, Run.player.hp, Run.player.max_hp)
+	_hp_label.text = "HP  %d / %d" % [Run.player.hp, Run.player.max_hp]
+	_stats.text = "Gold  %dg\nDeck  %d cards\n%s%s\nBag:  %s\nBadges:  %s" % [
+		Run.player.gold, Run.deck_size(), _xp_line(), candy_text, inventory_text, badge_text,
 	]
 
 
