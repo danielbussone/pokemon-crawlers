@@ -3,13 +3,15 @@ extends Control
 ## Phase 5 map editor (dev tool). Launch: godot --path . -- --mapeditor
 ## Paints the ASCII `grid` in data/balance/stage_layouts.json with a terrain +
 ## encounter palette, edits per-stage metadata, and live-validates connectivity.
-## Reads/writes the same JSON the game consumes; the gate funnel is auto-derived
-## at run time, so there is nothing funnel-related to author here.
+## The World View toggle shows every stage in one shared grid so stages can be
+## dragged into place (saved as each layout's `world_pos`, which the world builder
+## reads). Reads/writes the same JSON the game consumes.
 
 const LAYOUTS_PATH := "res://data/balance/stage_layouts.json"
 const RUN_CONFIG_PATH := "res://data/balance/run_config.json"
 
-const BARRIER_CHARS := ["#", "T", "H", "^", "B"]
+# Blocking chars — kept in sync with StageLayout.BARRIER_CHARS (the game's truth).
+const BARRIER_CHARS := ["#", "T", "H", "^", "B", "b", "+", "O", "~", "*", "I"]
 const TEMPLATES := ["open_field", "forest_maze", "cave_branches", "town_pocket", "gym_arena",
 	"big_city", "ship_interior", "corporate", "mansion", "volcanic", "bridge", "plateau"]
 const FACINGS := ["north", "east", "south", "west"]
@@ -27,6 +29,8 @@ const PALETTE := [
 	{"ch": "H", "name": "Hedge", "group": "Barrier", "color": Color(0.20, 0.42, 0.22)},
 	{"ch": "^", "name": "Mountain", "group": "Barrier", "color": Color(0.40, 0.36, 0.32)},
 	{"ch": "B", "name": "Building", "group": "Barrier", "color": Color(0.42, 0.22, 0.20)},
+	{"ch": "~", "name": "Water", "group": "Barrier", "color": Color(0.20, 0.40, 0.70)},
+	{"ch": "*", "name": "Lava", "group": "Barrier", "color": Color(0.85, 0.35, 0.10)},
 	# objects
 	{"ch": "S", "name": "Spawn", "group": "Object", "color": Color(0.20, 0.75, 0.85)},
 	{"ch": "X", "name": "Exit", "group": "Object", "color": Color(0.90, 0.90, 0.95)},
@@ -46,6 +50,11 @@ var _active_char := "#"
 
 # UI refs
 var _canvas: GridCanvas
+var _world_canvas: WorldCanvas
+var _center_scroll: ScrollContainer
+var _sidebar: Control
+var _view_toggle: Button
+var _world_mode := false
 var _stage_picker: OptionButton
 var _status: Label
 var _id_edit: LineEdit
@@ -79,17 +88,29 @@ func _ready() -> void:
 	mid.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	mid.add_theme_constant_override("separation", 8)
 	root.add_child(mid)
-	mid.add_child(_build_sidebar())
+	_sidebar = _build_sidebar()
+	mid.add_child(_sidebar)
 
-	var scroll := ScrollContainer.new()
-	scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	mid.add_child(scroll)
+	_center_scroll = ScrollContainer.new()
+	_center_scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_center_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	mid.add_child(_center_scroll)
 	_canvas = GridCanvas.new()
 	_canvas.painter = _paint_cell
 	for entry in PALETTE:
 		_canvas.colors[entry["ch"]] = entry["color"]
-	scroll.add_child(_canvas)
+	_center_scroll.add_child(_canvas)
+
+	# World View: all stages positioned in one shared grid (hidden until toggled).
+	_world_canvas = WorldCanvas.new()
+	_world_canvas.visible = false
+	_world_canvas.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_world_canvas.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	for entry in PALETTE:
+		_world_canvas.colors[entry["ch"]] = entry["color"]
+	_world_canvas.on_move = _on_world_move
+	_world_canvas.on_select = _on_world_select
+	mid.add_child(_world_canvas)
 
 	_status = Label.new()
 	_status.add_theme_font_size_override("font_size", 15)
@@ -142,6 +163,13 @@ func _build_toolbar() -> Control:
 	resize_btn.text = "Resize"
 	resize_btn.pressed.connect(_on_resize)
 	bar.add_child(resize_btn)
+
+	bar.add_child(VSeparator.new())
+	_view_toggle = Button.new()
+	_view_toggle.text = "World View"
+	_view_toggle.toggle_mode = true
+	_view_toggle.toggled.connect(_on_toggle_world)
+	bar.add_child(_view_toggle)
 
 	bar.add_child(VSeparator.new())
 	var save_btn := Button.new()
@@ -360,6 +388,187 @@ func _on_resize() -> void:
 	_grid = resized
 	_canvas.set_grid(_grid)
 	_revalidate()
+
+
+# --- World View (manual stage placement) ---
+
+func _on_toggle_world(pressed: bool) -> void:
+	_world_mode = pressed
+	_view_toggle.text = "◀ Edit Stage" if pressed else "World View"
+	_center_scroll.visible = not pressed
+	_sidebar.visible = not pressed
+	_world_canvas.visible = pressed
+	if pressed:
+		_enter_world_view()
+	else:
+		_revalidate()
+
+
+func _enter_world_view() -> void:
+	_commit_metadata_from_ui()
+	_seed_world_positions()
+	_refresh_world_canvas()
+
+
+## Give every stage a world_pos. Existing ones are kept; missing ones are seeded by
+## the same legacy telescope walk the world builder falls back to, so the view
+## matches what the game would build before any manual stitching.
+func _seed_world_positions() -> void:
+	var prev_exit_world := Vector2i.ZERO
+	var first := true
+	for sid in _ordered_ids():
+		var layout: Dictionary = _stages[sid]
+		var rows := _stage_rows(sid)
+		var pos: Vector2i
+		if _has_world_pos(layout):
+			pos = _layout_pos(sid)
+		elif first:
+			pos = Vector2i.ZERO
+			layout["world_pos"] = [0, 0]
+		else:
+			pos = prev_exit_world + Vector2i(0, 1) - _find_char(rows, "S")
+			layout["world_pos"] = [pos.x, pos.y]
+		prev_exit_world = pos + _exit_local(rows)
+		first = false
+
+
+func _refresh_world_canvas() -> void:
+	var defs: Array = []
+	for sid in _ordered_ids():
+		defs.append({
+			"id": sid, "rows": _stage_rows(sid),
+			"pos": _layout_pos(sid), "order": _segment_index(sid),
+		})
+	_world_canvas.set_stages(defs)
+	_world_canvas.selected_id = _stage_id
+	_world_checks()
+
+
+func _on_world_move(id: String, new_pos: Vector2i) -> void:
+	_stages[id]["world_pos"] = [new_pos.x, new_pos.y]
+	_world_checks()
+
+
+func _on_world_select(id: String) -> void:
+	_select_stage(id)  # keeps _stage_id/_grid/picker in sync so grid-mode edits the clicked stage
+	_refresh_world_canvas()  # restores selection highlight + world status (over _select_stage's)
+
+
+## Overlap (rect intersection) + reachability (flood the union of walkable cells
+## from the run's first spawn). Warnings go to the status line; offenders outline red.
+func _world_checks() -> void:
+	var run_ids := _run_ordered_ids()
+	var overlap := {}
+	var pairs: Array = []
+	var shown := _ordered_ids()
+	for i in shown.size():
+		for j in range(i + 1, shown.size()):
+			if _stage_rect(shown[i]).intersects(_stage_rect(shown[j])):
+				overlap[shown[i]] = true
+				overlap[shown[j]] = true
+				if pairs.size() < 3:
+					pairs.append("%s×%s" % [shown[i], shown[j]])
+	_world_canvas.overlap_ids = overlap
+
+	var unreachable := _unreachable_stages(run_ids)
+	var msgs: Array = []
+	if not overlap.is_empty():
+		msgs.append("⚠ overlap: " + "  ".join(pairs) + ("  +more" if overlap.size() > 6 else ""))
+	if not unreachable.is_empty():
+		msgs.append("⚠ unreachable: " + "  ".join(unreachable.slice(0, 5)))
+	if msgs.is_empty():
+		_status.text = "✓ %d stages placed — all connected, no overlaps" % run_ids.size()
+		_status.modulate = Color(0.6, 1.0, 0.6)
+	else:
+		_status.text = "   ".join(msgs)
+		_status.modulate = Color(1.0, 0.7, 0.5)
+	_world_canvas.queue_redraw()
+
+
+## Run stages whose spawn or exit can't be reached from the first stage's spawn,
+## walking the union of every run stage's walkable cells (barriers block).
+func _unreachable_stages(run_ids: Array) -> Array:
+	if run_ids.is_empty():
+		return []
+	var walk := {}
+	for sid in run_ids:
+		var rows := _stage_rows(sid)
+		var pos := _layout_pos(sid)
+		for y in rows.size():
+			var row := String(rows[y])
+			for x in row.length():
+				if row[x] not in BARRIER_CHARS:
+					walk[pos + Vector2i(x, y)] = true
+	var start := _layout_pos(run_ids[0]) + _find_char(_stage_rows(run_ids[0]), "S")
+	var seen := {start: true}
+	var frontier: Array = [start]
+	while not frontier.is_empty():
+		var c: Vector2i = frontier.pop_back()
+		for d in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
+			var n: Vector2i = c + d
+			if walk.has(n) and not seen.has(n):
+				seen[n] = true
+				frontier.append(n)
+	var bad: Array = []
+	for sid in run_ids:
+		var rows := _stage_rows(sid)
+		var pos := _layout_pos(sid)
+		var s := pos + _find_char(rows, "S")
+		var xl := _exit_local(rows)
+		if not seen.has(s) or (xl.x >= 0 and not seen.has(pos + xl)):
+			bad.append(sid)
+	return bad
+
+
+# world-view data helpers (read the editor's raw grids; no Balance dependency)
+
+func _stage_rows(sid: String) -> Array:
+	return _stages[sid].get("grid", [])
+
+
+func _find_char(rows: Array, ch: String) -> Vector2i:
+	for y in rows.size():
+		var x := String(rows[y]).find(ch)
+		if x >= 0:
+			return Vector2i(x, y)
+	return Vector2i(-1, -1)
+
+
+## Exit cell = `X`, or the leader `L` when there is no `X` (matches StageLayout).
+func _exit_local(rows: Array) -> Vector2i:
+	var x := _find_char(rows, "X")
+	return x if x.x >= 0 else _find_char(rows, "L")
+
+
+func _stage_size_of(sid: String) -> Vector2i:
+	var rows := _stage_rows(sid)
+	return Vector2i(String(rows[0]).length() if not rows.is_empty() else 0, rows.size())
+
+
+func _stage_rect(sid: String) -> Rect2i:
+	return Rect2i(_layout_pos(sid), _stage_size_of(sid))
+
+
+func _has_world_pos(layout: Dictionary) -> bool:
+	var wp = layout.get("world_pos", null)
+	return wp is Array and wp.size() == 2
+
+
+func _layout_pos(sid: String) -> Vector2i:
+	var wp: Variant = _stages[sid].get("world_pos", [0, 0])
+	if wp is Array and wp.size() == 2:
+		return Vector2i(int(wp[0]), int(wp[1]))
+	return Vector2i.ZERO
+
+
+## Stage ids that are actually in the run (segment order) — what the game builds.
+func _run_ordered_ids() -> Array:
+	var out: Array = []
+	for seg in _segments():
+		var sid := String(seg.get("id", ""))
+		if _stages.has(sid):
+			out.append(sid)
+	return out
 
 
 func _on_save() -> void:
@@ -597,7 +806,7 @@ func _spin(min_v: int, max_v: int, val: int) -> SpinBox:
 ## Inner canvas: draws the char grid and paints cells under the mouse. Self
 ## contained — colors are injected so it never reaches back to the outer class.
 class GridCanvas extends Control:
-	const TERRAIN := [".", "#", "_", "=", ",", "T", "H", "^", "B"]
+	const TERRAIN := [".", "#", "_", "=", ",", "T", "H", "^", "B", "~", "*"]
 	var grid: Array = []
 	var colors: Dictionary = {}
 	var cell_px := 30.0
@@ -631,3 +840,116 @@ class GridCanvas extends Control:
 		var cell := Vector2i(int(pos.x / cell_px), int(pos.y / cell_px))
 		if painter.is_valid():
 			painter.call(cell)
+
+
+## World View canvas: draws every stage at its world_pos in a shared grid and lets
+## the author drag stages to stitch them. Pan on empty space, wheel to zoom.
+class WorldCanvas extends Control:
+	const BARRIER := {
+		"#": true, "T": true, "H": true, "^": true, "B": true,
+		"b": true, "+": true, "O": true, "~": true, "*": true, "I": true,
+	}
+	var stages: Array = []          # [{id, rows:Array[String], pos:Vector2i, order:int}]
+	var colors: Dictionary = {}
+	var selected_id := ""
+	var overlap_ids: Dictionary = {}
+	var cell_px := 8.0
+	var pan := Vector2(60, 60)
+	var on_move: Callable
+	var on_select: Callable
+
+	var _drag_id := ""
+	var _grab_offset := Vector2i.ZERO
+	var _panning := false
+	var _pan_last := Vector2.ZERO
+
+	func set_stages(s: Array) -> void:
+		stages = s
+		queue_redraw()
+
+	func _draw() -> void:
+		var font := ThemeDB.fallback_font
+		for st in stages:
+			var rows: Array = st["rows"]
+			if rows.is_empty():
+				continue
+			var base := pan + Vector2(st["pos"]) * cell_px
+			for y in rows.size():
+				var row := String(rows[y])
+				for x in row.length():
+					var ch := row[x]
+					var col: Color = colors.get(ch, Color(0.10, 0.11, 0.13))
+					draw_rect(Rect2(base + Vector2(x, y) * cell_px, Vector2(cell_px, cell_px)), col)
+					if cell_px >= 11.0 and ch in ["S", "X", "L"]:
+						draw_string(font, base + Vector2(x * cell_px + 1, (y + 1) * cell_px - 2),
+								ch, HORIZONTAL_ALIGNMENT_LEFT, -1, int(cell_px * 0.9), Color.BLACK)
+			var w := String(rows[0]).length()
+			var rect := Rect2(base, Vector2(w, rows.size()) * cell_px)
+			var bcol := Color(1, 0.3, 0.3) if overlap_ids.has(st["id"]) \
+					else (Color(1, 0.9, 0.35) if st["id"] == selected_id else Color(0.45, 0.47, 0.55))
+			draw_rect(rect, bcol, false, 2.0)
+			draw_string(font, base + Vector2(2, -4),
+					"%d %s" % [int(st["order"]) + 1, st["id"]],
+					HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(0.88, 0.93, 1.0))
+
+	func _cell_at(mouse: Vector2) -> Vector2i:
+		return Vector2i(floori((mouse.x - pan.x) / cell_px), floori((mouse.y - pan.y) / cell_px))
+
+	func _pos_of(id: String) -> Vector2i:
+		for st in stages:
+			if st["id"] == id:
+				return st["pos"]
+		return Vector2i.ZERO
+
+	func _stage_at(mouse: Vector2) -> String:
+		var c := _cell_at(mouse)
+		for i in range(stages.size() - 1, -1, -1):  # topmost (last drawn) first
+			var st: Dictionary = stages[i]
+			var rows: Array = st["rows"]
+			if rows.is_empty():
+				continue
+			var p: Vector2i = st["pos"]
+			var w := String(rows[0]).length()
+			if c.x >= p.x and c.x < p.x + w and c.y >= p.y and c.y < p.y + rows.size():
+				return st["id"]
+		return ""
+
+	func _gui_input(event: InputEvent) -> void:
+		if event is InputEventMouseButton:
+			if event.button_index == MOUSE_BUTTON_WHEEL_UP and event.pressed:
+				_zoom(1.15, event.position)
+			elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN and event.pressed:
+				_zoom(1.0 / 1.15, event.position)
+			elif event.button_index == MOUSE_BUTTON_LEFT:
+				if event.pressed:
+					var id := _stage_at(event.position)
+					if id != "":
+						_drag_id = id
+						_grab_offset = _cell_at(event.position) - _pos_of(id)
+						if on_select.is_valid():
+							on_select.call(id)
+					else:
+						_panning = true
+						_pan_last = event.position
+				else:
+					_drag_id = ""
+					_panning = false
+		elif event is InputEventMouseMotion:
+			if _drag_id != "":
+				var new_pos := _cell_at(event.position) - _grab_offset
+				for st in stages:
+					if st["id"] == _drag_id:
+						st["pos"] = new_pos
+				queue_redraw()
+				if on_move.is_valid():
+					on_move.call(_drag_id, new_pos)
+			elif _panning:
+				pan += event.position - _pan_last
+				_pan_last = event.position
+				queue_redraw()
+
+	func _zoom(factor: float, center: Vector2) -> void:
+		var world_before := (center - pan) / cell_px
+		cell_px = clampf(cell_px * factor, 3.0, 40.0)
+		pan = center - world_before * cell_px
+		queue_redraw()
