@@ -207,12 +207,28 @@ static func size_local(bal, stage_id: String) -> Vector2i:
 	return parsed(bal, stage_id)["size"]
 
 
+## Author-placed top-left origin of the stage in the shared world grid (World View
+## in the map editor). Absent → the world builder falls back to legacy telescoping.
+static func has_world_pos(bal, stage_id: String) -> bool:
+	var wp = layout_for(bal, stage_id).get("world_pos", null)
+	return wp is Array and wp.size() == 2
+
+
+static func world_pos_of(bal, stage_id: String) -> Vector2i:
+	var wp: Array = layout_for(bal, stage_id).get("world_pos", [0, 0])
+	return Vector2i(int(wp[0]), int(wp[1]))
+
+
 static func template_id(bal, stage_id: String) -> String:
 	return String(layout_for(bal, stage_id).get("template", "open_field"))
 
 
 static func display_name(bal, stage_id: String) -> String:
 	return String(layout_for(bal, stage_id).get("display_name", ""))
+
+
+static func gym_name_of(bal, stage_id: String) -> String:
+	return String(layout_for(bal, stage_id).get("gym_name", ""))
 
 
 ## Zone title for the gym interior of whichever stage is a gym (the one with a

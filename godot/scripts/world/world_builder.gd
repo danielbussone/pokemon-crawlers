@@ -1,7 +1,8 @@
 class_name WorldMapBuilder
 extends Node3D
-## Builds walkable open-area / maze stages from stage_layouts.json, connected
-## northward with funnel gates at mandatory trainer fights.
+## Builds walkable open-area / maze stages from stage_layouts.json. Each stage is
+## stamped at its author-placed `world_pos` (map editor's World View) in a shared
+## grid; stages connect wherever the author makes their walkable cells meet.
 
 const StageLayout = preload("res://scripts/world/stage_layout.gd")
 const WG = preload("res://scripts/world/world_grid.gd")
@@ -26,6 +27,8 @@ var spawn_cell := Vector2i.ZERO
 
 var _encounter_cells: Array[Vector2i] = []
 var _zone_sign_cells: Dictionary = {}   # zone_id -> Vector2i (world cell for signage)
+var _gym_cell_stage: Dictionary = {}    # gym-zone world cell -> owning stage id (for naming)
+var _forest_bounds: Array = []          # [{origin, size}] of forest stages, for backdrops
 var _boss_cell := Vector2i.ZERO
 var _wall_tex_cache: Dictionary = {}
 var _shop_tex_cache: Dictionary = {}
@@ -43,6 +46,8 @@ func build(encounters: Array[Dictionary]) -> void:
 		_instance_tile(cell, grid.tiles[cell])
 	for cell in grid.tiles.keys():
 		_maybe_add_prop(cell, String(grid.zone_of.get(cell, "")))
+	for b in _forest_bounds:
+		_add_forest_backdrop(b["origin"], b["size"])
 
 	_build_signs()
 	_add_gym_lighting(_boss_cell)
@@ -61,8 +66,18 @@ func zone_name_for_cell(cell: Vector2i) -> String:
 	if zone == "":
 		return ""
 	if zone == "gym":
-		return StageLayout.gym_display_name(Balance)
+		return _gym_label_for_cell(cell)
 	return StageLayout.display_name(Balance, zone)
+
+
+## Name for a gym-zone cell: the owning stage's gym_name, else its display_name
+## (non-gym interiors like S.S. Anne reuse the `_` floor, so have no gym_name).
+func _gym_label_for_cell(cell: Vector2i) -> String:
+	var sid := String(_gym_cell_stage.get(cell, ""))
+	if sid == "":
+		return StageLayout.gym_display_name(Balance)
+	var gname := StageLayout.gym_name_of(Balance, sid)
+	return gname if gname != "" else StageLayout.display_name(Balance, sid)
 
 
 func clear_marker(index: int) -> void:
@@ -134,20 +149,27 @@ func _build_grid(encounters: Array[Dictionary]):
 	_encounter_cells.clear()
 	_encounter_cells.resize(encounters.size())
 	_zone_sign_cells.clear()
+	_gym_cell_stage.clear()
+	_forest_bounds.clear()
 	_shop_facings.clear()
 
 	var stage_origin := Vector2i.ZERO
 	var first_stage := true
 
 	for stage_id in StageLayout.stage_ids_in_order(Balance):
-		if first_stage:
+		# Placement is author-driven: a stage's `world_pos` (set in the map editor's
+		# World View) is its origin in the shared grid. Stages with no `world_pos` yet
+		# fall back to legacy telescoping so the run still builds.
+		if StageLayout.has_world_pos(Balance, stage_id):
+			stage_origin = StageLayout.world_pos_of(Balance, stage_id)
+		elif first_stage:
 			stage_origin = Vector2i.ZERO
-			spawn_cell = StageLayout.spawn_world(Balance, stage_id, stage_origin)
-			first_stage = false
 		else:
 			var spawn_local := StageLayout.spawn_local(Balance, stage_id)
-			var entry_world := _prev_stage_exit_world + Vector2i(0, 1)
-			stage_origin = entry_world - spawn_local
+			stage_origin = _prev_stage_exit_world + Vector2i(0, 1) - spawn_local
+		if first_stage:
+			spawn_cell = StageLayout.spawn_world(Balance, stage_id, stage_origin)
+			first_stage = false
 
 		_stamp_stage(g, stage_id, stage_origin, encounters)
 		var stage_size := StageLayout.size_local(Balance, stage_id)
@@ -183,13 +205,21 @@ func _stamp_stage(g, stage_id: String, origin: Vector2i,
 				g.set_tile(world_cell, WG.TileKind.CORRIDOR, zone_id)
 
 	# Gym anchors come from the grid ('_' floor, 'D' door); no-ops for non-gym stages.
+	# The shared "gym" zone drives arena rendering, so remember which stage owns each
+	# gym cell to name it correctly (its gym_name, else its display_name).
 	for cell in StageLayout.gym_floor_cells_local(Balance, stage_id):
 		var gym_world := StageLayout.local_to_world(cell, origin)
 		g.set_tile(gym_world, WG.TileKind.GYM_FLOOR, "gym")
+		_gym_cell_stage[gym_world] = stage_id
 	var door_local := StageLayout.gym_door_local(Balance, stage_id)
 	if door_local.x >= 0:
 		var door_world := StageLayout.local_to_world(door_local, origin)
 		g.set_tile(door_world, WG.TileKind.GYM_DOOR, zone_id)
+		_gym_cell_stage[door_world] = stage_id
+
+	# Forest stages get a receding wall of trees behind their edge (rendered in build).
+	if StageLayout.template_id(Balance, stage_id) == "forest_maze":
+		_forest_bounds.append({"origin": origin, "size": size})
 
 	var opt_spawns := StageLayout.optional_spawns_local(Balance, stage_id)
 	var opt_idx := 0
@@ -296,7 +326,7 @@ func _instance_tile(cell: Vector2i, kind: int) -> void:
 		var shop_kind := String(grid.tile_meta.get(cell, {}).get("shop_kind", "center"))
 		_build_shop_building(cell, pos, shop_kind)
 	elif kind == WG.TileKind.GYM_DOOR:
-		_dress_gym_door(pos)
+		_dress_gym_door(cell, pos)
 
 
 ## A barrier cell rendered as a 3D prop, shaped + sized by its terrain material.
@@ -307,10 +337,14 @@ func _place_barrier_prop(pos: Vector3, material: String) -> void:
 	var t := WG.TILE_SIZE
 	match ThemePalette.shape_of(material):
 		"tree":
-			_add_terrain_box(pos + Vector3(0, h * 0.28, 0), Vector3(0.5, h * 0.56, 0.5),
-					Color(0.34, 0.23, 0.13), false)          # trunk
-			_add_terrain_box(pos + Vector3(0, h * 0.72, 0), Vector3(t * 0.9, h * 0.6, t * 0.9),
-					color, false)                            # canopy
+			_add_terrain_box(pos + Vector3(0, h * 0.24, 0), Vector3(0.5, h * 0.48, 0.5),
+					Color(0.30, 0.20, 0.11), false)          # trunk
+			# Canopy is wider than a tile so neighbours overlap into a solid wall, and
+			# stacks two tiers so you can't see over or between the trees.
+			_add_terrain_box(pos + Vector3(0, h * 0.60, 0), Vector3(t * 1.2, h * 0.62, t * 1.2),
+					color.darkened(0.08), false)             # lower canopy
+			_add_terrain_box(pos + Vector3(0, h * 0.98, 0), Vector3(t * 1.05, h * 0.55, t * 1.05),
+					color, false)                            # upper canopy
 		"boulder":
 			_add_terrain_box(pos + Vector3(0, h * 0.5, 0), Vector3(t * 0.82, h, t * 0.82), color, false)
 		"pillar":
@@ -336,6 +370,34 @@ func _add_terrain_box(center: Vector3, size: Vector3, color: Color, emissive: bo
 	mi.material_override = mat
 	mi.position = center
 	add_child(mi)
+
+
+## Rings of tall tree blocks just outside a forest stage, each ring taller and
+## darker than the last so the forest edge recedes into darkness instead of sky.
+func _add_forest_backdrop(origin: Vector2i, size: Vector2i) -> void:
+	const RINGS := 4
+	var base := ThemePalette.color_of("tree")
+	for ring in range(1, RINGS + 1):
+		var col := base.darkened(0.18 * ring)
+		var height := WG.WALL_HEIGHT * (1.7 + 0.55 * ring)
+		var x0 := origin.x - ring
+		var x1 := origin.x + size.x - 1 + ring
+		var y0 := origin.y - ring
+		var y1 := origin.y + size.y - 1 + ring
+		for x in range(x0, x1 + 1):
+			_backdrop_tree(Vector2i(x, y0), col, height)
+			_backdrop_tree(Vector2i(x, y1), col, height)
+		for y in range(y0 + 1, y1):
+			_backdrop_tree(Vector2i(x0, y), col, height)
+			_backdrop_tree(Vector2i(x1, y), col, height)
+
+
+func _backdrop_tree(cell: Vector2i, color: Color, height: float) -> void:
+	if grid.tiles.has(cell):
+		return  # don't cover a neighbouring stage's tiles — only fill empty space
+	var pos := WG.world_pos(cell)
+	var w := WG.TILE_SIZE * 1.25
+	_add_terrain_box(pos + Vector3(0, height * 0.5, 0), Vector3(w, height, w), color, false)
 
 
 func _build_shop_building(cell: Vector2i, pos: Vector3, shop_kind: String) -> void:
@@ -611,9 +673,9 @@ func _draw_pixel_text(img: Image, text: String, x0: int, y0: int, px: int, color
 		cursor_x += 5 * px + px
 
 
-func _dress_gym_door(pos: Vector3) -> void:
+func _dress_gym_door(cell: Vector2i, pos: Vector3) -> void:
 	var label := Label3D.new()
-	label.text = "PEWTER GYM"
+	label.text = _gym_label_for_cell(cell).to_upper()
 	label.position = pos + Vector3(0, 2.4, 0)
 	label.billboard = BaseMaterial3D.BILLBOARD_ENABLED
 	label.font_size = 56
