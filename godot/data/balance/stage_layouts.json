@@ -1,167 +1,733 @@
 {
   "_legend": "Phase 5 map format. `grid` rows (equal length) are the stage geometry. Barrier: # wall, T tree, H hedge, ^ mountain, B building. Walkable: . grass, = road, , dirt, _ interior/gym floor. Objects (walkable): S spawn, X exit, c center, m mart, w wild encounter, L leader gate, D gym door. The leader's trigger cell + north facing are derived from the south→north arc; the gate auto-blocks the leader cell and every walkable cell north of it until cleared.",
   "stages": {
-    "route_viridian": {
-      "id": "route_viridian",
-      "template": "open_field",
-      "display_name": "Route 1 — Viridian Outskirts",
-      "gate_facing": "north",
-      "grid": [
-        "#####X#####",
-        "#.........#",
-        "#....L....#",
-        "#.w.......#",
-        "#.......w.#",
-        "#.w.......#",
-        "#.........#",
-        "#....S....#",
+	"celadon": {
+	  "display_name": "Celadon City",
+	  "gate_facing": "north",
+	  "grid": [
+		"####_L_####",
+		"#####D#####",
+		"#.w.....w.#",
+		"#.........#",
+		"#..c...m..#",
+		"#.........#",
+		"#....S....#",
         "#####.#####"
-      ]
-    },
-    "viridian_forest": {
-      "id": "viridian_forest",
-      "template": "forest_maze",
-      "display_name": "Viridian Forest",
-      "gate_facing": "north",
-      "grid": [
-        "#####X#####",
-        "#.........#",
-        "#....L....#",
-        "#.........#",
-        "#.##....w.#",
-        "#..#...#..#",
-        "#..#####.w#",
-        "#w.....##.#",
-        "#.........#",
-        "#....S....#",
+	  ],
+	  "gym_name": "Celadon Gym",
+	  "id": "celadon",
+	  "shop_windows": {
+		"center": 1,
+		"mart": 2
+	  },
+	  "template": "big_city",
+	  "world_pos": [
+		12,
+		15
+	  ]
+	},
+	"cerulean": {
+	  "display_name": "Cerulean City",
+	  "gate_facing": "north",
+	  "grid": [
+		"HSBB#___#BBBB",
+		"H=BB#___#BBBB",
+		"H=BB#___#BBBB",
+		"H=HH##D##HHHH",
+		"H=.w..=..w..H",
+		"H=....=.....H",
+		"H=w...=...w.H",
+		"H=.c..=..m..H",
+		"H=========..H",
+		"H......=....H",
+        "HHHHHHHXHHHHH"
+	  ],
+	  "gym_name": "Cerulean Gym",
+	  "id": "cerulean",
+	  "shop_windows": {
+		"center": 1,
+		"mart": 2
+	  },
+	  "template": "town_pocket",
+	  "world_pos": [
+		10,
+		-27
+	  ]
+	},
+	"cinnabar": {
+	  "display_name": "Cinnabar Island",
+	  "gate_facing": "north",
+	  "grid": [
+		"####_L_####",
+		"#####D#####",
+		"#.w.....w.#",
+		"#.........#",
+		"#..c...m..#",
+		"#.........#",
+		"#....S....#",
         "#####.#####"
-      ]
-    },
-    "pewter": {
-      "id": "pewter",
-      "template": "town_pocket",
-      "display_name": "Pewter City",
-      "gym_name": "Pewter Gym",
-      "gate_facing": "north",
-      "shop_windows": { "center": 1, "mart": 2 },
-      "grid": [
-        "#####_L_#####",
-        "#####___#####",
-        "#####___#####",
-        "######D######",
-        "#........w..#",
-        "#..w........#",
-        "#.w.......w.#",
-        "#..c.....m..#",
-        "#...........#",
-        "#.....S.....#",
-        "######.######"
-      ]
-    },
-    "cerulean": {
-      "id": "cerulean",
-      "template": "town_pocket",
-      "display_name": "Cerulean City",
-      "gym_name": "Cerulean Gym",
-      "gate_facing": "north",
-      "shop_windows": { "center": 1, "mart": 2 },
-      "grid": [
-        "#####_L_#####",
-        "#####___#####",
-        "#####___#####",
-        "######D######",
-        "#..w.....w..#",
-        "#...........#",
-        "#.w.......w.#",
-        "#..c.....m..#",
-        "#...........#",
-        "#.....S.....#",
-        "######.######"
-      ]
-    },
-    "route_vermilion": {
-      "id": "route_vermilion",
-      "template": "open_field",
-      "display_name": "Route 5 — Vermilion Path",
-      "gate_facing": "north",
-      "shop_windows": { "center": 1, "mart": 1 },
-      "grid": [
-        "#####X#####",
-        "#.........#",
-        "#....L....#",
-        "#.w.......#",
-        "#.......w.#",
-        "#.w.......#",
-        "#.........#",
-        "#....S....#",
+	  ],
+	  "gym_name": "Cinnabar Gym",
+	  "id": "cinnabar",
+	  "shop_windows": {
+		"center": 1,
+		"mart": 2
+	  },
+	  "template": "volcanic",
+	  "world_pos": [
+		-21,
+		39
+	  ]
+	},
+	"cycling_road": {
+	  "display_name": "Cycling Road",
+	  "gate_facing": "north",
+	  "grid": [
+		"####X####",
+		"#.......#",
+		"#...L...#",
+		"#.w...w.#",
+		"#.......#",
+		"#...S...#",
+        "####.####"
+	  ],
+	  "id": "cycling_road",
+	  "shop_windows": {
+		"center": 1,
+		"mart": 2
+	  },
+	  "template": "bridge",
+	  "world_pos": [
+		3,
+		23
+	  ]
+	},
+	"e4_agatha": {
+	  "display_name": "Indigo Plateau — Agatha",
+	  "gate_facing": "north",
+	  "grid": [
+		"##_L_##",
+		"#.....#",
+		"#.....#",
+		"#..S..#",
+        "###.###"
+	  ],
+	  "gym_name": "Elite Four",
+	  "id": "e4_agatha",
+	  "shop_windows": {
+		"center": 1,
+		"mart": 2
+	  },
+	  "template": "gym_arena",
+	  "world_pos": [
+		-29,
+		3
+	  ]
+	},
+	"e4_bruno": {
+	  "display_name": "Indigo Plateau — Bruno",
+	  "gate_facing": "north",
+	  "grid": [
+		"##_L_##",
+		"#.....#",
+		"#.....#",
+		"#..S..#",
+        "###.###"
+	  ],
+	  "gym_name": "Elite Four",
+	  "id": "e4_bruno",
+	  "shop_windows": {
+		"center": 1,
+		"mart": 2
+	  },
+	  "template": "gym_arena",
+	  "world_pos": [
+		-29,
+		13
+	  ]
+	},
+	"e4_champion": {
+	  "display_name": "Indigo Plateau — Champion",
+	  "gate_facing": "north",
+	  "grid": [
+		"##_L_##",
+		"#.....#",
+		"#.....#",
+		"#..S..#",
+        "###.###"
+	  ],
+	  "gym_name": "Champion",
+	  "id": "e4_champion",
+	  "shop_windows": {
+		"center": 1,
+		"mart": 2
+	  },
+	  "template": "gym_arena",
+	  "world_pos": [
+		-29,
+		-7
+	  ]
+	},
+	"e4_lance": {
+	  "display_name": "Indigo Plateau — Lance",
+	  "gate_facing": "north",
+	  "grid": [
+		"##_L_##",
+		"#.....#",
+		"#.....#",
+		"#..S..#",
+        "###.###"
+	  ],
+	  "gym_name": "Elite Four",
+	  "id": "e4_lance",
+	  "shop_windows": {
+		"center": 1,
+		"mart": 2
+	  },
+	  "template": "gym_arena",
+	  "world_pos": [
+		-29,
+		-2
+	  ]
+	},
+	"e4_lorelei": {
+	  "display_name": "Indigo Plateau — Lorelei",
+	  "gate_facing": "north",
+	  "grid": [
+		"##_L_##",
+		"#.....#",
+		"#.....#",
+		"#..S..#",
+        "###.###"
+	  ],
+	  "gym_name": "Elite Four",
+	  "id": "e4_lorelei",
+	  "shop_windows": {
+		"center": 1,
+		"mart": 2
+	  },
+	  "template": "gym_arena",
+	  "world_pos": [
+		-29,
+		8
+	  ]
+	},
+	"fuchsia": {
+	  "display_name": "Fuchsia City",
+	  "gate_facing": "north",
+	  "grid": [
+		"####_L_####",
+		"#####D#####",
+		"#.w.....w.#",
+		"#.........#",
+		"#..c...m..#",
+		"#.........#",
+		"#....S....#",
         "#####.#####"
-      ]
-    },
-    "ss_anne": {
-      "id": "ss_anne",
-      "template": "ship_interior",
-      "display_name": "S.S. Anne",
-      "gate_facing": "north",
-      "shop_windows": { "center": 1, "mart": 1 },
-      "grid": [
-        "#####X#####",
-        "#.........#",
-        "#....L....#",
-        "#.w.....w.#",
-        "#..#...#..#",
-        "#.w.......#",
-        "#.........#",
-        "#....S....#",
+	  ],
+	  "gym_name": "Fuchsia Gym",
+	  "id": "fuchsia",
+	  "shop_windows": {
+		"center": 1,
+		"mart": 2
+	  },
+	  "template": "town_pocket",
+	  "world_pos": [
+		12,
+		25
+	  ]
+	},
+	"game_corner": {
+	  "display_name": "Celadon Game Corner",
+	  "gate_facing": "north",
+	  "grid": [
+		"####X####",
+		"#.......#",
+		"#...L...#",
+		"#.w...w.#",
+		"#.......#",
+		"#...S...#",
+        "####.####"
+	  ],
+	  "id": "game_corner",
+	  "shop_windows": {
+		"center": 1,
+		"mart": 2
+	  },
+	  "template": "corporate",
+	  "world_pos": [
+		23,
+		15
+	  ]
+	},
+	"mansion": {
+	  "display_name": "Pokémon Mansion",
+	  "gate_facing": "north",
+	  "grid": [
+		"####X####",
+		"#.......#",
+		"#...L...#",
+		"#.w...w.#",
+		"#.......#",
+		"#...S...#",
+        "####.####"
+	  ],
+	  "id": "mansion",
+	  "shop_windows": {
+		"center": 1,
+		"mart": 2
+	  },
+	  "template": "mansion",
+	  "world_pos": [
+		-10,
+		40
+	  ]
+	},
+	"mt_moon": {
+	  "display_name": "Mt. Moon",
+	  "gate_facing": "east",
+	  "grid": [
+		"^^^^^^^^^^^^^",
+		"^,,,,,,,,,^^^",
+		"^,,,,,,,,,w^^",
+		"^,,^^^^^,,,^^",
+		"^,,,,,,^,,,,X",
+		"^,w,,,,^,^^^^",
+		"^^^^^^,^w^w,^",
+		"^^^^^^,^^^,,^",
+		"^,,,,,,,,,,,^",
+		"^,,,,,,,,,,,^",
+        "^^S^^^^^^^^^^"
+	  ],
+	  "id": "mt_moon",
+	  "shop_windows": {
+		"center": 1,
+		"mart": 2
+	  },
+	  "template": "cave_branches",
+	  "world_pos": [
+		-8,
+		-35
+	  ]
+	},
+	"nugget_bridge": {
+	  "display_name": "Nugget Bridge",
+	  "gate_facing": "south",
+	  "grid": [
+		"HHHHHHHHHHHHH",
+		"H...........H",
+		"H..,,,,.....H",
+		"H..,HH=H....H",
+		"H..,HH=H....H",
+		"H..,HH=H....H",
+		"H..,HH=H....H",
+		"S,,,HH=H....H",
+		"H...HH=H....H",
+		"H...HH=H....H",
+        "HHHHHHXHHHHHH"
+	  ],
+	  "id": "nugget_bridge",
+	  "shop_windows": {
+		"center": 1,
+		"mart": 2
+	  },
+	  "template": "open_field",
+	  "world_pos": [
+		5,
+		-38
+	  ]
+	},
+	"pewter": {
+	  "display_name": "Pewter City",
+	  "gate_facing": "north",
+	  "grid": [
+		"TBBB#_X_#BBB^",
+		"TBBB#___#BBB^",
+		"TBBB#___#BBB^",
+		"T#####D#####^",
+		"T...........^",
+		"T...........^",
+		"T...........^",
+		"T..c.....m..^",
+		"T...........^",
+		"T.....S.....^",
+        "TTTTTT.TTTTTT"
+	  ],
+	  "gym_name": "Pewter Gym",
+	  "id": "pewter",
+	  "shop_windows": {
+		"center": 1,
+		"mart": 2
+	  },
+	  "template": "town_pocket",
+	  "world_pos": [
+		-12,
+		-24
+	  ]
+	},
+	"route22": {
+	  "display_name": "Route 22",
+	  "gate_facing": "north",
+	  "grid": [
+		"####X####",
+		"#.......#",
+		"#...L...#",
+		"#.w...w.#",
+		"#.......#",
+		"#...S...#",
+        "####.####"
+	  ],
+	  "id": "route22",
+	  "shop_windows": {
+		"center": 1,
+		"mart": 2
+	  },
+	  "template": "open_field",
+	  "world_pos": [
+		-20,
+		32
+	  ]
+	},
+	"route6_7": {
+	  "display_name": "Route 6",
+	  "gate_facing": "north",
+	  "grid": [
+		"####X####",
+		"#.......#",
+		"#...L...#",
+		"#.w...w.#",
+		"#.......#",
+		"#...S...#",
+        "####.####"
+	  ],
+	  "id": "route6_7",
+	  "shop_windows": {
+		"center": 1,
+		"mart": 2
+	  },
+	  "template": "open_field",
+	  "world_pos": [
+		23,
+		8
+	  ]
+	},
+	"route_vermilion": {
+	  "display_name": "Route 5 — Vermilion Path",
+	  "gate_facing": "north",
+	  "grid": [
+		"#####S#####",
+		"#....,....#",
+		"#....,....#",
+		"#.w..,....#",
+		"#....,..w.#",
+		"#.w..,....#",
+		"#....,....#",
+		"#....,....#",
+        "#####X#####"
+	  ],
+	  "id": "route_vermilion",
+	  "shop_windows": {
+		"center": 1,
+		"mart": 1
+	  },
+	  "template": "open_field",
+	  "world_pos": [
+		12,
+		-16
+	  ]
+	},
+	"route_viridian": {
+	  "display_name": "Route 1 — Viridian Outskirts",
+	  "gate_facing": "north",
+	  "grid": [
+		"HHHHHXHHHHH",
+		"H.........H",
+		"H.........H",
+		"H.........H",
+		"H.........H",
+		"H.........H",
+		"H.........H",
+		"H.........H",
+        "HHHHHSHHHHH"
+	  ],
+	  "id": "route_viridian",
+	  "shop_windows": {
+		"center": 1,
+		"mart": 2
+	  },
+	  "template": "open_field",
+	  "world_pos": [
+		-11,
+		-2
+	  ]
+	},
+	"saffron": {
+	  "display_name": "Saffron City",
+	  "gate_facing": "north",
+	  "grid": [
+		"####_L_####",
+		"#####D#####",
+		"#.w.....w.#",
+		"#.........#",
+		"#..c...m..#",
+		"#.........#",
+		"#....S....#",
         "#####.#####"
-      ]
-    },
-    "vermilion": {
-      "id": "vermilion",
-      "template": "town_pocket",
-      "display_name": "Vermilion City",
-      "gym_name": "Vermilion Gym",
-      "gate_facing": "north",
-      "shop_windows": { "center": 1, "mart": 2 },
-      "grid": [
-        "#####_L_#####",
-        "#####___#####",
-        "#####___#####",
-        "######D######",
-        "#..w.....w..#",
-        "#...........#",
-        "#...........#",
-        "#..c.....m..#",
-        "#...........#",
-        "#.....S.....#",
-        "######.######"
-      ]
-    },
-
-    "route6_7": { "id": "route6_7", "template": "open_field", "display_name": "Route 6", "gate_facing": "north", "grid": ["####X####", "#.......#", "#...L...#", "#.w...w.#", "#.......#", "#...S...#", "####.####"] },
-    "game_corner": { "id": "game_corner", "template": "corporate", "display_name": "Celadon Game Corner", "gate_facing": "north", "grid": ["####X####", "#.......#", "#...L...#", "#.w...w.#", "#.......#", "#...S...#", "####.####"] },
-    "celadon": { "id": "celadon", "template": "big_city", "display_name": "Celadon City", "gym_name": "Celadon Gym", "gate_facing": "north", "shop_windows": { "center": 1, "mart": 2 }, "grid": ["####_L_####", "#####D#####", "#.w.....w.#", "#.........#", "#..c...m..#", "#.........#", "#....S....#", "#####.#####"] },
-
-    "cycling_road": { "id": "cycling_road", "template": "bridge", "display_name": "Cycling Road", "gate_facing": "north", "grid": ["####X####", "#.......#", "#...L...#", "#.w...w.#", "#.......#", "#...S...#", "####.####"] },
-    "silence_bridge": { "id": "silence_bridge", "template": "bridge", "display_name": "Route 12 — Silence Bridge", "gate_facing": "north", "grid": ["####X####", "#.......#", "#...L...#", "#.w...w.#", "#.......#", "#...S...#", "####.####"] },
-    "fuchsia": { "id": "fuchsia", "template": "town_pocket", "display_name": "Fuchsia City", "gym_name": "Fuchsia Gym", "gate_facing": "north", "shop_windows": { "center": 1, "mart": 2 }, "grid": ["####_L_####", "#####D#####", "#.w.....w.#", "#.........#", "#..c...m..#", "#.........#", "#....S....#", "#####.#####"] },
-
-    "silph_lower": { "id": "silph_lower", "template": "corporate", "display_name": "Silph Co. — Lower", "gate_facing": "north", "grid": ["####X####", "#.......#", "#...L...#", "#.w...w.#", "#.......#", "#...S...#", "####.####"] },
-    "silph_upper": { "id": "silph_upper", "template": "corporate", "display_name": "Silph Co. — Upper", "gate_facing": "north", "grid": ["####X####", "#.......#", "#...L...#", "#.w...w.#", "#.......#", "#...S...#", "####.####"] },
-    "saffron": { "id": "saffron", "template": "big_city", "display_name": "Saffron City", "gym_name": "Saffron Gym", "gate_facing": "north", "shop_windows": { "center": 1, "mart": 2 }, "grid": ["####_L_####", "#####D#####", "#.w.....w.#", "#.........#", "#..c...m..#", "#.........#", "#....S....#", "#####.#####"] },
-
-    "sea_route": { "id": "sea_route", "template": "open_field", "display_name": "Route 20 — Sea", "gate_facing": "north", "grid": ["####X####", "#.......#", "#...L...#", "#.w...w.#", "#.......#", "#...S...#", "####.####"] },
-    "mansion": { "id": "mansion", "template": "mansion", "display_name": "Pokémon Mansion", "gate_facing": "north", "grid": ["####X####", "#.......#", "#...L...#", "#.w...w.#", "#.......#", "#...S...#", "####.####"] },
-    "cinnabar": { "id": "cinnabar", "template": "volcanic", "display_name": "Cinnabar Island", "gym_name": "Cinnabar Gym", "gate_facing": "north", "shop_windows": { "center": 1, "mart": 2 }, "grid": ["####_L_####", "#####D#####", "#.w.....w.#", "#.........#", "#..c...m..#", "#.........#", "#....S....#", "#####.#####"] },
-
-    "route22": { "id": "route22", "template": "open_field", "display_name": "Route 22", "gate_facing": "north", "grid": ["####X####", "#.......#", "#...L...#", "#.w...w.#", "#.......#", "#...S...#", "####.####"] },
-    "viridian_front": { "id": "viridian_front", "template": "open_field", "display_name": "Viridian Approach", "gate_facing": "north", "grid": ["####X####", "#.......#", "#...L...#", "#.w...w.#", "#.......#", "#...S...#", "####.####"] },
-    "viridian": { "id": "viridian", "template": "big_city", "display_name": "Viridian City", "gym_name": "Viridian Gym", "gate_facing": "north", "shop_windows": { "center": 1, "mart": 2 }, "grid": ["####_L_####", "#####D#####", "#.w.....w.#", "#.........#", "#..c...m..#", "#.........#", "#....S....#", "#####.#####"] },
-
-    "victory_road": { "id": "victory_road", "template": "cave_branches", "display_name": "Victory Road", "gate_facing": "north", "grid": ["####X####", "#.......#", "#...L...#", "#.w...w.#", "#.......#", "#...S...#", "####.####"] },
-    "e4_lorelei": { "id": "e4_lorelei", "template": "gym_arena", "display_name": "Indigo Plateau — Lorelei", "gym_name": "Elite Four", "gate_facing": "north", "grid": ["##_L_##", "#.....#", "#.....#", "#..S..#", "###.###"] },
-    "e4_bruno": { "id": "e4_bruno", "template": "gym_arena", "display_name": "Indigo Plateau — Bruno", "gym_name": "Elite Four", "gate_facing": "north", "grid": ["##_L_##", "#.....#", "#.....#", "#..S..#", "###.###"] },
-    "e4_agatha": { "id": "e4_agatha", "template": "gym_arena", "display_name": "Indigo Plateau — Agatha", "gym_name": "Elite Four", "gate_facing": "north", "grid": ["##_L_##", "#.....#", "#.....#", "#..S..#", "###.###"] },
-    "e4_lance": { "id": "e4_lance", "template": "gym_arena", "display_name": "Indigo Plateau — Lance", "gym_name": "Elite Four", "gate_facing": "north", "grid": ["##_L_##", "#.....#", "#.....#", "#..S..#", "###.###"] },
-    "e4_champion": { "id": "e4_champion", "template": "gym_arena", "display_name": "Indigo Plateau — Champion", "gym_name": "Champion", "gate_facing": "north", "grid": ["##_L_##", "#.....#", "#.....#", "#..S..#", "###.###"] }
+	  ],
+	  "gym_name": "Saffron Gym",
+	  "id": "saffron",
+	  "shop_windows": {
+		"center": 1,
+		"mart": 2
+	  },
+	  "template": "big_city",
+	  "world_pos": [
+		31,
+		31
+	  ]
+	},
+	"sea_route": {
+	  "display_name": "Route 20 — Sea",
+	  "gate_facing": "north",
+	  "grid": [
+		"####X####",
+		"#.......#",
+		"#...L...#",
+		"#.w...w.#",
+		"#.......#",
+		"#...S...#",
+        "####.####"
+	  ],
+	  "id": "sea_route",
+	  "shop_windows": {
+		"center": 1,
+		"mart": 2
+	  },
+	  "template": "open_field",
+	  "world_pos": [
+		32,
+		39
+	  ]
+	},
+	"silence_bridge": {
+	  "display_name": "Route 12 — Silence Bridge",
+	  "gate_facing": "north",
+	  "grid": [
+		"####X####",
+		"#.......#",
+		"#...L...#",
+		"#.w...w.#",
+		"#.......#",
+		"#...S...#",
+        "####.####"
+	  ],
+	  "id": "silence_bridge",
+	  "shop_windows": {
+		"center": 1,
+		"mart": 2
+	  },
+	  "template": "bridge",
+	  "world_pos": [
+		3,
+		16
+	  ]
+	},
+	"silph_lower": {
+	  "display_name": "Silph Co. — Lower",
+	  "gate_facing": "north",
+	  "grid": [
+		"####X####",
+		"#.......#",
+		"#...L...#",
+		"#.w...w.#",
+		"#.......#",
+		"#...S...#",
+        "####.####"
+	  ],
+	  "id": "silph_lower",
+	  "shop_windows": {
+		"center": 1,
+		"mart": 2
+	  },
+	  "template": "open_field",
+	  "world_pos": [
+		23,
+		24
+	  ]
+	},
+	"silph_upper": {
+	  "display_name": "Silph Co. — Upper",
+	  "gate_facing": "north",
+	  "grid": [
+		"####X####",
+		"#.......#",
+		"#...L...#",
+		"#.w...w.#",
+		"#.......#",
+		"#...S...#",
+        "####.####"
+	  ],
+	  "id": "silph_upper",
+	  "shop_windows": {
+		"center": 1,
+		"mart": 2
+	  },
+	  "template": "open_field",
+	  "world_pos": [
+		32,
+		24
+	  ]
+	},
+	"ss_anne": {
+	  "display_name": "S.S. Anne",
+	  "gate_facing": "north",
+	  "grid": [
+		"#####S#####",
+		"#_________#",
+		"#__#___#__#",
+		"#__#___#__#",
+		"#__#___#__#",
+		"#__#___#__#",
+		"#__#___#__#",
+		"#_________#",
+        "#####X#####"
+	  ],
+	  "id": "ss_anne",
+	  "shop_windows": {
+		"center": 1,
+		"mart": 1
+	  },
+	  "template": "open_field",
+	  "world_pos": [
+		12,
+		-7
+	  ]
+	},
+	"vermilion": {
+	  "display_name": "Vermilion City",
+	  "gate_facing": "north",
+	  "grid": [
+		"HHHHHHHSHHHHH",
+		"H......=....H",
+		"H......=....H",
+		"H......=....H",
+		"#####..=....H",
+		"#___#..=....H",
+		"#___#..=....H",
+		"#___#..=====X",
+		"##D##..=....H",
+		"H.======....H",
+        "HHHHHHHHHHHHH"
+	  ],
+	  "gym_name": "Vermilion Gym",
+	  "id": "vermilion",
+	  "shop_windows": {
+		"center": 1,
+		"mart": 2
+	  },
+	  "template": "town_pocket",
+	  "world_pos": [
+		10,
+		2
+	  ]
+	},
+	"victory_road": {
+	  "display_name": "Victory Road",
+	  "gate_facing": "north",
+	  "grid": [
+		"####X####",
+		"#.......#",
+		"#...L...#",
+		"#.w...w.#",
+		"#.......#",
+		"#...S...#",
+        "####.####"
+	  ],
+	  "id": "victory_road",
+	  "shop_windows": {
+		"center": 1,
+		"mart": 2
+	  },
+	  "template": "cave_branches",
+	  "world_pos": [
+		-30,
+		18
+	  ]
+	},
+	"viridian": {
+	  "display_name": "Viridian City",
+	  "gate_facing": "north",
+	  "grid": [
+		"####_L_####",
+		"#####D#####",
+		"#.w.....w.#",
+		"#.........#",
+		"#..c...m..#",
+		"#.........#",
+		"#....S....#",
+        "#####.#####"
+	  ],
+	  "gym_name": "Viridian Gym",
+	  "id": "viridian",
+	  "shop_windows": {
+		"center": 1,
+		"mart": 2
+	  },
+	  "template": "big_city",
+	  "world_pos": [
+		-21,
+		17
+	  ]
+	},
+	"viridian_forest": {
+	  "display_name": "Viridian Forest",
+	  "gate_facing": "north",
+	  "grid": [
+		"TTTTTXTTTTT",
+		"T.........T",
+		"T.........T",
+		"T.........T",
+		"T.##......T",
+		"T..#...#..T",
+		"T..#####..T",
+		"T......##.T",
+		"T.........T",
+		"T.........T",
+        "TTTTTSTTTTT"
+	  ],
+	  "id": "viridian_forest",
+	  "shop_windows": {
+		"center": 1,
+		"mart": 2
+	  },
+	  "template": "forest_maze",
+	  "world_pos": [
+		-11,
+		-13
+	  ]
+	},
+	"viridian_front": {
+	  "display_name": "Viridian Approach",
+	  "gate_facing": "north",
+	  "grid": [
+		"####X####",
+		"#.......#",
+		"#...L...#",
+		"#.w...w.#",
+		"#.......#",
+		"#...S...#",
+        "####.####"
+	  ],
+	  "id": "viridian_front",
+	  "shop_windows": {
+		"center": 1,
+		"mart": 2
+	  },
+	  "template": "open_field",
+	  "world_pos": [
+		-20,
+		25
+	  ]
+	}
   }
 }

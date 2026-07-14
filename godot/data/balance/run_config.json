@@ -1,110 +1,420 @@
 {
+  "_comment": "Phase 5a/map-format: uniform gym segments. Each segment = optional wilds + one mandatory leader gate. A leader grants its badge/signature/rare candy and the run continues; only the `is_final` leader ends it. Optional-wild COUNT and placement come from the map grid (`w` cells); the segment supplies the `wild_pool` species. `leader` is an enemy id (or the rival sentinel); `leader_variants` picks one at random.",
   "economy_enabled": true,
   "economy_shim_heal": false,
-  "_comment": "Phase 5a/map-format: uniform gym segments. Each segment = optional wilds + one mandatory leader gate. A leader grants its badge/signature/rare candy and the run continues; only the `is_final` leader ends it. Optional-wild COUNT and placement come from the map grid (`w` cells); the segment supplies the `wild_pool` species. `leader` is an enemy id (or the rival sentinel); `leader_variants` picks one at random.",
   "segments": [
     {
       "id": "route_viridian",
-      "wild_pool": ["pidgey", "rattata", "weedle", "nidoran_m"],
+      "is_final": false,
       "leader": "rival_blue",
-      "leader_kind": "rival",
       "leader_gold": "midboss",
+      "leader_kind": "rival",
       "reward_pool_key": "stage1",
-      "shop_window": 1,
-      "is_final": false
+      "shop_window": 1.0,
+      "wild_pool": [
+        "pidgey",
+        "rattata",
+        "weedle",
+        "nidoran_m"
+      ]
     },
     {
       "id": "viridian_forest",
-      "wild_pool": ["caterpie", "metapod", "kakuna", "weedle"],
-      "leader_variants": ["bug_catcher_butterfree", "bug_catcher_beedrill"],
-      "leader_kind": "trainer",
+      "is_final": false,
       "leader_gold": "midboss",
+      "leader_kind": "trainer",
+      "leader_variants": [
+        "bug_catcher_butterfree",
+        "bug_catcher_beedrill"
+      ],
       "reward_pool_key": "stage2",
-      "shop_window": 2,
-      "is_final": false
+      "shop_window": 2.0,
+      "wild_pool": [
+        "caterpie",
+        "metapod",
+        "kakuna",
+        "weedle"
+      ]
     },
     {
-      "id": "pewter",
-      "wild_pool": ["geodude", "zubat", "onix"],
-      "leader": "brock",
-      "leader_kind": "gym",
-      "leader_gold": "",
       "badge_id": "boulder_badge",
-      "signature_card": "rock_slide",
+      "id": "pewter",
+      "is_final": false,
+      "leader": "brock",
+      "leader_gold": "",
+      "leader_kind": "gym",
       "reward_pool_key": "stage3",
-      "shop_window": 0,
-      "is_final": false
+      "shop_window": 0.0,
+      "signature_card": "rock_slide",
+      "wild_pool": [
+        "geodude",
+        "zubat",
+        "onix"
+      ]
     },
     {
-      "id": "cerulean",
-      "wild_pool": ["psyduck", "poliwag", "goldeen", "shellder"],
-      "leader": "misty",
-      "leader_kind": "gym",
-      "leader_gold": "",
+      "id": "mt_moon",
+      "is_final": false,
+      "leader": "brock",
+      "leader_gold": "midboss",
+      "leader_kind": "trainer",
+      "reward_pool_key": "stage1",
+      "shop_window": 0.0,
+      "wild_pool": []
+    },
+    {
+      "id": "nugget_bridge",
+      "is_final": false,
+      "leader": "brock",
+      "leader_gold": "midboss",
+      "leader_kind": "trainer",
+      "reward_pool_key": "stage1",
+      "shop_window": 0.0,
+      "wild_pool": []
+    },
+    {
       "badge_id": "cascade_badge",
-      "signature_card": "water_pulse",
+      "id": "cerulean",
+      "is_final": false,
+      "leader": "misty",
+      "leader_gold": "",
+      "leader_kind": "gym",
       "reward_pool_key": "stage4",
-      "shop_window": 0,
-      "is_final": false
+      "shop_window": 0.0,
+      "signature_card": "water_pulse",
+      "wild_pool": [
+        "psyduck",
+        "poliwag",
+        "goldeen",
+        "shellder"
+      ]
     },
     {
       "id": "route_vermilion",
-      "wild_pool": ["spearow", "meowth", "mankey", "magnemite"],
+      "is_final": false,
       "leader": "sailor",
-      "leader_kind": "trainer",
       "leader_gold": "midboss",
+      "leader_kind": "trainer",
       "reward_pool_key": "stage5",
-      "shop_window": 0,
-      "is_final": false
+      "shop_window": 0.0,
+      "wild_pool": [
+        "spearow",
+        "meowth",
+        "mankey",
+        "magnemite"
+      ]
     },
     {
       "id": "ss_anne",
-      "wild_pool": ["meowth", "magnemite", "diglett"],
+      "is_final": false,
       "leader": "rival_blue",
-      "leader_kind": "rival",
       "leader_gold": "midboss",
+      "leader_kind": "rival",
       "reward_pool_key": "stage6",
-      "shop_window": 0,
-      "is_final": false
+      "shop_window": 0.0,
+      "wild_pool": [
+        "meowth",
+        "magnemite",
+        "diglett"
+      ]
     },
     {
-      "id": "vermilion",
-      "wild_pool": ["magnemite", "voltorb"],
-      "leader": "surge",
-      "leader_kind": "gym",
-      "leader_gold": "",
       "badge_id": "thunder_badge",
-      "signature_card": "thunderbolt",
+      "id": "vermilion",
+      "is_final": false,
+      "leader": "surge",
+      "leader_gold": "",
+      "leader_kind": "gym",
       "reward_pool_key": "stage7",
-      "shop_window": 0,
-      "is_final": false
+      "shop_window": 0.0,
+      "signature_card": "thunderbolt",
+      "wild_pool": [
+        "magnemite",
+        "voltorb"
+      ]
     },
-
-    { "id": "route6_7", "wild_pool": ["oddish", "bellsprout", "meowth", "mankey"], "leader": "gambler", "leader_kind": "trainer", "leader_gold": "midboss", "reward_pool_key": "stage8", "shop_window": 0, "is_final": false },
-    { "id": "game_corner", "wild_pool": ["growlithe", "meowth", "magnemite"], "leader": "rocket_grunt", "leader_kind": "trainer", "leader_gold": "midboss", "reward_pool_key": "stage8", "shop_window": 0, "is_final": false },
-    { "id": "celadon", "wild_pool": ["oddish", "bellsprout", "gloom"], "leader": "erika", "leader_kind": "gym", "leader_gold": "", "badge_id": "rainbow_badge", "signature_card": "giga_drain", "reward_pool_key": "stage8", "shop_window": 0, "is_final": false },
-
-    { "id": "cycling_road", "wild_pool": ["spearow", "ekans", "meowth"], "leader": "biker", "leader_kind": "trainer", "leader_gold": "midboss", "reward_pool_key": "stage9", "shop_window": 0, "is_final": false },
-    { "id": "silence_bridge", "wild_pool": ["oddish", "gloom", "mankey"], "leader": "snorlax", "leader_kind": "trainer", "leader_gold": "midboss", "reward_pool_key": "stage9", "shop_window": 0, "is_final": false },
-    { "id": "fuchsia", "wild_pool": ["gloom", "ekans", "golbat"], "leader": "koga", "leader_kind": "gym", "leader_gold": "", "badge_id": "soul_badge", "signature_card": "sludge_bomb", "reward_pool_key": "stage9", "shop_window": 0, "is_final": false },
-
-    { "id": "silph_lower", "wild_pool": ["drowzee", "gastly", "meowth"], "leader": "rocket_grunt", "leader_kind": "trainer", "leader_gold": "midboss", "reward_pool_key": "stage10", "shop_window": 0, "is_final": false },
-    { "id": "silph_upper", "wild_pool": ["drowzee", "gastly", "magnemite"], "leader": "rival_blue", "leader_kind": "rival", "leader_gold": "midboss", "reward_pool_key": "stage10", "shop_window": 0, "is_final": false },
-    { "id": "saffron", "wild_pool": ["drowzee", "gastly"], "leader": "sabrina", "leader_kind": "gym", "leader_gold": "", "badge_id": "marsh_badge", "signature_card": "psybeam", "reward_pool_key": "stage10", "shop_window": 0, "is_final": false },
-
-    { "id": "sea_route", "wild_pool": ["tentacool", "shellder", "goldeen"], "leader": "swimmer", "leader_kind": "trainer", "leader_gold": "midboss", "reward_pool_key": "stage11", "shop_window": 0, "is_final": false },
-    { "id": "mansion", "wild_pool": ["growlithe", "ponyta", "magnemite"], "leader": "burglar", "leader_kind": "trainer", "leader_gold": "midboss", "reward_pool_key": "stage11", "shop_window": 0, "is_final": false },
-    { "id": "cinnabar", "wild_pool": ["growlithe", "ponyta"], "leader": "blaine", "leader_kind": "gym", "leader_gold": "", "badge_id": "volcano_badge", "signature_card": "flamethrower", "reward_pool_key": "stage11", "shop_window": 0, "is_final": false },
-
-    { "id": "route22", "wild_pool": ["spearow", "rattata", "ekans"], "leader": "rival_blue", "leader_kind": "rival", "leader_gold": "midboss", "reward_pool_key": "stage12", "shop_window": 0, "is_final": false },
-    { "id": "viridian_front", "wild_pool": ["ekans", "sandshrew", "mankey"], "leader": "rocket_admin", "leader_kind": "trainer", "leader_gold": "midboss", "reward_pool_key": "stage12", "shop_window": 0, "is_final": false },
-    { "id": "viridian", "wild_pool": ["sandshrew", "ekans"], "leader": "giovanni", "leader_kind": "gym", "leader_gold": "", "badge_id": "earth_badge", "signature_card": "earthquake", "reward_pool_key": "stage12", "shop_window": 0, "is_final": false },
-
-    { "id": "victory_road", "wild_pool": ["machop", "geodude", "onix", "golbat"], "leader": "cool_trainer", "leader_kind": "trainer", "leader_gold": "midboss", "reward_pool_key": "stage13", "shop_window": 0, "is_final": false },
-    { "id": "e4_lorelei", "wild_pool": [], "leader": "lorelei", "leader_kind": "gym", "leader_gold": "", "reward_pool_key": "stage13", "shop_window": 0, "is_final": false },
-    { "id": "e4_bruno", "wild_pool": [], "leader": "bruno", "leader_kind": "gym", "leader_gold": "", "reward_pool_key": "stage13", "shop_window": 0, "is_final": false },
-    { "id": "e4_agatha", "wild_pool": [], "leader": "agatha", "leader_kind": "gym", "leader_gold": "", "reward_pool_key": "stage13", "shop_window": 0, "is_final": false },
-    { "id": "e4_lance", "wild_pool": [], "leader": "lance", "leader_kind": "gym", "leader_gold": "", "reward_pool_key": "stage13", "shop_window": 0, "is_final": false },
-    { "id": "e4_champion", "wild_pool": [], "leader": "champion", "leader_kind": "gym", "leader_gold": "", "reward_pool_key": "stage13", "shop_window": 0, "is_final": true }
+    {
+      "id": "route6_7",
+      "is_final": false,
+      "leader": "gambler",
+      "leader_gold": "midboss",
+      "leader_kind": "trainer",
+      "reward_pool_key": "stage8",
+      "shop_window": 0.0,
+      "wild_pool": [
+        "oddish",
+        "bellsprout",
+        "meowth",
+        "mankey"
+      ]
+    },
+    {
+      "id": "game_corner",
+      "is_final": false,
+      "leader": "rocket_grunt",
+      "leader_gold": "midboss",
+      "leader_kind": "trainer",
+      "reward_pool_key": "stage8",
+      "shop_window": 0.0,
+      "wild_pool": [
+        "growlithe",
+        "meowth",
+        "magnemite"
+      ]
+    },
+    {
+      "badge_id": "rainbow_badge",
+      "id": "celadon",
+      "is_final": false,
+      "leader": "erika",
+      "leader_gold": "",
+      "leader_kind": "gym",
+      "reward_pool_key": "stage8",
+      "shop_window": 0.0,
+      "signature_card": "giga_drain",
+      "wild_pool": [
+        "oddish",
+        "bellsprout",
+        "gloom"
+      ]
+    },
+    {
+      "id": "cycling_road",
+      "is_final": false,
+      "leader": "biker",
+      "leader_gold": "midboss",
+      "leader_kind": "trainer",
+      "reward_pool_key": "stage9",
+      "shop_window": 0.0,
+      "wild_pool": [
+        "spearow",
+        "ekans",
+        "meowth"
+      ]
+    },
+    {
+      "id": "silence_bridge",
+      "is_final": false,
+      "leader": "snorlax",
+      "leader_gold": "midboss",
+      "leader_kind": "trainer",
+      "reward_pool_key": "stage9",
+      "shop_window": 0.0,
+      "wild_pool": [
+        "oddish",
+        "gloom",
+        "mankey"
+      ]
+    },
+    {
+      "badge_id": "soul_badge",
+      "id": "fuchsia",
+      "is_final": false,
+      "leader": "koga",
+      "leader_gold": "",
+      "leader_kind": "gym",
+      "reward_pool_key": "stage9",
+      "shop_window": 0.0,
+      "signature_card": "sludge_bomb",
+      "wild_pool": [
+        "gloom",
+        "ekans",
+        "golbat"
+      ]
+    },
+    {
+      "id": "silph_lower",
+      "is_final": false,
+      "leader": "rocket_grunt",
+      "leader_gold": "midboss",
+      "leader_kind": "trainer",
+      "reward_pool_key": "stage10",
+      "shop_window": 0.0,
+      "wild_pool": [
+        "drowzee",
+        "gastly",
+        "meowth"
+      ]
+    },
+    {
+      "id": "silph_upper",
+      "is_final": false,
+      "leader": "rival_blue",
+      "leader_gold": "midboss",
+      "leader_kind": "rival",
+      "reward_pool_key": "stage10",
+      "shop_window": 0.0,
+      "wild_pool": [
+        "drowzee",
+        "gastly",
+        "magnemite"
+      ]
+    },
+    {
+      "badge_id": "marsh_badge",
+      "id": "saffron",
+      "is_final": false,
+      "leader": "sabrina",
+      "leader_gold": "",
+      "leader_kind": "gym",
+      "reward_pool_key": "stage10",
+      "shop_window": 0.0,
+      "signature_card": "psybeam",
+      "wild_pool": [
+        "drowzee",
+        "gastly"
+      ]
+    },
+    {
+      "id": "sea_route",
+      "is_final": false,
+      "leader": "swimmer",
+      "leader_gold": "midboss",
+      "leader_kind": "trainer",
+      "reward_pool_key": "stage11",
+      "shop_window": 0.0,
+      "wild_pool": [
+        "tentacool",
+        "shellder",
+        "goldeen"
+      ]
+    },
+    {
+      "id": "mansion",
+      "is_final": false,
+      "leader": "burglar",
+      "leader_gold": "midboss",
+      "leader_kind": "trainer",
+      "reward_pool_key": "stage11",
+      "shop_window": 0.0,
+      "wild_pool": [
+        "growlithe",
+        "ponyta",
+        "magnemite"
+      ]
+    },
+    {
+      "badge_id": "volcano_badge",
+      "id": "cinnabar",
+      "is_final": false,
+      "leader": "blaine",
+      "leader_gold": "",
+      "leader_kind": "gym",
+      "reward_pool_key": "stage11",
+      "shop_window": 0.0,
+      "signature_card": "flamethrower",
+      "wild_pool": [
+        "growlithe",
+        "ponyta"
+      ]
+    },
+    {
+      "id": "route22",
+      "is_final": false,
+      "leader": "rival_blue",
+      "leader_gold": "midboss",
+      "leader_kind": "rival",
+      "reward_pool_key": "stage12",
+      "shop_window": 0.0,
+      "wild_pool": [
+        "spearow",
+        "rattata",
+        "ekans"
+      ]
+    },
+    {
+      "id": "viridian_front",
+      "is_final": false,
+      "leader": "rocket_admin",
+      "leader_gold": "midboss",
+      "leader_kind": "trainer",
+      "reward_pool_key": "stage12",
+      "shop_window": 0.0,
+      "wild_pool": [
+        "ekans",
+        "sandshrew",
+        "mankey"
+      ]
+    },
+    {
+      "badge_id": "earth_badge",
+      "id": "viridian",
+      "is_final": false,
+      "leader": "giovanni",
+      "leader_gold": "",
+      "leader_kind": "gym",
+      "reward_pool_key": "stage12",
+      "shop_window": 0.0,
+      "signature_card": "earthquake",
+      "wild_pool": [
+        "sandshrew",
+        "ekans"
+      ]
+    },
+    {
+      "id": "victory_road",
+      "is_final": false,
+      "leader": "cool_trainer",
+      "leader_gold": "midboss",
+      "leader_kind": "trainer",
+      "reward_pool_key": "stage13",
+      "shop_window": 0.0,
+      "wild_pool": [
+        "machop",
+        "geodude",
+        "onix",
+        "golbat"
+      ]
+    },
+    {
+      "id": "e4_lorelei",
+      "is_final": false,
+      "leader": "lorelei",
+      "leader_gold": "",
+      "leader_kind": "gym",
+      "reward_pool_key": "stage13",
+      "shop_window": 0.0,
+      "wild_pool": []
+    },
+    {
+      "id": "e4_bruno",
+      "is_final": false,
+      "leader": "bruno",
+      "leader_gold": "",
+      "leader_kind": "gym",
+      "reward_pool_key": "stage13",
+      "shop_window": 0.0,
+      "wild_pool": []
+    },
+    {
+      "id": "e4_agatha",
+      "is_final": false,
+      "leader": "agatha",
+      "leader_gold": "",
+      "leader_kind": "gym",
+      "reward_pool_key": "stage13",
+      "shop_window": 0.0,
+      "wild_pool": []
+    },
+    {
+      "id": "e4_lance",
+      "is_final": false,
+      "leader": "lance",
+      "leader_gold": "",
+      "leader_kind": "gym",
+      "reward_pool_key": "stage13",
+      "shop_window": 0.0,
+      "wild_pool": []
+    },
+    {
+      "id": "e4_champion",
+      "is_final": true,
+      "leader": "champion",
+      "leader_gold": "",
+      "leader_kind": "gym",
+      "reward_pool_key": "stage13",
+      "shop_window": 0.0,
+      "wild_pool": []
+    }
   ]
 }
