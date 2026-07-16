@@ -14,13 +14,15 @@
       "wild_pool": [
         "pidgey",
         "rattata",
-        "weedle",
+        "spearow",
+        "nidoran_f",
         "nidoran_m"
       ]
     },
     {
       "id": "viridian_forest",
       "is_final": false,
+      "leader": "bug_catcher",
       "leader_gold": "midboss",
       "leader_kind": "trainer",
       "leader_variants": [
@@ -55,12 +57,25 @@
     {
       "id": "mt_moon",
       "is_final": false,
-      "leader": "brock",
+      "leader": "team_rocket",
       "leader_gold": "midboss",
       "leader_kind": "trainer",
+      "leader_team": [
+        "ekans",
+        "koffing"
+      ],
+      "leader_team_mode": "sequential",
       "reward_pool_key": "stage1",
       "shop_window": 0.0,
-      "wild_pool": []
+      "wild_pool": [
+        "clefairy",
+        "jigglypuff",
+        "zubat",
+        "paras",
+        "diglett",
+        "machop",
+        "geodude"
+      ]
     },
     {
       "id": "nugget_bridge",
@@ -70,7 +85,11 @@
       "leader_kind": "trainer",
       "reward_pool_key": "stage1",
       "shop_window": 0.0,
-      "wild_pool": []
+      "wild_pool": [
+        "ekans",
+        "oddish",
+        "bellsprout"
+      ]
     },
     {
       "badge_id": "cascade_badge",
@@ -79,6 +98,10 @@
       "leader": "misty",
       "leader_gold": "",
       "leader_kind": "gym",
+      "leader_team": [
+        "starmie"
+      ],
+      "leader_team_mode": "sequential",
       "reward_pool_key": "stage4",
       "shop_window": 0.0,
       "signature_card": "water_pulse",
@@ -98,24 +121,26 @@
       "reward_pool_key": "stage5",
       "shop_window": 0.0,
       "wild_pool": [
-        "spearow",
+        "pidgeotto",
+        "raticate",
         "meowth",
-        "mankey",
-        "magnemite"
+        "mankey"
       ]
     },
     {
       "id": "ss_anne",
       "is_final": false,
-      "leader": "rival_blue",
+      "leader": "sailor",
       "leader_gold": "midboss",
       "leader_kind": "rival",
       "reward_pool_key": "stage6",
       "shop_window": 0.0,
       "wild_pool": [
-        "meowth",
-        "magnemite",
-        "diglett"
+        "poliwag",
+        "tentacool",
+        "shellder",
+        "horsea",
+        "goldeen"
       ]
     },
     {
@@ -125,12 +150,47 @@
       "leader": "surge",
       "leader_gold": "",
       "leader_kind": "gym",
+      "leader_team": [
+        "raichu"
+      ],
+      "leader_team_mode": "sequential",
       "reward_pool_key": "stage7",
       "shop_window": 0.0,
       "signature_card": "thunderbolt",
       "wild_pool": [
         "magnemite",
         "voltorb"
+      ]
+    },
+    {
+      "id": "rock_tunnel",
+      "is_final": false,
+      "leader": "hiker",
+      "leader_gold": "midboss",
+      "leader_kind": "trainer",
+      "reward_pool_key": "stage1",
+      "shop_window": 0.0,
+      "wild_pool": [
+        "golbat",
+        "parasect",
+        "dugtrio",
+        "machoke",
+        "graveler",
+        "onix"
+      ]
+    },
+    {
+      "id": "lavendar_town",
+      "is_final": false,
+      "leader": "brock",
+      "leader_gold": "midboss",
+      "leader_kind": "trainer",
+      "reward_pool_key": "stage1",
+      "shop_window": 0.0,
+      "wild_pool": [
+        "gastly",
+        "haunter",
+        "cubone"
       ]
     },
     {
@@ -142,68 +202,11 @@
       "reward_pool_key": "stage8",
       "shop_window": 0.0,
       "wild_pool": [
-        "oddish",
-        "bellsprout",
-        "meowth",
-        "mankey"
-      ]
-    },
-    {
-      "id": "game_corner",
-      "is_final": false,
-      "leader": "rocket_grunt",
-      "leader_gold": "midboss",
-      "leader_kind": "trainer",
-      "reward_pool_key": "stage8",
-      "shop_window": 0.0,
-      "wild_pool": [
-        "growlithe",
-        "meowth",
-        "magnemite"
-      ]
-    },
-    {
-      "badge_id": "rainbow_badge",
-      "id": "celadon",
-      "is_final": false,
-      "leader": "erika",
-      "leader_gold": "",
-      "leader_kind": "gym",
-      "reward_pool_key": "stage8",
-      "shop_window": 0.0,
-      "signature_card": "giga_drain",
-      "wild_pool": [
-        "oddish",
-        "bellsprout",
-        "gloom"
-      ]
-    },
-    {
-      "id": "cycling_road",
-      "is_final": false,
-      "leader": "biker",
-      "leader_gold": "midboss",
-      "leader_kind": "trainer",
-      "reward_pool_key": "stage9",
-      "shop_window": 0.0,
-      "wild_pool": [
-        "spearow",
-        "ekans",
-        "meowth"
-      ]
-    },
-    {
-      "id": "silence_bridge",
-      "is_final": false,
-      "leader": "snorlax",
-      "leader_gold": "midboss",
-      "leader_kind": "trainer",
-      "reward_pool_key": "stage9",
-      "shop_window": 0.0,
-      "wild_pool": [
-        "oddish",
         "gloom",
-        "mankey"
+        "venonat",
+        "poliwhirl",
+        "weepinbell",
+        "magikarp"
       ]
     },
     {
@@ -220,6 +223,20 @@
         "gloom",
         "ekans",
         "golbat"
+      ]
+    },
+    {
+      "id": "game_corner",
+      "is_final": false,
+      "leader": "rocket_grunt",
+      "leader_gold": "midboss",
+      "leader_kind": "trainer",
+      "reward_pool_key": "stage8",
+      "shop_window": 0.0,
+      "wild_pool": [
+        "vulpix",
+        "meowth",
+        "growlithe"
       ]
     },
     {
@@ -248,6 +265,50 @@
         "drowzee",
         "gastly",
         "magnemite"
+      ]
+    },
+    {
+      "badge_id": "rainbow_badge",
+      "id": "celadon",
+      "is_final": false,
+      "leader": "erika",
+      "leader_gold": "",
+      "leader_kind": "gym",
+      "leader_team": [
+        "vileplume"
+      ],
+      "leader_team_mode": "sequential",
+      "reward_pool_key": "stage8",
+      "shop_window": 0.0,
+      "signature_card": "giga_drain",
+      "wild_pool": [
+        "oddish",
+        "bellsprout",
+        "gloom"
+      ]
+    },
+    {
+      "id": "silence_bridge",
+      "is_final": false,
+      "leader": "snorlax",
+      "leader_gold": "midboss",
+      "leader_kind": "trainer",
+      "reward_pool_key": "stage9",
+      "shop_window": 0.0,
+      "wild_pool": []
+    },
+    {
+      "id": "cycling_road",
+      "is_final": false,
+      "leader": "biker",
+      "leader_gold": "midboss",
+      "leader_kind": "trainer",
+      "reward_pool_key": "stage9",
+      "shop_window": 0.0,
+      "wild_pool": [
+        "spearow",
+        "ekans",
+        "meowth"
       ]
     },
     {
@@ -288,9 +349,11 @@
       "reward_pool_key": "stage11",
       "shop_window": 0.0,
       "wild_pool": [
-        "growlithe",
+        "ninetales",
+        "arcanine",
         "ponyta",
-        "magnemite"
+        "muk",
+        "weezing"
       ]
     },
     {
@@ -323,7 +386,7 @@
       ]
     },
     {
-      "id": "viridian_front",
+      "id": "pallet_revisited",
       "is_final": false,
       "leader": "rocket_admin",
       "leader_gold": "midboss",

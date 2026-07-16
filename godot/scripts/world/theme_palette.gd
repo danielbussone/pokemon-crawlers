@@ -20,12 +20,13 @@ const THEMES := {
 	"plateau":       { "ground": "marble",      "barrier": "pillar",          "floor": "marble" },
 }
 
-## Override chars: force a specific material regardless of theme.
+## Override chars: force a specific material regardless of theme. `~` = deep
+## (non-surfable) water; `s` = surf water (walkable, gated by a surf ability).
 const CHAR_MATERIAL := {
 	";": "tall_grass", ",": "dirt", "=": "road", ":": "sand",
 	"T": "tree", "H": "hedge", "+": "railing", "^": "mountain",
 	"O": "boulder", "B": "building_large", "b": "building_small",
-	"~": "water", "*": "lava", "I": "pillar",
+	"~": "water", "s": "water_surf", "*": "lava", "I": "pillar",
 }
 
 ## material -> render spec. `barrier` materials have a `height` (tile units).
@@ -41,9 +42,12 @@ const MATERIALS := {
 	"ash":         { "color": Color(0.20, 0.18, 0.18) },
 	"planks":      { "color": Color(0.45, 0.33, 0.20) },
 	"wood":        { "color": Color(0.42, 0.31, 0.19) },
+	"dock":        { "color": Color(0.48, 0.35, 0.22) },
 	"metal_floor": { "color": Color(0.40, 0.42, 0.46) },
 	"tile":        { "color": Color(0.70, 0.67, 0.58) },
 	"marble":      { "color": Color(0.82, 0.80, 0.78) },
+	# surf water is walkable ground (no barrier flag), a brighter blue than deep water
+	"water_surf":  { "color": Color(0.30, 0.55, 0.80) },
 	# barriers — meshes at `height`
 	"wall":           { "color": Color(0.17, 0.18, 0.21), "height": 1.0, "barrier": true },
 	"wall_interior":  { "color": Color(0.55, 0.52, 0.50), "height": 1.0, "barrier": true },
@@ -70,6 +74,19 @@ const SHAPES := {
 
 const DEFAULT_GROUND := "grass"
 const DEFAULT_BARRIER := "wall"
+
+## Materials the map editor offers as a per-cell paint brush, in palette order.
+## Any of these can override a cell's appearance regardless of its glyph or theme
+## (a wild on water, dirt kept brown inside a building area, a chosen building size).
+## Swatch colors come from MATERIALS via color_of(), so this stays a single list.
+const PAINTABLE_MATERIALS := [
+	# walkable ground
+	"grass", "tall_grass", "dirt", "road", "sand", "pavement", "rock_floor",
+	"wood", "planks", "dock", "water_surf", "ash", "metal_floor", "tile", "marble",
+	# barriers
+	"wall", "tree", "hedge", "railing", "mountain", "boulder",
+	"building_small", "building_large", "water", "lava", "pillar",
+]
 
 
 ## Material for a grid char under a theme. Override chars win; else the theme's
@@ -102,6 +119,10 @@ static func is_emissive(material: String) -> bool:
 
 static func shape_of(material: String) -> String:
 	return String(SHAPES.get(material, "block"))
+
+
+static func theme_barrier(theme: String) -> String:
+	return String(THEMES.get(theme, THEMES["open_field"])["barrier"])
 
 
 static func theme_ground(theme: String) -> String:

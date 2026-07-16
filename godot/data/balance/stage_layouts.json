@@ -1,733 +1,2862 @@
 {
-  "_legend": "Phase 5 map format. `grid` rows (equal length) are the stage geometry. Barrier: # wall, T tree, H hedge, ^ mountain, B building. Walkable: . grass, = road, , dirt, _ interior/gym floor. Objects (walkable): S spawn, X exit, c center, m mart, w wild encounter, L leader gate, D gym door. The leader's trigger cell + north facing are derived from the south→north arc; the gate auto-blocks the leader cell and every walkable cell north of it until cleared.",
+  "_legend": "Phase 7 map format (structured cells). Each stage's `cells` is a list of rows; a row is either a plain glyph string (compact, no per-cell overrides) or a list of cells, where a cell is a bare glyph string or an object {\"g\": glyph, \"m\": material}. `m` overrides a cell's cosmetic material regardless of glyph or theme (a wild on water, dirt kept brown in a building area). Legacy `grid` (bare-glyph strings) is still read as a fallback. Every stage is stitched into a single shared world at its `world_pos` (map editor World View), so a stage's cells are frequently reachable only through its neighbour. Terrain glyphs are cosmetic and theme-relative (see docs/TERRAIN_PALETTE.md); walkability is decided here. Barriers: # wall, T tree, H hedge, ^ mountain, B/b building, O boulder, + railing, I pillar, ~ deep water (non-surfable), * lava. Walkable terrain: . ground, ; tall grass, , dirt, = road, : sand, s surf water (walkable, gated by a surf ability), _ interior/gym floor. Objects (walkable): S run spawn (first segment only; exactly one in the whole world), X exit gate (opened by this stage's leader; a stage with no leader is never gated), c center, m mart, w wild encounter (only spawns if the segment has a non-empty `wild_pool`), t route trainer (only spawns if the segment has a `trainers` spec), L leader gate, D gym door. A leader's trigger cell is the tile south of `L` and the arc faces north; the gate blocks only the `L` tile itself until its slot is cleared, so progression must be gated by map chokepoints.",
   "stages": {
-	"celadon": {
-	  "display_name": "Celadon City",
-	  "gate_facing": "north",
-	  "grid": [
-		"####_L_####",
-		"#####D#####",
-		"#.w.....w.#",
-		"#.........#",
-		"#..c...m..#",
-		"#.........#",
-		"#....S....#",
-        "#####.#####"
-	  ],
-	  "gym_name": "Celadon Gym",
-	  "id": "celadon",
-	  "shop_windows": {
-		"center": 1,
-		"mart": 2
-	  },
-	  "template": "big_city",
-	  "world_pos": [
-		12,
-		15
-	  ]
-	},
-	"cerulean": {
-	  "display_name": "Cerulean City",
-	  "gate_facing": "north",
-	  "grid": [
-		"HSBB#___#BBBB",
-		"H=BB#___#BBBB",
-		"H=BB#___#BBBB",
-		"H=HH##D##HHHH",
-		"H=.w..=..w..H",
-		"H=....=.....H",
-		"H=w...=...w.H",
-		"H=.c..=..m..H",
-		"H=========..H",
-		"H......=....H",
-        "HHHHHHHXHHHHH"
-	  ],
-	  "gym_name": "Cerulean Gym",
-	  "id": "cerulean",
-	  "shop_windows": {
-		"center": 1,
-		"mart": 2
-	  },
-	  "template": "town_pocket",
-	  "world_pos": [
-		10,
-		-27
-	  ]
-	},
-	"cinnabar": {
-	  "display_name": "Cinnabar Island",
-	  "gate_facing": "north",
-	  "grid": [
-		"####_L_####",
-		"#####D#####",
-		"#.w.....w.#",
-		"#.........#",
-		"#..c...m..#",
-		"#.........#",
-		"#....S....#",
-        "#####.#####"
-	  ],
-	  "gym_name": "Cinnabar Gym",
-	  "id": "cinnabar",
-	  "shop_windows": {
-		"center": 1,
-		"mart": 2
-	  },
-	  "template": "volcanic",
-	  "world_pos": [
-		-21,
-		39
-	  ]
-	},
-	"cycling_road": {
-	  "display_name": "Cycling Road",
-	  "gate_facing": "north",
-	  "grid": [
-		"####X####",
-		"#.......#",
-		"#...L...#",
-		"#.w...w.#",
-		"#.......#",
-		"#...S...#",
-        "####.####"
-	  ],
-	  "id": "cycling_road",
-	  "shop_windows": {
-		"center": 1,
-		"mart": 2
-	  },
-	  "template": "bridge",
-	  "world_pos": [
-		3,
-		23
-	  ]
-	},
-	"e4_agatha": {
-	  "display_name": "Indigo Plateau — Agatha",
-	  "gate_facing": "north",
-	  "grid": [
-		"##_L_##",
-		"#.....#",
-		"#.....#",
-		"#..S..#",
-        "###.###"
-	  ],
-	  "gym_name": "Elite Four",
-	  "id": "e4_agatha",
-	  "shop_windows": {
-		"center": 1,
-		"mart": 2
-	  },
-	  "template": "gym_arena",
-	  "world_pos": [
-		-29,
-		3
-	  ]
-	},
-	"e4_bruno": {
-	  "display_name": "Indigo Plateau — Bruno",
-	  "gate_facing": "north",
-	  "grid": [
-		"##_L_##",
-		"#.....#",
-		"#.....#",
-		"#..S..#",
-        "###.###"
-	  ],
-	  "gym_name": "Elite Four",
-	  "id": "e4_bruno",
-	  "shop_windows": {
-		"center": 1,
-		"mart": 2
-	  },
-	  "template": "gym_arena",
-	  "world_pos": [
-		-29,
-		13
-	  ]
-	},
-	"e4_champion": {
-	  "display_name": "Indigo Plateau — Champion",
-	  "gate_facing": "north",
-	  "grid": [
-		"##_L_##",
-		"#.....#",
-		"#.....#",
-		"#..S..#",
-        "###.###"
-	  ],
-	  "gym_name": "Champion",
-	  "id": "e4_champion",
-	  "shop_windows": {
-		"center": 1,
-		"mart": 2
-	  },
-	  "template": "gym_arena",
-	  "world_pos": [
-		-29,
-		-7
-	  ]
-	},
-	"e4_lance": {
-	  "display_name": "Indigo Plateau — Lance",
-	  "gate_facing": "north",
-	  "grid": [
-		"##_L_##",
-		"#.....#",
-		"#.....#",
-		"#..S..#",
-        "###.###"
-	  ],
-	  "gym_name": "Elite Four",
-	  "id": "e4_lance",
-	  "shop_windows": {
-		"center": 1,
-		"mart": 2
-	  },
-	  "template": "gym_arena",
-	  "world_pos": [
-		-29,
-		-2
-	  ]
-	},
-	"e4_lorelei": {
-	  "display_name": "Indigo Plateau — Lorelei",
-	  "gate_facing": "north",
-	  "grid": [
-		"##_L_##",
-		"#.....#",
-		"#.....#",
-		"#..S..#",
-        "###.###"
-	  ],
-	  "gym_name": "Elite Four",
-	  "id": "e4_lorelei",
-	  "shop_windows": {
-		"center": 1,
-		"mart": 2
-	  },
-	  "template": "gym_arena",
-	  "world_pos": [
-		-29,
-		8
-	  ]
-	},
-	"fuchsia": {
-	  "display_name": "Fuchsia City",
-	  "gate_facing": "north",
-	  "grid": [
-		"####_L_####",
-		"#####D#####",
-		"#.w.....w.#",
-		"#.........#",
-		"#..c...m..#",
-		"#.........#",
-		"#....S....#",
-        "#####.#####"
-	  ],
-	  "gym_name": "Fuchsia Gym",
-	  "id": "fuchsia",
-	  "shop_windows": {
-		"center": 1,
-		"mart": 2
-	  },
-	  "template": "town_pocket",
-	  "world_pos": [
-		12,
-		25
-	  ]
-	},
-	"game_corner": {
-	  "display_name": "Celadon Game Corner",
-	  "gate_facing": "north",
-	  "grid": [
-		"####X####",
-		"#.......#",
-		"#...L...#",
-		"#.w...w.#",
-		"#.......#",
-		"#...S...#",
-        "####.####"
-	  ],
-	  "id": "game_corner",
-	  "shop_windows": {
-		"center": 1,
-		"mart": 2
-	  },
-	  "template": "corporate",
-	  "world_pos": [
-		23,
-		15
-	  ]
-	},
-	"mansion": {
-	  "display_name": "Pokémon Mansion",
-	  "gate_facing": "north",
-	  "grid": [
-		"####X####",
-		"#.......#",
-		"#...L...#",
-		"#.w...w.#",
-		"#.......#",
-		"#...S...#",
-        "####.####"
-	  ],
-	  "id": "mansion",
-	  "shop_windows": {
-		"center": 1,
-		"mart": 2
-	  },
-	  "template": "mansion",
-	  "world_pos": [
-		-10,
-		40
-	  ]
-	},
-	"mt_moon": {
-	  "display_name": "Mt. Moon",
-	  "gate_facing": "east",
-	  "grid": [
-		"^^^^^^^^^^^^^",
-		"^,,,,,,,,,^^^",
-		"^,,,,,,,,,w^^",
-		"^,,^^^^^,,,^^",
-		"^,,,,,,^,,,,X",
-		"^,w,,,,^,^^^^",
-		"^^^^^^,^w^w,^",
-		"^^^^^^,^^^,,^",
-		"^,,,,,,,,,,,^",
-		"^,,,,,,,,,,,^",
-        "^^S^^^^^^^^^^"
-	  ],
-	  "id": "mt_moon",
-	  "shop_windows": {
-		"center": 1,
-		"mart": 2
-	  },
-	  "template": "cave_branches",
-	  "world_pos": [
-		-8,
-		-35
-	  ]
-	},
-	"nugget_bridge": {
-	  "display_name": "Nugget Bridge",
-	  "gate_facing": "south",
-	  "grid": [
-		"HHHHHHHHHHHHH",
-		"H...........H",
-		"H..,,,,.....H",
-		"H..,HH=H....H",
-		"H..,HH=H....H",
-		"H..,HH=H....H",
-		"H..,HH=H....H",
-		"S,,,HH=H....H",
-		"H...HH=H....H",
-		"H...HH=H....H",
-        "HHHHHHXHHHHHH"
-	  ],
-	  "id": "nugget_bridge",
-	  "shop_windows": {
-		"center": 1,
-		"mart": 2
-	  },
-	  "template": "open_field",
-	  "world_pos": [
-		5,
-		-38
-	  ]
-	},
-	"pewter": {
-	  "display_name": "Pewter City",
-	  "gate_facing": "north",
-	  "grid": [
-		"TBBB#_X_#BBB^",
-		"TBBB#___#BBB^",
-		"TBBB#___#BBB^",
-		"T#####D#####^",
-		"T...........^",
-		"T...........^",
-		"T...........^",
-		"T..c.....m..^",
-		"T...........^",
-		"T.....S.....^",
-        "TTTTTT.TTTTTT"
-	  ],
-	  "gym_name": "Pewter Gym",
-	  "id": "pewter",
-	  "shop_windows": {
-		"center": 1,
-		"mart": 2
-	  },
-	  "template": "town_pocket",
-	  "world_pos": [
-		-12,
-		-24
-	  ]
-	},
-	"route22": {
-	  "display_name": "Route 22",
-	  "gate_facing": "north",
-	  "grid": [
-		"####X####",
-		"#.......#",
-		"#...L...#",
-		"#.w...w.#",
-		"#.......#",
-		"#...S...#",
-        "####.####"
-	  ],
-	  "id": "route22",
-	  "shop_windows": {
-		"center": 1,
-		"mart": 2
-	  },
-	  "template": "open_field",
-	  "world_pos": [
-		-20,
-		32
-	  ]
-	},
-	"route6_7": {
-	  "display_name": "Route 6",
-	  "gate_facing": "north",
-	  "grid": [
-		"####X####",
-		"#.......#",
-		"#...L...#",
-		"#.w...w.#",
-		"#.......#",
-		"#...S...#",
-        "####.####"
-	  ],
-	  "id": "route6_7",
-	  "shop_windows": {
-		"center": 1,
-		"mart": 2
-	  },
-	  "template": "open_field",
-	  "world_pos": [
-		23,
-		8
-	  ]
-	},
-	"route_vermilion": {
-	  "display_name": "Route 5 — Vermilion Path",
-	  "gate_facing": "north",
-	  "grid": [
-		"#####S#####",
-		"#....,....#",
-		"#....,....#",
-		"#.w..,....#",
-		"#....,..w.#",
-		"#.w..,....#",
-		"#....,....#",
-		"#....,....#",
-        "#####X#####"
-	  ],
-	  "id": "route_vermilion",
-	  "shop_windows": {
-		"center": 1,
-		"mart": 1
-	  },
-	  "template": "open_field",
-	  "world_pos": [
-		12,
-		-16
-	  ]
-	},
-	"route_viridian": {
-	  "display_name": "Route 1 — Viridian Outskirts",
-	  "gate_facing": "north",
-	  "grid": [
-		"HHHHHXHHHHH",
-		"H.........H",
-		"H.........H",
-		"H.........H",
-		"H.........H",
-		"H.........H",
-		"H.........H",
-		"H.........H",
-        "HHHHHSHHHHH"
-	  ],
-	  "id": "route_viridian",
-	  "shop_windows": {
-		"center": 1,
-		"mart": 2
-	  },
-	  "template": "open_field",
-	  "world_pos": [
-		-11,
-		-2
-	  ]
-	},
-	"saffron": {
-	  "display_name": "Saffron City",
-	  "gate_facing": "north",
-	  "grid": [
-		"####_L_####",
-		"#####D#####",
-		"#.w.....w.#",
-		"#.........#",
-		"#..c...m..#",
-		"#.........#",
-		"#....S....#",
-        "#####.#####"
-	  ],
-	  "gym_name": "Saffron Gym",
-	  "id": "saffron",
-	  "shop_windows": {
-		"center": 1,
-		"mart": 2
-	  },
-	  "template": "big_city",
-	  "world_pos": [
-		31,
-		31
-	  ]
-	},
-	"sea_route": {
-	  "display_name": "Route 20 — Sea",
-	  "gate_facing": "north",
-	  "grid": [
-		"####X####",
-		"#.......#",
-		"#...L...#",
-		"#.w...w.#",
-		"#.......#",
-		"#...S...#",
-        "####.####"
-	  ],
-	  "id": "sea_route",
-	  "shop_windows": {
-		"center": 1,
-		"mart": 2
-	  },
-	  "template": "open_field",
-	  "world_pos": [
-		32,
-		39
-	  ]
-	},
-	"silence_bridge": {
-	  "display_name": "Route 12 — Silence Bridge",
-	  "gate_facing": "north",
-	  "grid": [
-		"####X####",
-		"#.......#",
-		"#...L...#",
-		"#.w...w.#",
-		"#.......#",
-		"#...S...#",
-        "####.####"
-	  ],
-	  "id": "silence_bridge",
-	  "shop_windows": {
-		"center": 1,
-		"mart": 2
-	  },
-	  "template": "bridge",
-	  "world_pos": [
-		3,
-		16
-	  ]
-	},
-	"silph_lower": {
-	  "display_name": "Silph Co. — Lower",
-	  "gate_facing": "north",
-	  "grid": [
-		"####X####",
-		"#.......#",
-		"#...L...#",
-		"#.w...w.#",
-		"#.......#",
-		"#...S...#",
-        "####.####"
-	  ],
-	  "id": "silph_lower",
-	  "shop_windows": {
-		"center": 1,
-		"mart": 2
-	  },
-	  "template": "open_field",
-	  "world_pos": [
-		23,
-		24
-	  ]
-	},
-	"silph_upper": {
-	  "display_name": "Silph Co. — Upper",
-	  "gate_facing": "north",
-	  "grid": [
-		"####X####",
-		"#.......#",
-		"#...L...#",
-		"#.w...w.#",
-		"#.......#",
-		"#...S...#",
-        "####.####"
-	  ],
-	  "id": "silph_upper",
-	  "shop_windows": {
-		"center": 1,
-		"mart": 2
-	  },
-	  "template": "open_field",
-	  "world_pos": [
-		32,
-		24
-	  ]
-	},
-	"ss_anne": {
-	  "display_name": "S.S. Anne",
-	  "gate_facing": "north",
-	  "grid": [
-		"#####S#####",
-		"#_________#",
-		"#__#___#__#",
-		"#__#___#__#",
-		"#__#___#__#",
-		"#__#___#__#",
-		"#__#___#__#",
-		"#_________#",
-        "#####X#####"
-	  ],
-	  "id": "ss_anne",
-	  "shop_windows": {
-		"center": 1,
-		"mart": 1
-	  },
-	  "template": "open_field",
-	  "world_pos": [
-		12,
-		-7
-	  ]
-	},
-	"vermilion": {
-	  "display_name": "Vermilion City",
-	  "gate_facing": "north",
-	  "grid": [
-		"HHHHHHHSHHHHH",
-		"H......=....H",
-		"H......=....H",
-		"H......=....H",
-		"#####..=....H",
-		"#___#..=....H",
-		"#___#..=....H",
-		"#___#..=====X",
-		"##D##..=....H",
-		"H.======....H",
-        "HHHHHHHHHHHHH"
-	  ],
-	  "gym_name": "Vermilion Gym",
-	  "id": "vermilion",
-	  "shop_windows": {
-		"center": 1,
-		"mart": 2
-	  },
-	  "template": "town_pocket",
-	  "world_pos": [
-		10,
-		2
-	  ]
-	},
-	"victory_road": {
-	  "display_name": "Victory Road",
-	  "gate_facing": "north",
-	  "grid": [
-		"####X####",
-		"#.......#",
-		"#...L...#",
-		"#.w...w.#",
-		"#.......#",
-		"#...S...#",
-        "####.####"
-	  ],
-	  "id": "victory_road",
-	  "shop_windows": {
-		"center": 1,
-		"mart": 2
-	  },
-	  "template": "cave_branches",
-	  "world_pos": [
-		-30,
-		18
-	  ]
-	},
-	"viridian": {
-	  "display_name": "Viridian City",
-	  "gate_facing": "north",
-	  "grid": [
-		"####_L_####",
-		"#####D#####",
-		"#.w.....w.#",
-		"#.........#",
-		"#..c...m..#",
-		"#.........#",
-		"#....S....#",
-        "#####.#####"
-	  ],
-	  "gym_name": "Viridian Gym",
-	  "id": "viridian",
-	  "shop_windows": {
-		"center": 1,
-		"mart": 2
-	  },
-	  "template": "big_city",
-	  "world_pos": [
-		-21,
-		17
-	  ]
-	},
-	"viridian_forest": {
-	  "display_name": "Viridian Forest",
-	  "gate_facing": "north",
-	  "grid": [
-		"TTTTTXTTTTT",
-		"T.........T",
-		"T.........T",
-		"T.........T",
-		"T.##......T",
-		"T..#...#..T",
-		"T..#####..T",
-		"T......##.T",
-		"T.........T",
-		"T.........T",
-        "TTTTTSTTTTT"
-	  ],
-	  "id": "viridian_forest",
-	  "shop_windows": {
-		"center": 1,
-		"mart": 2
-	  },
-	  "template": "forest_maze",
-	  "world_pos": [
-		-11,
-		-13
-	  ]
-	},
-	"viridian_front": {
-	  "display_name": "Viridian Approach",
-	  "gate_facing": "north",
-	  "grid": [
-		"####X####",
-		"#.......#",
-		"#...L...#",
-		"#.w...w.#",
-		"#.......#",
-		"#...S...#",
-        "####.####"
-	  ],
-	  "id": "viridian_front",
-	  "shop_windows": {
-		"center": 1,
-		"mart": 2
-	  },
-	  "template": "open_field",
-	  "world_pos": [
-		-20,
-		25
-	  ]
-	}
+    "celadon": {
+      "cells": [
+        [
+          {
+            "g": "B",
+            "m": "building_small"
+          },
+          {
+            "g": "B",
+            "m": "building_small"
+          },
+          {
+            "g": "B",
+            "m": "building_small"
+          },
+          {
+            "g": "B",
+            "m": "building_small"
+          },
+          {
+            "g": "B",
+            "m": "building_large"
+          },
+          {
+            "g": "B",
+            "m": "building_large"
+          },
+          {
+            "g": "B",
+            "m": "building_large"
+          },
+          {
+            "g": "B",
+            "m": "building_large"
+          },
+          {
+            "g": "B",
+            "m": "building_large"
+          },
+          {
+            "g": "B",
+            "m": "building_small"
+          },
+          {
+            "g": "B",
+            "m": "building_large"
+          },
+          {
+            "g": "B",
+            "m": "building_large"
+          },
+          {
+            "g": "B",
+            "m": "building_large"
+          },
+          {
+            "g": "B",
+            "m": "building_small"
+          },
+          {
+            "g": "B",
+            "m": "building_small"
+          },
+          {
+            "g": "B",
+            "m": "building_small"
+          },
+          {
+            "g": "B",
+            "m": "building_small"
+          },
+          {
+            "g": "B",
+            "m": "building_small"
+          },
+          {
+            "g": "B",
+            "m": "building_small"
+          },
+          {
+            "g": "B",
+            "m": "building_small"
+          }
+        ],
+        [
+          {
+            "g": "B",
+            "m": "building_small"
+          },
+          ".",
+          ".",
+          ".",
+          {
+            "g": "B",
+            "m": "building_large"
+          },
+          {
+            "g": "B",
+            "m": "building_large"
+          },
+          {
+            "g": "B",
+            "m": "building_large"
+          },
+          {
+            "g": "B",
+            "m": "building_large"
+          },
+          {
+            "g": "B",
+            "m": "building_large"
+          },
+          ".",
+          {
+            "g": "B",
+            "m": "building_large"
+          },
+          {
+            "g": "B",
+            "m": "building_large"
+          },
+          {
+            "g": "B",
+            "m": "building_large"
+          },
+          ".",
+          ".",
+          ".",
+          ".",
+          ".",
+          ".",
+          {
+            "g": "B",
+            "m": "building_small"
+          }
+        ],
+        [
+          {
+            "g": "B",
+            "m": "building_small"
+          },
+          ".",
+          ".",
+          ".",
+          {
+            "g": "B",
+            "m": "building_large"
+          },
+          {
+            "g": "B",
+            "m": "building_large"
+          },
+          {
+            "g": "B",
+            "m": "building_large"
+          },
+          {
+            "g": "B",
+            "m": "building_large"
+          },
+          {
+            "g": "B",
+            "m": "building_large"
+          },
+          ".",
+          {
+            "g": "B",
+            "m": "building_large"
+          },
+          {
+            "g": "B",
+            "m": "building_large"
+          },
+          {
+            "g": "B",
+            "m": "building_large"
+          },
+          ".",
+          "c",
+          ".",
+          "m",
+          ".",
+          ".",
+          {
+            "g": "B",
+            "m": "building_small"
+          }
+        ],
+        [
+          {
+            "g": "B",
+            "m": "building_small"
+          },
+          ".",
+          ".",
+          ".",
+          ".",
+          ".",
+          ".",
+          ".",
+          ".",
+          ".",
+          ".",
+          ".",
+          ".",
+          ".",
+          ".",
+          ".",
+          ".",
+          ".",
+          ".",
+          {
+            "g": "B",
+            "m": "building_small"
+          }
+        ],
+        [
+          {
+            "g": "B",
+            "m": "building_small"
+          },
+          "=",
+          "=",
+          "=",
+          "=",
+          "=",
+          "=",
+          "=",
+          "=",
+          "=",
+          "=",
+          "=",
+          "=",
+          "=",
+          "=",
+          "=",
+          "=",
+          "=",
+          "=",
+          "="
+        ],
+        [
+          {
+            "g": "B",
+            "m": "building_small"
+          },
+          "=",
+          "#",
+          "#",
+          "#",
+          "#",
+          "#",
+          ".",
+          ".",
+          ".",
+          ".",
+          ".",
+          ".",
+          ".",
+          "=",
+          ".",
+          ".",
+          ".",
+          ".",
+          {
+            "g": "B",
+            "m": "building_small"
+          }
+        ],
+        [
+          "X",
+          "=",
+          "#",
+          "_",
+          "L",
+          "_",
+          "#",
+          ".",
+          ".",
+          ".",
+          ".",
+          ".",
+          ".",
+          ".",
+          "=",
+          ".",
+          ".",
+          ".",
+          ".",
+          {
+            "g": "B",
+            "m": "building_small"
+          }
+        ],
+        [
+          {
+            "g": "B",
+            "m": "building_small"
+          },
+          ".",
+          "#",
+          "_",
+          "_",
+          "_",
+          "#",
+          ".",
+          ".",
+          ".",
+          ".",
+          ".",
+          ".",
+          ".",
+          "=",
+          ".",
+          ".",
+          ".",
+          ".",
+          {
+            "g": "B",
+            "m": "building_small"
+          }
+        ],
+        [
+          {
+            "g": "B",
+            "m": "building_small"
+          },
+          "H",
+          "#",
+          "#",
+          "D",
+          "#",
+          "#",
+          ".",
+          ".",
+          ".",
+          ".",
+          ".",
+          ".",
+          ".",
+          "=",
+          ".",
+          ".",
+          ".",
+          ".",
+          {
+            "g": "B",
+            "m": "building_small"
+          }
+        ],
+        [
+          {
+            "g": "B",
+            "m": "building_small"
+          },
+          ".",
+          ".",
+          ".",
+          "=",
+          "=",
+          "=",
+          "=",
+          "=",
+          "=",
+          "=",
+          "=",
+          "=",
+          "=",
+          "=",
+          ".",
+          ".",
+          ".",
+          ".",
+          {
+            "g": "B",
+            "m": "building_small"
+          }
+        ],
+        [
+          {
+            "g": "B",
+            "m": "building_small"
+          },
+          ".",
+          ".",
+          ".",
+          ".",
+          ".",
+          ".",
+          ".",
+          ".",
+          ".",
+          ".",
+          ".",
+          ".",
+          ".",
+          ".",
+          ".",
+          ".",
+          ".",
+          ".",
+          {
+            "g": "B",
+            "m": "building_small"
+          }
+        ],
+        [
+          {
+            "g": "B",
+            "m": "building_small"
+          },
+          {
+            "g": "B",
+            "m": "building_small"
+          },
+          {
+            "g": "B",
+            "m": "building_small"
+          },
+          {
+            "g": "B",
+            "m": "building_small"
+          },
+          {
+            "g": "B",
+            "m": "building_small"
+          },
+          {
+            "g": "B",
+            "m": "building_small"
+          },
+          {
+            "g": "B",
+            "m": "building_small"
+          },
+          {
+            "g": "B",
+            "m": "building_small"
+          },
+          {
+            "g": "B",
+            "m": "building_small"
+          },
+          {
+            "g": "B",
+            "m": "building_small"
+          },
+          {
+            "g": "B",
+            "m": "building_small"
+          },
+          {
+            "g": "B",
+            "m": "building_small"
+          },
+          {
+            "g": "B",
+            "m": "building_small"
+          },
+          {
+            "g": "B",
+            "m": "building_small"
+          },
+          {
+            "g": "B",
+            "m": "building_small"
+          },
+          {
+            "g": "B",
+            "m": "building_small"
+          },
+          {
+            "g": "B",
+            "m": "building_small"
+          },
+          {
+            "g": "B",
+            "m": "building_small"
+          },
+          {
+            "g": "B",
+            "m": "building_small"
+          },
+          {
+            "g": "B",
+            "m": "building_small"
+          }
+        ]
+      ],
+      "display_name": "Celadon City",
+      "gate_facing": "north",
+      "gym_name": "Celadon Gym",
+      "id": "celadon",
+      "shop_windows": {
+        "center": 1,
+        "mart": 2
+      },
+      "template": "big_city",
+      "world_pos": [
+        -1.0,
+        24.0
+      ]
+    },
+    "cerulean": {
+      "cells": [
+        "~~~~~~=~~~#####~~~~~",
+        "~~~~~~=~~~#_L_#~~~~~",
+        "~~~~~~=~~~#___#~~~~~",
+        "~~~~~~=~~~#___#~~~~~",
+        "~~~~~~=~~~##D##~~~~~",
+        "~~~~~~=~~~~~=~~~~~~~",
+        "H.....=.....=......H",
+        "H..c..=..m..=......H",
+        "H.....=======......H",
+        "H..........=.......H",
+        "H..........=.......H",
+        "HHHHHHHHHHHXHHHHHHHH"
+      ],
+      "display_name": "Cerulean City",
+      "gate_facing": "north",
+      "gym_name": "Cerulean Gym",
+      "id": "cerulean",
+      "shop_windows": {
+        "center": 1.0,
+        "mart": 2.0
+      },
+      "template": "town_pocket",
+      "world_pos": [
+        6.0,
+        -27.0
+      ]
+    },
+    "cinnabar": {
+      "cells": [
+        "~~,##X##,,,,",
+        "~~,#*L*#,,,,",
+        "~~,#*_*#,,,,",
+        "~~,##D##,,==",
+        "~~,,,=,,,,=,",
+        "~~,,,======,",
+        "~~,,,,,,=,,,",
+        "~~,c,m,,=,,*",
+        "~~,======,,*",
+        "~~,,,,,,,,**",
+        "~~~~~~~~~~~~",
+        "~~~~~~~~~~~~"
+      ],
+      "display_name": "Cinnabar Island",
+      "gate_facing": "north",
+      "gym_name": "Cinnabar Gym",
+      "id": "cinnabar",
+      "shop_windows": {
+        "center": 1.0,
+        "mart": 2.0
+      },
+      "template": "volcanic",
+      "world_pos": [
+        -50.0,
+        64.0
+      ]
+    },
+    "cycling_road": {
+      "cells": [
+        "#########",
+        "#.......B",
+        "#.......B",
+        "#...=====",
+        "#...=...B",
+        "#...=...B",
+        "#...=...#",
+        "#.=====.#",
+        "#.=~~~=.#",
+        "#.=~~~=.#",
+        "#.=~~~=.#",
+        "#.=~~~=.#",
+        "#.=~~~=.#",
+        "#.=~~~=.#",
+        "#.=~~~=.#",
+        "#.=~~~=.#",
+        "#.=~~~=.#",
+        "#.=~~~=.#",
+        "#.=~~~=.#",
+        "#.=~~~=.#",
+        "#.=~~~=.#",
+        "#.=====.#",
+        "#...=...#",
+        "#...=...B",
+        "#...=...B",
+        "#...=====",
+        "#.......B",
+        "#.......B",
+        "#.......#",
+        "#########"
+      ],
+      "display_name": "Cycling Road",
+      "gate_facing": "north",
+      "id": "cycling_road",
+      "shop_windows": {
+        "center": 1.0,
+        "mart": 2.0
+      },
+      "template": "bridge",
+      "world_pos": [
+        -19.0,
+        27.0
+      ]
+    },
+    "e4_agatha": {
+      "cells": [
+        "##_L_##",
+        "#_____#",
+        "#_____#",
+        "#_____#",
+        "###_###"
+      ],
+      "display_name": "Indigo Plateau — Agatha",
+      "gate_facing": "north",
+      "gym_name": "Elite Four",
+      "id": "e4_agatha",
+      "shop_windows": {
+        "center": 1.0,
+        "mart": 2.0
+      },
+      "template": "gym_arena",
+      "world_pos": [
+        -58.0,
+        5.0
+      ]
+    },
+    "e4_bruno": {
+      "cells": [
+        "##_L_##",
+        "#,___,#",
+        "#,,_,,#",
+        "#,,_,,#",
+        "###_###"
+      ],
+      "display_name": "Indigo Plateau — Bruno",
+      "gate_facing": "north",
+      "gym_name": "Elite Four",
+      "id": "e4_bruno",
+      "shop_windows": {
+        "center": 1.0,
+        "mart": 2.0
+      },
+      "template": "gym_arena",
+      "world_pos": [
+        -58.0,
+        10.0
+      ]
+    },
+    "e4_champion": {
+      "cells": [
+        "#######",
+        "#__L__#",
+        "#_____#",
+        "#_____#",
+        "###_###"
+      ],
+      "display_name": "Indigo Plateau — Champion",
+      "gate_facing": "north",
+      "gym_name": "Champion",
+      "id": "e4_champion",
+      "shop_windows": {
+        "center": 1.0,
+        "mart": 2.0
+      },
+      "template": "gym_arena",
+      "world_pos": [
+        -58.0,
+        -5.0
+      ]
+    },
+    "e4_lance": {
+      "cells": [
+        "##_L_##",
+        "#_____#",
+        "#_____#",
+        "#_____#",
+        "###_###"
+      ],
+      "display_name": "Indigo Plateau — Lance",
+      "gate_facing": "north",
+      "gym_name": "Elite Four",
+      "id": "e4_lance",
+      "shop_windows": {
+        "center": 1.0,
+        "mart": 2.0
+      },
+      "template": "gym_arena",
+      "world_pos": [
+        -58.0,
+        0.0
+      ]
+    },
+    "e4_lorelei": {
+      "cells": [
+        "##_L_##",
+        "#~___~#",
+        "#~~_~~#",
+        "#~~_~~#",
+        "###_###"
+      ],
+      "display_name": "Indigo Plateau — Lorelei",
+      "gate_facing": "north",
+      "gym_name": "Elite Four",
+      "id": "e4_lorelei",
+      "shop_windows": {
+        "center": 1.0,
+        "mart": 2.0
+      },
+      "template": "gym_arena",
+      "world_pos": [
+        -58.0,
+        15.0
+      ]
+    },
+    "fuchsia": {
+      "cells": [
+        "BBB#_L_#BBB",
+        "B####D####B",
+        "B....=....B",
+        "B....======",
+        "B..c.=....B",
+        "X=====....B",
+        "B....=....B",
+        "B....=.m..B",
+        "B....===..B",
+        "B.........B",
+        "B.........B",
+        "BBBBBBBBBBB"
+      ],
+      "display_name": "Fuchsia City",
+      "gate_facing": "north",
+      "gym_name": "Fuchsia Gym",
+      "id": "fuchsia",
+      "shop_windows": {
+        "center": 1.0,
+        "mart": 2.0
+      },
+      "template": "town_pocket",
+      "world_pos": [
+        40.0,
+        38.0
+      ]
+    },
+    "game_corner": {
+      "cells": [
+        "############",
+        "#_______#w..",
+        "#_______#...",
+        "#_______#...",
+        "________#...",
+        "#_______#.,,",
+        "####_####.,.",
+        "....,.....,.",
+        "w...,.....,.",
+        "....,,,,,,,.",
+        ".......w....",
+        "............"
+      ],
+      "display_name": "Celadon Game Corner",
+      "gate_facing": "north",
+      "id": "game_corner",
+      "shop_windows": {
+        "center": 1.0,
+        "mart": 2.0
+      },
+      "template": "corporate",
+      "world_pos": [
+        28.0,
+        38.0
+      ]
+    },
+    "lavendar_town": {
+      "cells": [
+        "###=############",
+        "#..=.....#_____#",
+        "#..=.....#______",
+        "#..=.....#_#####",
+        "#..=.....#____w#",
+        "#..=.....#_____#",
+        "#..=.....#_____#",
+        "#..=.....#####_#",
+        "#..=.....#w____#",
+        "#..=.....#_____#",
+        "#..=.....#_____#",
+        "#..=.....#_#####",
+        "#..=.....#____w#",
+        "#..=.....#_____#",
+        "#..=.....#_____#",
+        "#..=.c.m.###_###",
+        "#..==========..#",
+        "#..............#",
+        "#..............#",
+        "################"
+      ],
+      "display_name": "Lavendar Town",
+      "gate_facing": "north",
+      "id": "lavendar_town",
+      "shop_windows": {
+        "center": 1.0,
+        "mart": 2.0
+      },
+      "template": "town_pocket",
+      "world_pos": [
+        35.0,
+        18.0
+      ]
+    },
+    "mansion": {
+      "cells": [
+        [
+          "#",
+          "#",
+          "#",
+          "#",
+          "#",
+          "#",
+          "#",
+          "#",
+          "#",
+          {
+            "g": ",",
+            "m": "dirt"
+          }
+        ],
+        [
+          "#",
+          "w",
+          "_",
+          "_",
+          "_",
+          "_",
+          "_",
+          "_",
+          "#",
+          {
+            "g": ",",
+            "m": "dirt"
+          }
+        ],
+        [
+          "#",
+          "_",
+          "_",
+          "_",
+          "_",
+          "_",
+          "_",
+          "_",
+          "#",
+          {
+            "g": ",",
+            "m": "dirt"
+          }
+        ],
+        [
+          "_",
+          "_",
+          "_",
+          "_",
+          "_",
+          "_",
+          "_",
+          "_",
+          "#",
+          {
+            "g": ",",
+            "m": "dirt"
+          }
+        ],
+        [
+          "#",
+          "_",
+          "_",
+          "_",
+          "_",
+          "_",
+          "_",
+          "_",
+          "#",
+          {
+            "g": ",",
+            "m": "dirt"
+          }
+        ],
+        [
+          "#",
+          "_",
+          "_",
+          "_",
+          "_",
+          "_",
+          "_",
+          "w",
+          "#",
+          {
+            "g": ",",
+            "m": "dirt"
+          }
+        ],
+        [
+          "#",
+          "#",
+          "#",
+          "#",
+          "_",
+          "#",
+          "#",
+          "#",
+          "#",
+          {
+            "g": ",",
+            "m": "dirt"
+          }
+        ],
+        [
+          "*",
+          {
+            "g": ",",
+            "m": "dirt"
+          },
+          {
+            "g": ",",
+            "m": "dirt"
+          },
+          {
+            "g": ",",
+            "m": "dirt"
+          },
+          {
+            "g": ",",
+            "m": "dirt"
+          },
+          {
+            "g": ",",
+            "m": "dirt"
+          },
+          {
+            "g": ",",
+            "m": "dirt"
+          },
+          {
+            "g": ",",
+            "m": "dirt"
+          },
+          {
+            "g": ",",
+            "m": "dirt"
+          },
+          {
+            "g": ",",
+            "m": "dirt"
+          }
+        ],
+        [
+          "*",
+          "w",
+          {
+            "g": ",",
+            "m": "dirt"
+          },
+          {
+            "g": ",",
+            "m": "dirt"
+          },
+          {
+            "g": ",",
+            "m": "dirt"
+          },
+          {
+            "g": ",",
+            "m": "dirt"
+          },
+          {
+            "g": ",",
+            "m": "dirt"
+          },
+          {
+            "g": ",",
+            "m": "dirt"
+          },
+          {
+            "g": ",",
+            "m": "dirt"
+          },
+          {
+            "g": ",",
+            "m": "dirt"
+          }
+        ],
+        [
+          "*",
+          "*",
+          {
+            "g": ",",
+            "m": "dirt"
+          },
+          {
+            "g": ",",
+            "m": "dirt"
+          },
+          {
+            "g": ",",
+            "m": "dirt"
+          },
+          {
+            "g": ",",
+            "m": "dirt"
+          },
+          {
+            "g": ",",
+            "m": "dirt"
+          },
+          {
+            "g": ",",
+            "m": "dirt"
+          },
+          {
+            "g": ",",
+            "m": "dirt"
+          },
+          {
+            "g": ",",
+            "m": "dirt"
+          }
+        ],
+        "~~~~~~~~~~",
+        "~~~~~~~~~~"
+      ],
+      "display_name": "Pokémon Mansion",
+      "gate_facing": "north",
+      "id": "mansion",
+      "shop_windows": {
+        "center": 1.0,
+        "mart": 2.0
+      },
+      "template": "mansion",
+      "world_pos": [
+        -38.0,
+        64.0
+      ]
+    },
+    "mt_moon": {
+      "cells": [
+        "^^^^^^^^^^^^^",
+        "^,,,,,,,,,^^^",
+        "^,,,,,,,,,w^^",
+        "^,,^^^^^,,,^^",
+        "^,,,,,,^,,,,,",
+        "^w,,,,,^,^^^^",
+        "^^^^^^,^,^w,^",
+        "^^^^^^,^^^,,^",
+        "^,,,,,,,,,,,^",
+        "^,,,,,,,,,,,^",
+        "^^,^^^^^^^^^^"
+      ],
+      "display_name": "Mt. Moon",
+      "gate_facing": "east",
+      "id": "mt_moon",
+      "shop_windows": {
+        "center": 1.0,
+        "mart": 2.0
+      },
+      "template": "cave_branches",
+      "world_pos": [
+        -7.0,
+        -35.0
+      ]
+    },
+    "nugget_bridge": {
+      "cells": [
+        "HHHHHHHHHHHHH~~~~~~~",
+        "H...........H~~~~~~~",
+        "H..,,,,.....H~~~~~~~",
+        "H..,~~=~~...H~~~~~~~",
+        "H..,~~=~~...H~~~~~~~",
+        "H..,~~=~~...H~~~~~~~",
+        "Hw.,~~=~~...H~~~~~~~",
+        ",,,,~~=~~...H~~~~~~~",
+        "H...~~=~~...H~~~~~~~",
+        "H...~~=~~w..H~~~~~~~",
+        "H~~~~~=~~~~~~~~~~~~~"
+      ],
+      "display_name": "Nugget Bridge",
+      "gate_facing": "south",
+      "id": "nugget_bridge",
+      "shop_windows": {
+        "center": 1.0,
+        "mart": 2.0
+      },
+      "template": "open_field",
+      "world_pos": [
+        6.0,
+        -38.0
+      ]
+    },
+    "pallet_revisited": {
+      "cells": [
+        "####X####",
+        "#.......#",
+        "#.......#",
+        "#.......#",
+        "#.......#",
+        "#.......#",
+        "####.####",
+        "~.......~",
+        [
+          "~",
+          "~",
+          {
+            "g": ",",
+            "m": "sand"
+          },
+          {
+            "g": ",",
+            "m": "sand"
+          },
+          {
+            "g": ",",
+            "m": "sand"
+          },
+          {
+            "g": ",",
+            "m": "sand"
+          },
+          {
+            "g": ",",
+            "m": "sand"
+          },
+          "~",
+          "~"
+        ]
+      ],
+      "display_name": "Pallet Town (Revisited)",
+      "gate_facing": "north",
+      "id": "pallet_revisited",
+      "shop_windows": {
+        "center": 1.0,
+        "mart": 2.0
+      },
+      "template": "open_field",
+      "world_pos": [
+        -49.0,
+        43.0
+      ]
+    },
+    "pewter": {
+      "cells": [
+        [
+          "T",
+          {
+            "g": "B",
+            "m": "building_small"
+          },
+          {
+            "g": "B",
+            "m": "building_small"
+          },
+          {
+            "g": "B",
+            "m": "building_small"
+          },
+          "#",
+          "_",
+          "L",
+          "_",
+          "#",
+          {
+            "g": "B",
+            "m": "building_small"
+          },
+          {
+            "g": "B",
+            "m": "building_small"
+          },
+          {
+            "g": "B",
+            "m": "building_small"
+          },
+          "^",
+          "^",
+          "^",
+          "^",
+          "^"
+        ],
+        [
+          "T",
+          {
+            "g": "B",
+            "m": "building_small"
+          },
+          {
+            "g": "B",
+            "m": "building_small"
+          },
+          {
+            "g": "B",
+            "m": "building_small"
+          },
+          "#",
+          "_",
+          "_",
+          "_",
+          "#",
+          {
+            "g": "B",
+            "m": "building_small"
+          },
+          {
+            "g": "B",
+            "m": "building_small"
+          },
+          {
+            "g": "B",
+            "m": "building_small"
+          },
+          "^",
+          "^",
+          "^",
+          "^",
+          "^"
+        ],
+        [
+          "T",
+          {
+            "g": "B",
+            "m": "building_small"
+          },
+          {
+            "g": "B",
+            "m": "building_small"
+          },
+          {
+            "g": "B",
+            "m": "building_small"
+          },
+          "#",
+          "_",
+          "_",
+          "_",
+          "#",
+          {
+            "g": "B",
+            "m": "building_small"
+          },
+          {
+            "g": "B",
+            "m": "building_small"
+          },
+          {
+            "g": "B",
+            "m": "building_small"
+          },
+          "^",
+          "^",
+          "^",
+          "^",
+          "^"
+        ],
+        "T#####D#####^^^^^",
+        [
+          "T",
+          ".",
+          ".",
+          ".",
+          ".",
+          ".",
+          {
+            "g": "=",
+            "m": "road"
+          },
+          ".",
+          ".",
+          ".",
+          ".",
+          ".",
+          "^",
+          "^",
+          "^",
+          "^",
+          "^"
+        ],
+        [
+          "T",
+          ".",
+          ".",
+          ".",
+          ".",
+          ".",
+          {
+            "g": "=",
+            "m": "road"
+          },
+          ".",
+          ".",
+          ".",
+          ".",
+          ".",
+          "^",
+          "^",
+          "^",
+          "^",
+          "^"
+        ],
+        [
+          "T",
+          ".",
+          ".",
+          ".",
+          ".",
+          ".",
+          {
+            "g": "=",
+            "m": "road"
+          },
+          ".",
+          ".",
+          ".",
+          ".",
+          ".",
+          "^",
+          "^",
+          "^",
+          "^",
+          "^"
+        ],
+        [
+          "T",
+          ".",
+          ".",
+          "c",
+          ".",
+          ".",
+          {
+            "g": "=",
+            "m": "road"
+          },
+          ".",
+          ".",
+          "m",
+          ".",
+          ".",
+          "^",
+          "^",
+          "^",
+          "^",
+          "^"
+        ],
+        [
+          "T",
+          ".",
+          ".",
+          {
+            "g": "=",
+            "m": "road"
+          },
+          {
+            "g": "=",
+            "m": "road"
+          },
+          {
+            "g": "=",
+            "m": "road"
+          },
+          {
+            "g": "=",
+            "m": "road"
+          },
+          {
+            "g": "=",
+            "m": "road"
+          },
+          {
+            "g": "=",
+            "m": "road"
+          },
+          {
+            "g": "=",
+            "m": "road"
+          },
+          ".",
+          ".",
+          "^",
+          "^",
+          "^",
+          "^",
+          "^"
+        ],
+        [
+          "T",
+          ".",
+          ".",
+          ".",
+          ".",
+          ".",
+          {
+            "g": "=",
+            "m": "road"
+          },
+          ".",
+          ".",
+          ".",
+          ".",
+          ".",
+          "^",
+          "^",
+          "^",
+          "^",
+          "^"
+        ],
+        [
+          "T",
+          "T",
+          "T",
+          "T",
+          "T",
+          "T",
+          {
+            "g": "=",
+            "m": "road"
+          },
+          "T",
+          "T",
+          "T",
+          "T",
+          "T",
+          "^",
+          "^",
+          "^",
+          "^",
+          "^"
+        ]
+      ],
+      "display_name": "Pewter City",
+      "gate_facing": "north",
+      "gym_name": "Pewter Gym",
+      "id": "pewter",
+      "shop_windows": {
+        "center": 1.0,
+        "mart": 2.0
+      },
+      "template": "town_pocket",
+      "world_pos": [
+        -11.0,
+        -24.0
+      ]
+    },
+    "rock_tunnel": {
+      "cells": [
+        "^^^^^^^^^^^^^^^^^^^^",
+        "^,,,,,#,,,,,,,,,,,w^",
+        "^,,,,w#,,,,,,,,,,,,^",
+        "^,,####,,########,,^",
+        "^,,,,,,,,,,,,,,,#,,^",
+        "^###########,,,,#,,^",
+        "^,,,,,,,,,,#,,,,#,,^",
+        ",,,,,,,,,,,#,,,w#,,^",
+        "^,,######,,#,,###,,^",
+        "^,,,,,,w#,,,,,#,,,,^",
+        "^,,,,,,,#,,,,,#,,,,^",
+        "^^^^^^^^^^^^^^^^L^^^"
+      ],
+      "display_name": "Rock Tunnel",
+      "gate_facing": "north",
+      "id": "rock_tunnel",
+      "shop_windows": {
+        "center": 1.0,
+        "mart": 2.0
+      },
+      "template": "cave_branches",
+      "world_pos": [
+        22.0,
+        6.0
+      ]
+    },
+    "route22": {
+      "cells": [
+        "~~~sss~~~",
+        "~~~sss~~~",
+        "~~~sss~~~",
+        "~~~sss~~~",
+        "~~~sss~~~",
+        "~~~sss~~~",
+        "~~~sss~~~",
+        "~~~sss~~~",
+        "~~~sss~~~",
+        "~~~sss~~~",
+        "~~~sss~~~",
+        "~~~,,,~~~"
+      ],
+      "display_name": "Route 22",
+      "gate_facing": "north",
+      "id": "route22",
+      "shop_windows": {
+        "center": 1.0,
+        "mart": 2.0
+      },
+      "template": "bridge",
+      "world_pos": [
+        -49.0,
+        52.0
+      ]
+    },
+    "route6_7": {
+      "cells": [
+        "~~~~~~~~~~",
+        "~~~~~~~~~~",
+        "~~~~~~~~~~",
+        "~~~~~~~~~~",
+        "~~~~~~~~~~",
+        "~~~~~~~~~~",
+        "~~~~~~~~~~",
+        [
+          {
+            "g": "=",
+            "m": "dock"
+          },
+          {
+            "g": "=",
+            "m": "dock"
+          },
+          {
+            "g": "=",
+            "m": "dock"
+          },
+          {
+            "g": "=",
+            "m": "dock"
+          },
+          {
+            "g": "=",
+            "m": "dock"
+          },
+          "~",
+          "~",
+          "~",
+          "~",
+          "~"
+        ],
+        [
+          "~",
+          "~",
+          "~",
+          "~",
+          {
+            "g": "=",
+            "m": "dock"
+          },
+          "~",
+          "~",
+          "~",
+          "~",
+          "~"
+        ],
+        [
+          "~",
+          "~",
+          "~",
+          "~",
+          {
+            "g": "=",
+            "m": "dock"
+          },
+          "~",
+          "~",
+          "~",
+          "~",
+          "~"
+        ],
+        [
+          "~",
+          {
+            "g": "=",
+            "m": "dock"
+          },
+          {
+            "g": "=",
+            "m": "dock"
+          },
+          {
+            "g": "=",
+            "m": "dock"
+          },
+          {
+            "g": "=",
+            "m": "dock"
+          },
+          {
+            "g": "=",
+            "m": "dock"
+          },
+          "w",
+          "~",
+          "~",
+          "~"
+        ],
+        [
+          "~",
+          {
+            "g": "=",
+            "m": "dock"
+          },
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~"
+        ],
+        [
+          "~",
+          {
+            "g": "=",
+            "m": "dock"
+          },
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~"
+        ],
+        [
+          "~",
+          {
+            "g": "=",
+            "m": "dock"
+          },
+          {
+            "g": "=",
+            "m": "dock"
+          },
+          {
+            "g": "=",
+            "m": "dock"
+          },
+          {
+            "g": "=",
+            "m": "dock"
+          },
+          {
+            "g": "=",
+            "m": "dock"
+          },
+          "~",
+          "~",
+          "~",
+          "~"
+        ],
+        [
+          "~",
+          "w",
+          "~",
+          "~",
+          "~",
+          {
+            "g": "=",
+            "m": "dock"
+          },
+          "~",
+          "~",
+          "~",
+          "~"
+        ],
+        [
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          {
+            "g": "=",
+            "m": "dock"
+          },
+          "~",
+          "~",
+          "~",
+          "~"
+        ],
+        [
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          {
+            "g": "=",
+            "m": "dock"
+          },
+          "~",
+          "~",
+          "~",
+          "~"
+        ],
+        [
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          {
+            "g": "=",
+            "m": "dock"
+          },
+          "~",
+          "~",
+          "~",
+          "~"
+        ],
+        [
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          {
+            "g": "=",
+            "m": "dock"
+          },
+          "~",
+          "~",
+          "~",
+          "~"
+        ],
+        [
+          ".",
+          ".",
+          ".",
+          "~",
+          "~",
+          {
+            "g": "=",
+            "m": "dock"
+          },
+          "~",
+          "~",
+          "~",
+          "~"
+        ],
+        [
+          ".",
+          ".",
+          ".",
+          "~",
+          "~",
+          {
+            "g": "=",
+            "m": "dock"
+          },
+          "~",
+          "~",
+          "~",
+          "~"
+        ],
+        [
+          "w",
+          ".",
+          ".",
+          {
+            "g": "=",
+            "m": "dock"
+          },
+          {
+            "g": "=",
+            "m": "dock"
+          },
+          {
+            "g": "=",
+            "m": "dock"
+          },
+          "~",
+          "~",
+          "~",
+          "~"
+        ],
+        [
+          ".",
+          ".",
+          ".",
+          "~",
+          "~",
+          {
+            "g": "=",
+            "m": "dock"
+          },
+          "~",
+          "~",
+          "~",
+          "~"
+        ],
+        [
+          ".",
+          ".",
+          ".",
+          "~",
+          "~",
+          {
+            "g": "=",
+            "m": "dock"
+          },
+          "~",
+          "~",
+          "~",
+          "~"
+        ],
+        [
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          {
+            "g": "=",
+            "m": "dock"
+          },
+          "~",
+          "~",
+          "~",
+          "~"
+        ],
+        [
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          {
+            "g": "=",
+            "m": "dock"
+          },
+          "~",
+          "~",
+          "~",
+          "~"
+        ],
+        [
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          {
+            "g": "=",
+            "m": "dock"
+          },
+          "~",
+          "~",
+          "~",
+          "~"
+        ],
+        [
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          {
+            "g": "=",
+            "m": "dock"
+          },
+          "~",
+          "~",
+          "~",
+          "~"
+        ],
+        [
+          {
+            "g": "=",
+            "m": "dock"
+          },
+          {
+            "g": "=",
+            "m": "dock"
+          },
+          {
+            "g": "=",
+            "m": "dock"
+          },
+          {
+            "g": "=",
+            "m": "dock"
+          },
+          {
+            "g": "=",
+            "m": "dock"
+          },
+          {
+            "g": "=",
+            "m": "dock"
+          },
+          "~",
+          "~",
+          "~",
+          "~"
+        ],
+        "~~~~~w~~~~",
+        "~~~~~~~~~~",
+        "~~~~~~~~~~",
+        "~~~~~~~~~~",
+        "~~~~~~~~~~",
+        "~~~~~~~~~~",
+        "~~~~~~~~~~"
+      ],
+      "display_name": "Route 6",
+      "gate_facing": "north",
+      "id": "route6_7",
+      "shop_windows": {
+        "center": 1.0,
+        "mart": 2.0
+      },
+      "template": "bridge",
+      "world_pos": [
+        51.0,
+        13.0
+      ]
+    },
+    "route_vermilion": {
+      "cells": [
+        "~~~..H.....,..w.H~~~~~~~~~",
+        "~~~..H.....,....H~~~~~~~~~",
+        "~~~..H..w..,,,..H~~~~~~~~~",
+        "~~~..H~~~~~~~,..H~~~~~~~~~",
+        "~~~..H~~~~~~~,..H~~~~~~~~~",
+        "~~~..H....,,,,..H~~~~~~~~~",
+        "~~~..H...w,.....H~~~~~~~~~",
+        "~~~..HHHHH,HHHHHH~~~~~~~~~",
+        "~~~~~~~~~~=~~~~~~~~~~~~~~~"
+      ],
+      "display_name": "Route 5 — Vermilion Path",
+      "gate_facing": "north",
+      "id": "route_vermilion",
+      "shop_windows": {
+        "center": 1.0,
+        "mart": 1.0
+      },
+      "template": "open_field",
+      "world_pos": [
+        6.0,
+        -15.0
+      ]
+    },
+    "route_viridian": {
+      "cells": [
+        "HHHHHLHHHHH..,~~~~~~~",
+        [
+          "H",
+          {
+            "g": ".",
+            "m": "tall_grass"
+          },
+          {
+            "g": ".",
+            "m": "tall_grass"
+          },
+          {
+            "g": ".",
+            "m": "tall_grass"
+          },
+          ".",
+          "=",
+          ".",
+          {
+            "g": ".",
+            "m": "tall_grass"
+          },
+          {
+            "g": ".",
+            "m": "tall_grass"
+          },
+          {
+            "g": "w",
+            "m": "tall_grass"
+          },
+          "H",
+          ".",
+          ".",
+          ",",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~"
+        ],
+        [
+          "H",
+          {
+            "g": "w",
+            "m": "tall_grass"
+          },
+          {
+            "g": ".",
+            "m": "tall_grass"
+          },
+          {
+            "g": ".",
+            "m": "tall_grass"
+          },
+          ".",
+          "=",
+          ".",
+          {
+            "g": ".",
+            "m": "tall_grass"
+          },
+          {
+            "g": ".",
+            "m": "tall_grass"
+          },
+          {
+            "g": ".",
+            "m": "tall_grass"
+          },
+          "H",
+          ".",
+          ".",
+          ",",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~"
+        ],
+        [
+          "H",
+          {
+            "g": "H",
+            "m": "railing"
+          },
+          {
+            "g": "H",
+            "m": "railing"
+          },
+          {
+            "g": "H",
+            "m": "railing"
+          },
+          {
+            "g": "H",
+            "m": "railing"
+          },
+          "=",
+          {
+            "g": "H",
+            "m": "railing"
+          },
+          {
+            "g": "H",
+            "m": "railing"
+          },
+          {
+            "g": "H",
+            "m": "railing"
+          },
+          {
+            "g": "H",
+            "m": "railing"
+          },
+          "H",
+          ".",
+          ".",
+          ",",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~"
+        ],
+        "H....=....H..,~~~~~~~",
+        "H....=....H..,~~~~~~~",
+        "H....=....H..,~~~~~~~",
+        "H....=....H..,~~~~~~~",
+        "HHHHHSHHHHH,,~~~~~~~~",
+        ",,,,,...,,,~~~~~~~~~~",
+        "~~~~,,,,,~~~~~~~~~~~~",
+        "~~~~~~~~~~~~~~~~~~~~~",
+        "~~~~~~~~~~~~~~~~~~~~~",
+        "~~~~~~~~~~~~~~~~~~~~~",
+        "~~~~~~~~~~~~~~~~~~~~~",
+        "~~~~~~~~~~~~~~~~~~~~~",
+        "~~~~~~~~~~~~~~~~~~~~~",
+        "~~~~~~~~~~~~~~~~~~~~~",
+        "~~~~~~~~~~~~~~~~~~~~~"
+      ],
+      "display_name": "Route 1 — Viridian Outskirts",
+      "gate_facing": "north",
+      "id": "route_viridian",
+      "shop_windows": {
+        "center": 1,
+        "mart": 2
+      },
+      "template": "open_field",
+      "world_pos": [
+        -15.0,
+        -2.0
+      ]
+    },
+    "saffron": {
+      "cells": [
+        "####_L_#####",
+        "#####D######",
+        "#.w..,..w..#",
+        "#.,,,,,,,,.#",
+        ",,,......,.#",
+        "#.,.c..m.,.#",
+        "#.,,,,,,,,.#",
+        "#..........#",
+        "#..........#",
+        "#..........#",
+        "#..........#",
+        [
+          {
+            "g": ",",
+            "m": "sand"
+          },
+          {
+            "g": ",",
+            "m": "sand"
+          },
+          {
+            "g": ",",
+            "m": "sand"
+          },
+          {
+            "g": ",",
+            "m": "sand"
+          },
+          {
+            "g": ",",
+            "m": "sand"
+          },
+          {
+            "g": ",",
+            "m": "sand"
+          },
+          {
+            "g": ",",
+            "m": "sand"
+          },
+          {
+            "g": ",",
+            "m": "sand"
+          },
+          {
+            "g": ",",
+            "m": "sand"
+          },
+          {
+            "g": ",",
+            "m": "sand"
+          },
+          {
+            "g": ",",
+            "m": "sand"
+          },
+          {
+            "g": ",",
+            "m": "sand"
+          }
+        ],
+        [
+          {
+            "g": ",",
+            "m": "sand"
+          },
+          {
+            "g": ",",
+            "m": "sand"
+          },
+          {
+            "g": ",",
+            "m": "sand"
+          },
+          {
+            "g": ",",
+            "m": "sand"
+          },
+          {
+            "g": ",",
+            "m": "sand"
+          },
+          {
+            "g": ",",
+            "m": "sand"
+          },
+          {
+            "g": ",",
+            "m": "sand"
+          },
+          {
+            "g": ",",
+            "m": "sand"
+          },
+          {
+            "g": ",",
+            "m": "sand"
+          },
+          {
+            "g": ",",
+            "m": "sand"
+          },
+          {
+            "g": ",",
+            "m": "sand"
+          },
+          {
+            "g": ",",
+            "m": "sand"
+          }
+        ],
+        "~~~~~~X~~~~~",
+        "~~~~~~s~~~~~",
+        "~~~~~~s~~~~~"
+      ],
+      "display_name": "Saffron City",
+      "gate_facing": "north",
+      "gym_name": "Saffron Gym",
+      "id": "saffron",
+      "shop_windows": {
+        "center": 1.0,
+        "mart": 2.0
+      },
+      "template": "big_city",
+      "world_pos": [
+        -10.0,
+        48.0
+      ]
+    },
+    "sea_route": {
+      "cells": [
+        "~~~~~~~~~~~~~~~~~~~~~~~sss~~~~",
+        "~~~~~~~~~~~~~~~~~~~~~~~sss~~~~",
+        "~~~~~~~~~~~~~~~~~~~~~~~sss~~~~",
+        [
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          {
+            "g": "s",
+            "m": "dirt"
+          },
+          {
+            "g": "s",
+            "m": "dirt"
+          },
+          "^",
+          "^",
+          "^",
+          "^",
+          "^",
+          "^",
+          "^",
+          "^",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "s",
+          "s",
+          "s",
+          "~",
+          "~",
+          "~",
+          "~"
+        ],
+        [
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          {
+            "g": "s",
+            "m": "dirt"
+          },
+          {
+            "g": "s",
+            "m": "dirt"
+          },
+          ",",
+          ",",
+          ",",
+          ",",
+          ",",
+          ",",
+          ",",
+          "^",
+          {
+            "g": "s",
+            "m": "dirt"
+          },
+          {
+            "g": "s",
+            "m": "dirt"
+          },
+          "~",
+          "~",
+          "~",
+          "~",
+          "s",
+          "s",
+          "s",
+          "~",
+          "~",
+          "~",
+          "~"
+        ],
+        [
+          "s",
+          "s",
+          "s",
+          "s",
+          "s",
+          "s",
+          "s",
+          {
+            "g": "s",
+            "m": "dirt"
+          },
+          {
+            "g": "s",
+            "m": "dirt"
+          },
+          "^",
+          ",",
+          ",",
+          ",",
+          ",",
+          ",",
+          ",",
+          "^",
+          {
+            "g": "s",
+            "m": "dirt"
+          },
+          {
+            "g": "s",
+            "m": "dirt"
+          },
+          "~",
+          "~",
+          "~",
+          "~",
+          "s",
+          "s",
+          "s",
+          "~",
+          "~",
+          "~",
+          "~"
+        ],
+        [
+          "s",
+          "s",
+          "s",
+          "s",
+          "s",
+          "s",
+          "s",
+          {
+            "g": "s",
+            "m": "dirt"
+          },
+          {
+            "g": "s",
+            "m": "dirt"
+          },
+          "^",
+          ",",
+          ",",
+          ",",
+          ",",
+          ",",
+          ",",
+          "^",
+          {
+            "g": "s",
+            "m": "dirt"
+          },
+          {
+            "g": "s",
+            "m": "dirt"
+          },
+          "s",
+          "s",
+          "s",
+          "s",
+          "s",
+          "s",
+          "s",
+          "~",
+          "~",
+          "~",
+          "~"
+        ],
+        [
+          "s",
+          "s",
+          "s",
+          "s",
+          "s",
+          "s",
+          "s",
+          {
+            "g": "s",
+            "m": "dirt"
+          },
+          {
+            "g": "s",
+            "m": "dirt"
+          },
+          "^",
+          ",",
+          ",",
+          ",",
+          ",",
+          ",",
+          ",",
+          ",",
+          {
+            "g": "s",
+            "m": "dirt"
+          },
+          {
+            "g": "s",
+            "m": "dirt"
+          },
+          "s",
+          "s",
+          "s",
+          "s",
+          "s",
+          "s",
+          "s",
+          "~",
+          "~",
+          "~",
+          "~"
+        ],
+        [
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "^",
+          "^",
+          "^",
+          "^",
+          "^",
+          "^",
+          "^",
+          "^",
+          {
+            "g": "s",
+            "m": "dirt"
+          },
+          {
+            "g": "s",
+            "m": "dirt"
+          },
+          "s",
+          "s",
+          "s",
+          "s",
+          "s",
+          "s",
+          "s",
+          "~",
+          "~",
+          "~",
+          "~"
+        ],
+        "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+        "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+        "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+      ],
+      "display_name": "Route 20 — Sea",
+      "gate_facing": "north",
+      "id": "sea_route",
+      "shop_windows": {
+        "center": 1.0,
+        "mart": 2.0
+      },
+      "template": "open_field",
+      "world_pos": [
+        -28.0,
+        64.0
+      ]
+    },
+    "silence_bridge": {
+      "cells": [
+        "#########",
+        "B.......#",
+        "B.......#",
+        "L,,,,,,,,",
+        "B.......#",
+        "B.......#",
+        "#########"
+      ],
+      "display_name": "Route 12 — Silence Bridge",
+      "gate_facing": "north",
+      "id": "silence_bridge",
+      "shop_windows": {
+        "center": 1.0,
+        "mart": 2.0
+      },
+      "template": "bridge",
+      "world_pos": [
+        -10.0,
+        27.0
+      ]
+    },
+    "silph_lower": {
+      "cells": [
+        "####L####",
+        "#_______#",
+        "#_______#",
+        "#_______#",
+        "#________",
+        "#_______#",
+        "#_______#",
+        "#_______#",
+        "#########"
+      ],
+      "display_name": "Silph Co. — Lower",
+      "gate_facing": "north",
+      "id": "silph_lower",
+      "shop_windows": {
+        "center": 1.0,
+        "mart": 2.0
+      },
+      "template": "corporate",
+      "world_pos": [
+        19.0,
+        38.0
+      ]
+    },
+    "silph_upper": {
+      "cells": [
+        "#########",
+        "#_______#",
+        "#____#__#",
+        "#_####__#",
+        "#____#__#",
+        "L____#__#",
+        "######__#",
+        "#____#__#",
+        "#__#_##_#",
+        "#__#__#_#",
+        "#__####_#",
+        "#_______#",
+        "#__###__#",
+        "#____#__#",
+        "####_####"
+      ],
+      "display_name": "Silph Co. — Upper",
+      "gate_facing": "north",
+      "id": "silph_upper",
+      "shop_windows": {
+        "center": 1.0,
+        "mart": 2.0
+      },
+      "template": "open_field",
+      "world_pos": [
+        19.0,
+        23.0
+      ]
+    },
+    "ss_anne": {
+      "cells": [
+        [
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          {
+            "g": "=",
+            "m": "dock"
+          },
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~"
+        ],
+        [
+          "~",
+          "~",
+          "~",
+          "#",
+          "#",
+          "#",
+          "#",
+          "#",
+          "#",
+          "#",
+          {
+            "g": "=",
+            "m": "dock"
+          },
+          "#",
+          "#",
+          "#",
+          "#",
+          "#",
+          "#",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~"
+        ],
+        "~~~#____________#~~~~~~~~~",
+        "~~~#____________#~~~~~~~~~",
+        "~~~#_##########_#~~~~~~~~~",
+        "~~~#________w___#~~~~~~~~~",
+        "~~~#____w_______#~~~~~~~~~",
+        "~~~#_##########_#~~~~~~~~~",
+        "~~~#____________#~~~~~~~~~",
+        "~~~#____________#~~~~~~~~~",
+        [
+          "~",
+          "~",
+          "~",
+          "#",
+          "#",
+          "#",
+          "#",
+          "#",
+          "#",
+          "#",
+          {
+            "g": "L",
+            "m": "dock"
+          },
+          "#",
+          "#",
+          "#",
+          "#",
+          "#",
+          "#",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~"
+        ],
+        [
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          {
+            "g": "=",
+            "m": "dock"
+          },
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~"
+        ]
+      ],
+      "display_name": "S.S. Anne",
+      "gate_facing": "north",
+      "id": "ss_anne",
+      "shop_windows": {
+        "center": 1.0,
+        "mart": 1.0
+      },
+      "template": "ship_interior",
+      "world_pos": [
+        6.0,
+        -6.0
+      ]
+    },
+    "vermilion": {
+      "cells": [
+        "~~~~~~~~~~=~~~~~",
+        "~~~.......=....#",
+        "~~~..c.m..=....#",
+        "~~~.......=....#",
+        "~~~.......=....#",
+        "~~#####...=....#",
+        "~~#_L_#...=....#",
+        "~~#___#========X",
+        "~~##D##=.......#",
+        "~~~.====.......#",
+        "~~~HHHHHHHHHHHH#"
+      ],
+      "display_name": "Vermilion City",
+      "gate_facing": "north",
+      "gym_name": "Vermilion Gym",
+      "id": "vermilion",
+      "shop_windows": {
+        "center": 1.0,
+        "mart": 2.0
+      },
+      "template": "town_pocket",
+      "world_pos": [
+        6.0,
+        6.0
+      ]
+    },
+    "victory_road": {
+      "cells": [
+        "####=####",
+        "#.c.=.m.#",
+        "#...=...#",
+        "#...=...#",
+        "#...=...#",
+        "#^^^,^^^#",
+        "#,,,,#,,#",
+        "#,,,,#,,#",
+        "#,,###,,#",
+        "#,,#,,,,#",
+        "#,,,,,,,#",
+        "#,,,,#,,#",
+        "#,,###,,#",
+        "#,,#,,,,#",
+        "#,,#,,,,#",
+        "#^^^,^^^#",
+        "#...=...#",
+        "#~~.=...#",
+        "#~~.=====",
+        "#.......#",
+        "#########"
+      ],
+      "display_name": "Victory Road",
+      "gate_facing": "north",
+      "id": "victory_road",
+      "shop_windows": {
+        "center": 1.0,
+        "mart": 2.0
+      },
+      "template": "cave_branches",
+      "world_pos": [
+        -59.0,
+        20.0
+      ]
+    },
+    "viridian": {
+      "cells": [
+        "###########",
+        "#.....#_L_#",
+        "#.....#___#",
+        "X==...#___#",
+        "#.=.cm##D##",
+        "#.=======.#",
+        "#....=....#",
+        "#####=#####"
+      ],
+      "display_name": "Viridian City",
+      "gate_facing": "north",
+      "gym_name": "Viridian Gym",
+      "id": "viridian",
+      "shop_windows": {
+        "center": 1.0,
+        "mart": 2.0
+      },
+      "template": "big_city",
+      "world_pos": [
+        -50.0,
+        35.0
+      ]
+    },
+    "viridian_forest": {
+      "cells": [
+        "TTTTTTTTTTLTTTTTTTTT~",
+        "TTT......T.......TTT~",
+        "TTT..T...TTTTTTT.TTT~",
+        "TTT..T......w..T.TTT~",
+        "TTT..TTTTTTTT..T.TTT~",
+        "TTT.....w...T....TTT~",
+        "TTT.TTTTTT..T....TTT~",
+        "TTT.....wT..TTT..TTT~",
+        "TTT......T.......TTT~",
+        "TTT..............TTT~",
+        "TTTTT.TTTTTTTTTTTTTT~"
+      ],
+      "display_name": "Viridian Forest",
+      "gate_facing": "north",
+      "id": "viridian_forest",
+      "shop_windows": {
+        "center": 1.0,
+        "mart": 2.0
+      },
+      "template": "forest_maze",
+      "world_pos": [
+        -15.0,
+        -13.0
+      ]
+    }
   }
 }

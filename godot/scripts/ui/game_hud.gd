@@ -95,7 +95,7 @@ func _ready() -> void:
 			CreatureArt.get_texture(Run.starter_id), PARTY_POKEMON_HEIGHT))
 
 	var hint := Label.new()
-	hint.text = "WASD/QE — move & strafe.  ← → — turn.  Face a Pokémon to battle.  Doors open shops once unlocked."
+	hint.text = "WASD/QE — move & strafe.  ← → — turn.  Face a Pokémon to battle.  Walk into a door to shop."
 	hint.set_anchors_and_offsets_preset(Control.PRESET_CENTER_BOTTOM)
 	hint.offset_bottom = -10
 	hint.grow_horizontal = Control.GROW_DIRECTION_BOTH

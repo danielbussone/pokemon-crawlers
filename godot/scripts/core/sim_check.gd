@@ -142,6 +142,10 @@ static func _fight(run_mgr, bal, idx: int, spend_candy: bool = false,
 
 	var ctx: CombatCtx = run_mgr.begin_combat_at(idx)
 	var outcome := _play_combat(ctx)
+	# Trainer battle: fight each Pokemon in the team before the encounter resolves.
+	while outcome == CombatCtx.WIN and run_mgr.has_next_bout():
+		ctx = run_mgr.begin_next_bout()
+		outcome = _play_combat(ctx)
 	if outcome != CombatCtx.WIN:
 		run_mgr.after_loss()
 		return ctx.enemy.enemy_id
@@ -156,17 +160,15 @@ static func _fight(run_mgr, bal, idx: int, spend_candy: bool = false,
 	return ""
 
 
-## Heal at the current stage's Poké Center if it exists, is unlocked, the player
-## is hurt, and they can afford it — the "stock up before the gym" a human does.
+## Heal at the current stage's Poké Center if it exists, the player is hurt, and
+## they can afford it — the "stock up before the gym" a human does. Centers are
+## never leader-gated (main.gd `_on_shop_entered`), so reaching one is enough.
 static func _heal_at_city_center(run_mgr, bal, stage_id: String, stats: Dictionary) -> void:
 	var player = run_mgr.player
 	if player.hp >= player.max_hp:
 		return
 	var shops := StageLayout.shop_cells_local(bal, stage_id)
 	if not shops.has("center"):
-		return
-	var window := int(StageLayout.shop_windows_local(bal, stage_id).get("center", 1))
-	if run_mgr.unlocked_shop_window < window:
 		return
 	if ShopOps.purchase_center(player, bal) and not stats.is_empty():
 		stats["heals"] = int(stats.get("heals", 0)) + 1

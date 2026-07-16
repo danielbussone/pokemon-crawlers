@@ -1,0 +1,28 @@
+{
+  "_comment": "Trainer identities: a person (name + portrait) who fields real Pokemon. The team fought is defined per placement in run_config (leader_team / segment.trainers), independently of other appearances. portrait_id resolves art/trainers/<portrait_id>.png (else procedural). A trainer with no entry here falls back to its id for name+portrait.",
+  "trainers": [
+    { "id": "brock", "name": "Brock", "portrait_id": "brock" },
+    { "id": "misty", "name": "Misty", "portrait_id": "misty" },
+    { "id": "surge", "name": "Lt. Surge", "portrait_id": "surge" },
+    { "id": "erika", "name": "Erika", "portrait_id": "erika" },
+    { "id": "koga", "name": "Koga", "portrait_id": "koga" },
+    { "id": "sabrina", "name": "Sabrina", "portrait_id": "sabrina" },
+    { "id": "blaine", "name": "Blaine", "portrait_id": "blaine" },
+    { "id": "giovanni", "name": "Giovanni", "portrait_id": "giovanni" },
+    { "id": "lorelei", "name": "Lorelei", "portrait_id": "lorelei" },
+    { "id": "bruno", "name": "Bruno", "portrait_id": "bruno" },
+    { "id": "agatha", "name": "Agatha", "portrait_id": "agatha" },
+    { "id": "lance", "name": "Lance", "portrait_id": "lance" },
+    { "id": "champion", "name": "Champion Gary", "portrait_id": "champion" },
+    { "id": "rival", "name": "Gary", "portrait_id": "rival" },
+    { "id": "bug_catcher", "name": "Bug Catcher", "portrait_id": "bug_catcher" },
+    { "id": "sailor", "name": "Sailor", "portrait_id": "sailor" },
+    { "id": "gambler", "name": "Gambler", "portrait_id": "gambler" },
+    { "id": "rocket_grunt", "name": "Team Rocket Grunt", "portrait_id": "rocket_grunt" },
+    { "id": "rocket_admin", "name": "Team Rocket Admin", "portrait_id": "rocket_admin" },
+    { "id": "biker", "name": "Biker", "portrait_id": "biker" },
+    { "id": "swimmer", "name": "Swimmer", "portrait_id": "swimmer" },
+    { "id": "burglar", "name": "Burglar", "portrait_id": "burglar" },
+    { "id": "cool_trainer", "name": "Cool Trainer", "portrait_id": "cool_trainer" }
+  ]
+}

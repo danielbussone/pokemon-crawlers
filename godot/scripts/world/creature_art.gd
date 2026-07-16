@@ -1,9 +1,9 @@
 class_name CreatureArt
 ## Resolves creature/trainer art: real imported illustration if available for
 ## that enemy_id, else the procedural pixel-art fallback from CreatureFactory.
-## Same pattern as CardArt — drop a `<enemy_id>.png` into art/creatures/ and
-## it's picked up automatically next run, no code changes needed. A sibling
-## `<enemy_id>.gif` is preferred over the .png when Settings.use_gif_art is on.
+## Same pattern as CardArt — drop a `<enemy_id>.png` into art/creatures/ (or a
+## trainer portrait into art/trainers/, which wins for that id) and it's picked up
+## automatically next run. A sibling `<enemy_id>.gif` is preferred when use_gif_art.
 ##
 ## The Gen 5 Black/White scrape (see black-white/README.md) is checked first,
 ## since it's the preferred art source going forward and covers all of Gen 1;
@@ -11,6 +11,7 @@ class_name CreatureArt
 ## (rival_*, bug_catcher_*, brock) and a safety net for anything unscraped.
 
 const ART_DIR := "res://art/creatures"
+const TRAINER_DIR := "res://art/trainers"
 const BW_STATIC_DIR := ART_DIR + "/black-white/normal"
 const BW_ANIM_DIR := ART_DIR + "/black-white/anim/normal"
 const ALPHA_CUTOFF := 16
@@ -20,6 +21,8 @@ const HOLE_FILL_MAX := 350     # skip large interior gaps (mouth shading, etc.)
 const MIN_OPAQUE_PER_AXIS := 8
 const EYE_WHITE := Color(1, 1, 1, 1)
 
+static var _trainer_cache: Dictionary = {}    # id -> ImageTexture (trainer portrait)
+static var _trainer_scanned := false
 static var _file_cache: Dictionary = {}       # enemy_id -> ImageTexture
 static var _gif_cache: Dictionary = {}        # enemy_id -> AnimatedTexture (or null if none)
 static var _bw_static_cache: Dictionary = {}  # enemy_id -> ImageTexture (or null if none)
@@ -27,6 +30,11 @@ static var _scanned := false
 
 
 static func get_texture(enemy_id: String) -> Texture2D:
+	# Trainer portraits (people) live in art/trainers/ and win for that id.
+	var trainer_tex := _get_trainer_texture(enemy_id)
+	if trainer_tex != null:
+		return trainer_tex
+
 	if Settings.use_gif_art:
 		var gif_tex := _get_gif_texture(enemy_id)
 		if gif_tex != null:
@@ -48,6 +56,26 @@ static func get_texture(enemy_id: String) -> Texture2D:
 			return tex
 
 	return CreatureFactory.build_texture(enemy_id)
+
+
+## Trainer portrait by id, from art/trainers/. Scanned once via DirAccess + Image.load
+## (the same live-disk read the creature scrape uses — reliable regardless of import
+## state, unlike FileAccess/ResourceLoader on imported res:// paths).
+static func _get_trainer_texture(enemy_id: String) -> Texture2D:
+	if not _trainer_scanned:
+		_trainer_scanned = true
+		var dir := DirAccess.open(TRAINER_DIR)
+		if dir != null:
+			dir.list_dir_begin()
+			var fname := dir.get_next()
+			while fname != "":
+				if not dir.current_is_dir() and fname.get_extension().to_lower() == "png":
+					var t := _load_cropped(TRAINER_DIR + "/" + fname)
+					if t != null:
+						_trainer_cache[fname.get_basename()] = t
+				fname = dir.get_next()
+			dir.list_dir_end()
+	return _trainer_cache.get(enemy_id, null)
 
 
 ## pokemondb's scrape uses hyphenated slugs (nidoran-f) where our enemy ids

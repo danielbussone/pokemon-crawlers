@@ -9,6 +9,7 @@ const COMBAT_CARD_SIZE := Vector2(125, 175)
 
 var ctx: CombatCtx
 var busy := true
+var bout := Vector2i(1, 1)  # (index, total) of this Pokemon in a trainer's team
 
 var _marker: EncounterMarker
 var _fx: CombatFX
@@ -326,7 +327,8 @@ func _make_hp_bar(fill_color: Color) -> ProgressBar:
 func _refresh() -> void:
 	var enemy := ctx.enemy
 	var enemy_def := ctx.enemy_def
-	_enemy_name.text = "%s  [%s]" % [String(enemy_def["name"]), enemy.ptype]
+	var team_tag := "  (%d/%d)" % [bout.x, bout.y] if bout.y > 1 else ""
+	_enemy_name.text = "%s  [%s]%s" % [String(enemy_def["name"]), enemy.ptype, team_tag]
 	_enemy_hp.max_value = enemy.max_hp
 	if _last_enemy_hp_shown < 0:
 		_enemy_hp.value = enemy.hp

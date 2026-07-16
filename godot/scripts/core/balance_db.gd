@@ -9,7 +9,8 @@ var constants: Dictionary = {}
 var conditions: Dictionary = {}
 var type_chart: Dictionary = {}   # "ATTACKER>DEFENDER" -> float
 var cards: Dictionary = {}        # card id -> card dict
-var enemies: Dictionary = {}      # enemy id -> enemy dict
+var enemies: Dictionary = {}      # enemy id -> enemy dict (the Pokemon combatant library)
+var trainers: Dictionary = {}     # trainer id -> {name, portrait_id} (identity only)
 var starters: Dictionary = {}     # starter id -> starter dict
 var badges: Dictionary = {}       # badge id -> badge dict
 var items: Dictionary = {}        # item id -> item dict (insertion order = shop order)
@@ -39,6 +40,8 @@ func _ready() -> void:
 		cards[c["id"]] = c
 	for e in _load_json("enemies")["enemies"]:
 		enemies[e["id"]] = e
+	for t in _load_json("trainers")["trainers"]:
+		trainers[t["id"]] = t
 
 	var items_raw: Dictionary = _load_json("items")
 	for it in items_raw["items"]:
@@ -178,13 +181,23 @@ func _validate_segments() -> void:
 		var seg_id := String(seg["id"])
 		for eid in seg.get("wilds", seg.get("wild_pool", [])):
 			assert(enemies.has(String(eid)), "Unknown wild '%s' in segment '%s'" % [eid, seg_id])
-		if seg.has("leader_variants"):
+		# Leader: a trainer + team (leader_team) fields real Pokemon; otherwise the
+		# `leader` (or a leader_variants pick) is itself the single combatant (legacy).
+		var leader_team: Array = seg.get("leader_team", [])
+		if not leader_team.is_empty():
+			for eid in leader_team:
+				assert(enemies.has(String(eid)), "Unknown leader_team Pokemon '%s' in '%s'" % [eid, seg_id])
+		elif seg.has("leader_variants"):
 			for eid in seg["leader_variants"]:
 				assert(enemies.has(String(eid)), "Unknown leader variant '%s' in '%s'" % [eid, seg_id])
 		else:
 			var leader := String(seg["leader"])
 			assert(leader == Rivals.RIVAL_SENTINEL or enemies.has(leader),
 					"Unknown leader '%s' in segment '%s'" % [leader, seg_id])
+		# Route trainers (optional placements): each fields real Pokemon.
+		for tr in seg.get("trainers", []):
+			for eid in tr.get("team", []):
+				assert(enemies.has(String(eid)), "Unknown trainer team Pokemon '%s' in '%s'" % [eid, seg_id])
 		assert(stage_rewards.has(String(seg["reward_pool_key"])),
 				"Unknown reward pool '%s' in segment '%s'" % [seg.get("reward_pool_key"), seg_id])
 		var badge_id := String(seg.get("badge_id", ""))

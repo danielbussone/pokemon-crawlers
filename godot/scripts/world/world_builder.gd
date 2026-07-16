@@ -29,18 +29,23 @@ var _encounter_cells: Array[Vector2i] = []
 var _zone_sign_cells: Dictionary = {}   # zone_id -> Vector2i (world cell for signage)
 var _gym_cell_stage: Dictionary = {}    # gym-zone world cell -> owning stage id (for naming)
 var _forest_bounds: Array = []          # [{origin, size}] of forest stages, for backdrops
+var _ship_bounds: Array = []            # [{origin, size}] of ship stages, for lamps + portholes
 var _boss_cell := Vector2i.ZERO
 var _wall_tex_cache: Dictionary = {}
 var _shop_tex_cache: Dictionary = {}
 var _prop_rng := RandomNumberGenerator.new()
 var _prev_stage_exit_world := Vector2i.ZERO
 var _shop_facings: Dictionary = {}   # shop cell -> approach facing
+var _shop_body_cells: Dictionary = {}  # cell behind a shop door -> true (solid building body)
 var _encounter_triggers_enabled := true
+var _exit_gate_cells: Dictionary = {}  # mandatory slot -> world cell of its `X` gate
+var _exit_gate_props: Dictionary = {}  # mandatory slot -> Node3D holding that gate's prop
 
 
 func build(encounters: Array[Dictionary]) -> void:
 	_prop_rng.seed = 20260704  # visual scatter only; fixed for a stable map
 	grid = _build_grid(encounters)
+	_warn_unreachable_encounters()
 
 	for cell in grid.tiles.keys():
 		_instance_tile(cell, grid.tiles[cell])
@@ -48,9 +53,13 @@ func build(encounters: Array[Dictionary]) -> void:
 		_maybe_add_prop(cell, String(grid.zone_of.get(cell, "")))
 	for b in _forest_bounds:
 		_add_forest_backdrop(b["origin"], b["size"])
+	for b in _ship_bounds:
+		_dress_ship(b["origin"], b["size"])
 
 	_build_signs()
-	_add_gym_lighting(_boss_cell)
+	if not _encounter_cells.is_empty():
+		_add_gym_lighting(_boss_cell)  # no boss cell in an encounter-less (explore) run
+	_build_exit_gates()
 	_build_markers(encounters)
 
 
@@ -84,12 +93,24 @@ func clear_marker(index: int) -> void:
 	if index < 0 or index >= markers.size():
 		return
 	markers[index].clear()
-	if bool(Run.encounter_at(index).get("is_optional", false)):
+	var enc := Run.encounter_at(index)
+	if bool(enc.get("is_optional", false)):
 		var cell := encounter_cell(index)
 		if cell == Vector2i.ZERO or grid.kind_at(cell) != WG.TileKind.OPTIONAL_ENCOUNTER:
 			return
 		grid.set_tile(cell, WG.TileKind.CORRIDOR, String(grid.zone_of.get(cell, "")))
 		grid.tile_meta.erase(cell)
+		return
+	# A leader falling opens its stage's exit gate. WorldGrid already reopens the
+	# tile itself (same slot), so this just drops the prop standing in the way.
+	_open_exit_gate(int(enc.get("mandatory_slot", -1)))
+
+
+func _open_exit_gate(slot: int) -> void:
+	if not _exit_gate_props.has(slot):
+		return
+	(_exit_gate_props[slot] as Node3D).queue_free()
+	_exit_gate_props.erase(slot)
 
 
 func set_encounter_triggers_enabled(enabled: bool) -> void:
@@ -151,7 +172,10 @@ func _build_grid(encounters: Array[Dictionary]):
 	_zone_sign_cells.clear()
 	_gym_cell_stage.clear()
 	_forest_bounds.clear()
+	_ship_bounds.clear()
 	_shop_facings.clear()
+	_shop_body_cells.clear()
+	_exit_gate_cells.clear()
 
 	var stage_origin := Vector2i.ZERO
 	var first_stage := true
@@ -183,6 +207,29 @@ func _build_grid(encounters: Array[Dictionary]):
 	return g
 
 
+## Structural reachability check: flood the walkable grid from spawn and warn for
+## any encounter tile a wall (e.g. a shop footprint) has sealed off. Ignores gate
+## clear-state — this is about physical connectivity, not progression order.
+func _warn_unreachable_encounters() -> void:
+	if grid == null or _encounter_cells.is_empty():
+		return
+	var reached := {spawn_cell: true}
+	var frontier: Array[Vector2i] = [spawn_cell]
+	while not frontier.is_empty():
+		var c: Vector2i = frontier.pop_back()
+		for d in WG.FACING_DIR:
+			var n: Vector2i = c + d
+			if reached.has(n) or grid.kind_at(n) == WG.TileKind.WALL:
+				continue
+			reached[n] = true
+			frontier.append(n)
+	for idx in _encounter_cells.size():
+		var cell: Vector2i = _encounter_cells[idx]
+		if cell != Vector2i.ZERO and not reached.has(cell):
+			push_warning("WorldMapBuilder: encounter %d at %s is unreachable from spawn "
+					% [idx, cell] + "(a shop footprint or wall may have sealed it off).")
+
+
 func _stamp_stage(g, stage_id: String, origin: Vector2i,
 		encounters: Array[Dictionary]) -> void:
 	var size := StageLayout.size_local(Balance, stage_id)
@@ -204,6 +251,10 @@ func _stamp_stage(g, stage_id: String, origin: Vector2i,
 			else:
 				g.set_tile(world_cell, WG.TileKind.CORRIDOR, zone_id)
 
+	# Surfable-water cells (walkable, gated by Surf in is_walkable).
+	for cell in StageLayout.surf_cells_local(Balance, stage_id):
+		g.surf_cells[StageLayout.local_to_world(cell, origin)] = true
+
 	# Gym anchors come from the grid ('_' floor, 'D' door); no-ops for non-gym stages.
 	# The shared "gym" zone drives arena rendering, so remember which stage owns each
 	# gym cell to name it correctly (its gym_name, else its display_name).
@@ -217,18 +268,29 @@ func _stamp_stage(g, stage_id: String, origin: Vector2i,
 		g.set_tile(door_world, WG.TileKind.GYM_DOOR, zone_id)
 		_gym_cell_stage[door_world] = stage_id
 
-	# Forest stages get a receding wall of trees behind their edge (rendered in build).
-	if StageLayout.template_id(Balance, stage_id) == "forest_maze":
+	# Forest stages get a receding wall of trees behind their edge (rendered in build);
+	# ship stages get interior lamps + hull portholes. Both are deferred to build().
+	var tmpl := StageLayout.template_id(Balance, stage_id)
+	if tmpl == "forest_maze":
 		_forest_bounds.append({"origin": origin, "size": size})
+	elif tmpl == "ship_interior":
+		_ship_bounds.append({"origin": origin, "size": size})
 
 	var opt_spawns := StageLayout.optional_spawns_local(Balance, stage_id)
+	var trainer_spawns := StageLayout.trainer_spawns_local(Balance, stage_id)
 	var opt_idx := 0
+	var tr_idx := 0
 	for flat_i in encounters.size():
 		var enc: Dictionary = encounters[flat_i]
 		if String(enc["stage_id"]) != stage_id:
 			continue
 		if bool(enc.get("is_optional", false)):
-			if opt_idx < opt_spawns.size():
+			# Wilds sit on `w` cells; route trainers on `t` cells (separate placements).
+			if String(enc.get("placement", "wild")) == "trainer":
+				if tr_idx < trainer_spawns.size():
+					_place_optional_encounter(g, trainer_spawns[tr_idx], origin, zone_id, flat_i)
+					tr_idx += 1
+			elif opt_idx < opt_spawns.size():
 				_place_optional_encounter(g, opt_spawns[opt_idx], origin, zone_id, flat_i)
 				opt_idx += 1
 		elif bool(enc.get("is_mandatory", false)):
@@ -266,24 +328,42 @@ func _place_mandatory_gate(g, gate: Dictionary, origin: Vector2i, zone_id: Strin
 	# blocking the region north of the leader.
 	_gate_block_cells(g, mandatory_slot, [encounter_world])
 
+	# …but a leader in a dead-end side room (every city gym) is a chokepoint for
+	# nothing, so the stage's exit gate (`X`) blocks on the same slot: the area
+	# stays shut until its leader falls. Stages that gate by chokepoint alone
+	# (Pewter, the Elite Four) author no `X` and are unaffected.
+	var exit_gate := StageLayout.exit_gate_local(Balance, stage_id)
+	if exit_gate.x >= 0:
+		var exit_world := StageLayout.local_to_world(exit_gate, origin)
+		_gate_block_cells(g, mandatory_slot, [exit_world])
+		_exit_gate_cells[mandatory_slot] = exit_world
+
 
 func _stamp_shops(g, stage_id: String, origin: Vector2i, zone_id: String) -> void:
 	var shops := StageLayout.shop_cells_local(Balance, stage_id)
 	var windows := StageLayout.shop_windows_local(Balance, stage_id)
 	if shops.has("center"):
-		var center_world := StageLayout.local_to_world(shops["center"], origin)
-		g.set_tile(center_world, WG.TileKind.SHOP_DOOR, zone_id)
-		g.tile_meta[center_world] = {
-			"shop_window": int(windows.get("center", 1)),
-			"shop_kind": "center",
-		}
+		_stamp_one_shop(g, StageLayout.local_to_world(shops["center"], origin),
+				zone_id, int(windows.get("center", 1)), "center")
 	if shops.has("mart"):
-		var mart_world := StageLayout.local_to_world(shops["mart"], origin)
-		g.set_tile(mart_world, WG.TileKind.SHOP_DOOR, zone_id)
-		g.tile_meta[mart_world] = {
-			"shop_window": int(windows.get("mart", 2)),
-			"shop_kind": "mart",
-		}
+		_stamp_one_shop(g, StageLayout.local_to_world(shops["mart"], origin),
+				zone_id, int(windows.get("mart", 2)), "mart")
+
+
+func _stamp_one_shop(g, door: Vector2i, zone_id: String, window: int, kind: String) -> void:
+	g.set_tile(door, WG.TileKind.SHOP_DOOR, zone_id)
+	g.tile_meta[door] = {"shop_window": window, "shop_kind": kind}
+
+	# The building body sits on the tile behind the door (opposite the approach), so
+	# make that tile solid — otherwise the mesh overhangs a walkable cell and you can
+	# walk through the shop. The approach is always the door's front, so this can't
+	# wall the door off. `_warn_unreachable_encounters` flags a body that seals a path.
+	var facing := _shop_approach_facing(g, door)
+	_shop_facings[door] = facing
+	var body: Vector2i = door - WG.FACING_DIR[facing]
+	if g.kind_at(body) != WG.TileKind.WALL:
+		g.set_tile(body, WG.TileKind.WALL, String(g.zone_of.get(body, zone_id)))
+		_shop_body_cells[body] = true
 
 
 func _gate_block_cells(g, mandatory_slot: int, cells: Array) -> void:
@@ -309,17 +389,22 @@ func _instance_tile(cell: Vector2i, kind: int) -> void:
 	add_child(floor_mesh)
 
 	if zone_id == "gym":
-		var ceil_mesh := MeshInstance3D.new()
-		var ceil_box := BoxMesh.new()
-		ceil_box.size = Vector3(WG.TILE_SIZE, 0.1, WG.TILE_SIZE)
-		ceil_mesh.mesh = ceil_box
-		ceil_mesh.material_override = _flat_material(Color(0.3, 0.28, 0.26))
-		ceil_mesh.position = pos + Vector3(0, WG.WALL_HEIGHT, 0)
-		add_child(ceil_mesh)
+		_add_ceiling(pos, Color(0.3, 0.28, 0.26))
+	else:
+		match _stage_template(zone_id):
+			"cave_branches":
+				# Caves (Mt. Moon) get a rock roof so they read as enclosed, not open sky.
+				_add_ceiling(pos, Color(0.17, 0.15, 0.14))
+			"ship_interior":
+				# Ships are an enclosed deck: a wooden ceiling over the hull, but not
+				# over the surrounding sea cells that belong to the same stage grid.
+				if mat_name != "water":
+					_add_ceiling(pos, Color(0.30, 0.24, 0.17))
 
 	# Barrier cells become 3D props (tree / building / boulder / pillar / water…);
 	# walkable cells stay open so the props enclose the corridors (Phase 7 slice 2).
-	if kind == WG.TileKind.WALL:
+	# Shop-body cells are solid too, but the shop building mesh covers them — no prop.
+	if kind == WG.TileKind.WALL and not _shop_body_cells.has(cell):
 		_place_barrier_prop(pos, mat_name)
 
 	if kind == WG.TileKind.SHOP_DOOR:
@@ -329,8 +414,58 @@ func _instance_tile(cell: Vector2i, kind: int) -> void:
 		_dress_gym_door(cell, pos)
 
 
+## Stand a barrier prop on every closed exit gate, so an area whose leader is still
+## standing reads as sealed rather than as an invisible wall. Each gate owns its
+## meshes, and `_open_exit_gate` frees them when that leader falls.
+func _build_exit_gates() -> void:
+	_exit_gate_props.clear()
+	for slot in _exit_gate_cells:
+		var cell: Vector2i = _exit_gate_cells[slot]
+		var holder := Node3D.new()
+		add_child(holder)
+		_exit_gate_props[slot] = holder
+		_place_barrier_prop(WG.world_pos(cell), _gate_material_for(cell), holder)
+
+
+## What a gate on `cell` is built from: whatever barrier walls it in (the hedge
+## line, the cave rock, the sea), else the stage theme's default barrier. Keeps a
+## gate in a hedge a hedge, and one across water unsurfable water.
+func _gate_material_for(cell: Vector2i) -> String:
+	for d in WG.FACING_DIR:
+		var neighbour: Vector2i = cell + d
+		if grid.kind_at(neighbour) != WG.TileKind.WALL:
+			continue
+		var mat := String(grid.material_of.get(neighbour, ""))
+		if mat != "" and ThemePalette.is_barrier(mat):
+			return mat
+	return ThemePalette.theme_barrier(_stage_template(String(grid.zone_of.get(cell, ""))))
+
+
+## A flat overhead slab at wall height, used for gym and cave roofs.
+func _add_ceiling(pos: Vector3, color: Color) -> void:
+	var mi := MeshInstance3D.new()
+	var box := BoxMesh.new()
+	box.size = Vector3(WG.TILE_SIZE, 0.1, WG.TILE_SIZE)
+	mi.mesh = box
+	mi.material_override = _flat_material(color)
+	mi.position = pos + Vector3(0, WG.WALL_HEIGHT, 0)
+	add_child(mi)
+
+
+## Template ('cave_branches', 'ship_interior', …) of the stage owning a cell's zone.
+## Empty for the shared "gym" zone and any non-stage zone (no layout to read).
+func _stage_template(zone_id: String) -> String:
+	if zone_id == "" or zone_id == "gym":
+		return ""
+	if not Balance.stage_layouts.has(zone_id):
+		return ""
+	return StageLayout.template_id(Balance, zone_id)
+
+
 ## A barrier cell rendered as a 3D prop, shaped + sized by its terrain material.
-func _place_barrier_prop(pos: Vector3, material: String) -> void:
+## `parent` (default: this builder) lets a caller own the resulting meshes so it
+## can free them later — used by the exit gates, which vanish when they open.
+func _place_barrier_prop(pos: Vector3, material: String, parent: Node3D = null) -> void:
 	var h := ThemePalette.height_of(material) * WG.WALL_HEIGHT
 	var color := ThemePalette.color_of(material)
 	var emissive := ThemePalette.is_emissive(material)
@@ -338,24 +473,26 @@ func _place_barrier_prop(pos: Vector3, material: String) -> void:
 	match ThemePalette.shape_of(material):
 		"tree":
 			_add_terrain_box(pos + Vector3(0, h * 0.24, 0), Vector3(0.5, h * 0.48, 0.5),
-					Color(0.30, 0.20, 0.11), false)          # trunk
+					Color(0.30, 0.20, 0.11), false, parent)  # trunk
 			# Canopy is wider than a tile so neighbours overlap into a solid wall, and
 			# stacks two tiers so you can't see over or between the trees.
 			_add_terrain_box(pos + Vector3(0, h * 0.60, 0), Vector3(t * 1.2, h * 0.62, t * 1.2),
-					color.darkened(0.08), false)             # lower canopy
+					color.darkened(0.08), false, parent)     # lower canopy
 			_add_terrain_box(pos + Vector3(0, h * 0.98, 0), Vector3(t * 1.05, h * 0.55, t * 1.05),
-					color, false)                            # upper canopy
+					color, false, parent)                    # upper canopy
 		"boulder":
-			_add_terrain_box(pos + Vector3(0, h * 0.5, 0), Vector3(t * 0.82, h, t * 0.82), color, false)
+			_add_terrain_box(pos + Vector3(0, h * 0.5, 0), Vector3(t * 0.82, h, t * 0.82),
+					color, false, parent)
 		"pillar":
-			_add_terrain_box(pos + Vector3(0, h * 0.5, 0), Vector3(0.7, h, 0.7), color, false)
+			_add_terrain_box(pos + Vector3(0, h * 0.5, 0), Vector3(0.7, h, 0.7), color, false, parent)
 		"flat":  # water / lava — low pool covering the tile
-			_add_terrain_box(pos + Vector3(0, 0.12, 0), Vector3(t, 0.14, t), color, emissive)
+			_add_terrain_box(pos + Vector3(0, 0.12, 0), Vector3(t, 0.14, t), color, emissive, parent)
 		_:  # block — wall / building / mountain / hedge / railing
-			_add_terrain_box(pos + Vector3(0, h * 0.5, 0), Vector3(t, h, t), color, emissive)
+			_add_terrain_box(pos + Vector3(0, h * 0.5, 0), Vector3(t, h, t), color, emissive, parent)
 
 
-func _add_terrain_box(center: Vector3, size: Vector3, color: Color, emissive: bool) -> void:
+func _add_terrain_box(center: Vector3, size: Vector3, color: Color, emissive: bool,
+		parent: Node3D = null) -> void:
 	var mi := MeshInstance3D.new()
 	var box := BoxMesh.new()
 	box.size = size
@@ -369,17 +506,22 @@ func _add_terrain_box(center: Vector3, size: Vector3, color: Color, emissive: bo
 		mat.emission_energy_multiplier = 0.7
 	mi.material_override = mat
 	mi.position = center
-	add_child(mi)
+	if parent != null:
+		parent.add_child(mi)
+	else:
+		add_child(mi)
 
 
-## Rings of tall tree blocks just outside a forest stage, each ring taller and
-## darker than the last so the forest edge recedes into darkness instead of sky.
+## Rings of tree blocks just outside a forest stage, each ring a touch taller and
+## darker than the last so the forest edge recedes instead of ending at open sky.
+## Kept close to the height of the in-forest trees (tree = 1.4 * WALL_HEIGHT) so the
+## backdrop reads as more forest, not a black wall towering over the canopy.
 func _add_forest_backdrop(origin: Vector2i, size: Vector2i) -> void:
-	const RINGS := 4
+	const RINGS := 3
 	var base := ThemePalette.color_of("tree")
 	for ring in range(1, RINGS + 1):
-		var col := base.darkened(0.18 * ring)
-		var height := WG.WALL_HEIGHT * (1.7 + 0.55 * ring)
+		var col := base.darkened(0.12 * ring)
+		var height := WG.WALL_HEIGHT * (1.4 + 0.3 * ring)
 		var x0 := origin.x - ring
 		var x1 := origin.x + size.x - 1 + ring
 		var y0 := origin.y - ring
@@ -400,13 +542,106 @@ func _backdrop_tree(cell: Vector2i, color: Color, height: float) -> void:
 	_add_terrain_box(pos + Vector3(0, height * 0.5, 0), Vector3(w, height, w), color, false)
 
 
+## Dress a ship stage: warm ceiling lamps over the interior so it reads as "well
+## lit", and portholes on hull walls (metal barriers that touch the surrounding sea).
+func _dress_ship(origin: Vector2i, size: Vector2i) -> void:
+	for ly in range(size.y):
+		for lx in range(size.x):
+			var cell := origin + Vector2i(lx, ly)
+			var mat := String(grid.material_of.get(cell, ""))
+			if grid.kind_at(cell) == WG.TileKind.WALL:
+				# Only the outer hull (a metal wall facing open water) gets a porthole;
+				# interior cabin dividers stay solid.
+				if mat == "wall_metal" and _wall_touches_water(cell):
+					var idir := _interior_dir_for_wall(cell)
+					if idir != Vector2i.ZERO:
+						_add_porthole(cell, idir)
+			elif mat == "wood" and lx % 4 == 2 and ly % 3 == 2:
+				_add_ship_lamp(WG.world_pos(cell))
+
+
+## Direction from a wall cell toward the first adjacent walkable (interior) cell.
+func _interior_dir_for_wall(cell: Vector2i) -> Vector2i:
+	for d in WG.FACING_DIR:
+		if grid.kind_at(cell + d) != WG.TileKind.WALL:
+			return d
+	return Vector2i.ZERO
+
+
+func _wall_touches_water(cell: Vector2i) -> bool:
+	for d in WG.FACING_DIR:
+		if String(grid.material_of.get(cell + d, "")) == "water":
+			return true
+	return false
+
+
+## A round porthole on the interior face of a hull wall, oriented to face inward.
+func _add_porthole(cell: Vector2i, dir: Vector2i) -> void:
+	var pos := WG.world_pos(cell)
+	var face := pos \
+			+ Vector3(dir.x, 0, dir.y) * (WG.TILE_SIZE * 0.5 - 0.03) \
+			+ Vector3(0, WG.EYE_HEIGHT, 0)
+	var mi := MeshInstance3D.new()
+	var quad := QuadMesh.new()
+	quad.size = Vector2(1.3, 1.3)
+	mi.mesh = quad
+	var mat := _textured_material(_ship_porthole_texture())
+	mat.cull_mode = BaseMaterial3D.CULL_DISABLED
+	mi.material_override = mat
+	mi.position = face
+	# QuadMesh faces +Z; yaw so that normal points along `dir` (into the interior).
+	mi.rotation.y = atan2(float(dir.x), float(dir.y))
+	add_child(mi)
+
+
+func _add_ship_lamp(pos: Vector3) -> void:
+	var light := OmniLight3D.new()
+	light.position = pos + Vector3(0, WG.WALL_HEIGHT - 0.5, 0)
+	light.light_color = Color(1.0, 0.85, 0.6)
+	light.omni_range = 7.5
+	light.light_energy = 1.6
+	add_child(light)
+
+	var lamp := MeshInstance3D.new()
+	var box := BoxMesh.new()
+	box.size = Vector3(0.7, 0.1, 0.7)
+	lamp.mesh = box
+	var mat := StandardMaterial3D.new()
+	mat.albedo_color = Color(1.0, 0.92, 0.72)
+	mat.emission_enabled = true
+	mat.emission = Color(1.0, 0.85, 0.55)
+	mat.emission_energy_multiplier = 1.8
+	lamp.material_override = mat
+	lamp.position = pos + Vector3(0, WG.WALL_HEIGHT - 0.06, 0)
+	add_child(lamp)
+
+
+## Metal plate with a round blue-glass window (cached). Reads as "you're at sea".
+func _ship_porthole_texture() -> ImageTexture:
+	if _shop_tex_cache.has("porthole"):
+		return _shop_tex_cache["porthole"]
+	var img := PixelArt.new_canvas_wh(48, 48)
+	img.fill(Color(0.30, 0.32, 0.36))                      # metal plate
+	var c := Vector2(24, 24)
+	PixelArt.filled_circle(img, c, 21, Color(0.17, 0.18, 0.21))   # recessed shadow
+	PixelArt.filled_circle(img, c, 18, Color(0.58, 0.61, 0.66))   # brass/steel ring
+	PixelArt.filled_circle(img, c, 13, Color(0.24, 0.46, 0.64))   # sea-blue glass
+	PixelArt.filled_circle(img, Vector2(20, 20), 7, Color(0.34, 0.60, 0.78))   # upper sheen
+	PixelArt.filled_circle(img, Vector2(19, 19), 3.2, Color(0.80, 0.90, 0.98))  # glint
+	# Four bolts around the ring.
+	for p in [Vector2(24, 5), Vector2(24, 43), Vector2(5, 24), Vector2(43, 24)]:
+		PixelArt.filled_circle(img, p, 1.6, Color(0.20, 0.21, 0.24))
+	var tex := PixelArt.to_texture(img)
+	_shop_tex_cache["porthole"] = tex
+	return tex
+
+
 func _build_shop_building(cell: Vector2i, pos: Vector3, shop_kind: String) -> void:
 	var is_center := shop_kind == "center"
 	var roof_color := Color(0.86, 0.18, 0.18) if is_center else Color(0.18, 0.4, 0.84)
 	var roof_dark := roof_color.darkened(0.32)
 	var roof_light := roof_color.lightened(0.22)
-	var facing := _shop_approach_facing(cell)
-	_shop_facings[cell] = facing
+	var facing := int(_shop_facings.get(cell, WG.Facing.SOUTH))
 
 	var push := Vector3(-WG.FACING_DIR[facing].x, 0, -WG.FACING_DIR[facing].y) * (WG.TILE_SIZE * 0.38)
 	var root := Node3D.new()
@@ -534,15 +769,15 @@ func _build_window(parent: Node3D, local_pos: Vector3) -> void:
 	_add_box(parent, local_pos - Vector3(0, 0, 0.006), Vector3(0.04, 0.62, 0.01), _flat_material(frame))
 
 
-func _shop_approach_facing(cell: Vector2i) -> int:
+func _shop_approach_facing(g, cell: Vector2i) -> int:
 	var best_facing := WG.Facing.SOUTH
 	var best_score := -1
 	for facing in 4:
 		var dir: Vector2i = WG.FACING_DIR[facing]
 		var n := cell + dir
-		if not grid.tiles.has(n):
+		if not g.tiles.has(n):
 			continue
-		var kind: int = grid.kind_at(n)
+		var kind: int = g.kind_at(n)
 		if kind == WG.TileKind.WALL:
 			continue
 		var score := 1
@@ -829,7 +1064,13 @@ func _maybe_add_prop(cell: Vector2i, zone_id: String) -> void:
 	if (cell.x + cell.y) % 3 != 0:
 		return
 	var side := 1 if (cell.y % 2 == 0) else -1
-	if grid.kind_at(cell + Vector2i(side, 0)) != WG.TileKind.WALL:
+	var wall_cell := cell + Vector2i(side, 0)
+	if grid.kind_at(wall_cell) != WG.TileKind.WALL:
+		return
+	# The prop is offset into the neighbouring barrier cell, so don't plant a tree
+	# or boulder on top of a water/lava pool — it looks like it's growing out of it.
+	var wall_mat := String(grid.material_of.get(wall_cell, ""))
+	if wall_mat == "water" or wall_mat == "lava":
 		return
 	var pos := WG.world_pos(cell) + Vector3(side * (WG.TILE_SIZE * 0.5 + 2.5), 0, 0)
 	match zone_id:
@@ -915,14 +1156,27 @@ func _build_markers(encounters: Array[Dictionary]) -> void:
 	markers.clear()
 	for i in encounters.size():
 		var enc := encounters[i]
-		var enemy_id := String(enc["enemy_id"])
-		var display_name := String(Balance.enemies[enemy_id]["name"])
-		if String(enc["kind"]) == "wild":
-			display_name = "Wild " + display_name
+		# A trainer encounter shows the trainer's portrait + name; a wild shows its Pokemon.
+		var trainer_id := String(enc.get("trainer_id", ""))
+		var sprite_id: String
+		var display_name: String
+		var companions: Array = []
+		if trainer_id != "":
+			sprite_id = TrainerOps.portrait_of(Balance, trainer_id)
+			display_name = TrainerOps.trainer_name(Balance, trainer_id)
+			# Stand the trainer's team beside them (Misty + Starmie, Surge + Raichu…).
+			# Cap the row so a long sequential team doesn't sprawl past the tile.
+			var team: Array = enc.get("team_pool", [])
+			companions = team.slice(0, mini(3, team.size()))
+		else:
+			sprite_id = String(enc["enemy_id"])
+			display_name = String(Balance.enemies[sprite_id]["name"])
+			if String(enc["kind"]) == "wild":
+				display_name = "Wild " + display_name
 		var marker := EncounterMarker.new()
 		add_child(marker)
 		marker.position = WG.world_pos(_encounter_cells[i])
-		marker.setup(i, enemy_id, display_name, _marker_kind_for(enc))
+		marker.setup(i, sprite_id, display_name, _marker_kind_for(enc), companions)
 		markers.append(marker)
 
 

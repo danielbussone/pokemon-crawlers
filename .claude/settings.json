@@ -26,7 +26,13 @@
       "Bash(python -c ' *)",
       "PowerShell(Add-Type -AssemblyName System.Windows.Forms; [System.Windows.Forms.Screen]::PrimaryScreen | Select-Object Bounds, WorkingArea)",
       "Bash(taskkill //F //IM Godot_v4.7-stable_win64.exe)",
-      "Bash(disown)"
+      "Bash(disown)",
+      "Bash(git checkout *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(command -v godot godot4)",
+      "Bash(git diff *)",
+      "Bash(git show *)"
     ]
   }
 }

@@ -6,3 +6,4 @@ export_presets.cfg
 
 # --visualcheck dev-tool output
 .debug_screenshots/
+.simcheck_out.txt

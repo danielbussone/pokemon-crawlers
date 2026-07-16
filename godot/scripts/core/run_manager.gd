@@ -22,8 +22,17 @@ var cleared_optional: Dictionary = {}
 var unlocked_shop_window := 0  # 0 = none, 1 = after Rival, 2 = after Bug Catcher
 var run_over := false
 var run_won := false
+## Whether surfable water is crossable. Freely granted for now; the hook is here to
+## gate it behind a badge/item later (WorldGrid.is_walkable reads this).
+var has_surf := true
+## Dev/debug: build the run with no encounters at all (no wilds, trainers, or leader
+## gates), so the whole stitched world is freely walkable for traversal/visual checks.
+var explore_mode := false
 
 var _active_encounter_idx := -1
+## A trainer encounter is a battle = a chain of 1v1 bouts over the resolved team.
+var _active_team: Array = []   # Pokemon ids fought this battle, in order
+var _active_bout := 0
 
 const STARTER_TYPES := {
 	"bulbasaur": "GRASS",
@@ -113,13 +122,53 @@ func current_encounter() -> Dictionary:
 
 func begin_combat_at(flat_idx: int) -> CombatCtx:
 	_active_encounter_idx = flat_idx
-	prepare_between_encounters()
-	# Rainbow badge (Phase 5b): heal a little at the start of each fight.
-	var heal := BadgeOps.heal_on_combat_start(player.badge_ids, Balance)
-	if heal > 0:
-		player.hp = mini(player.max_hp, player.hp + heal)
 	var enc := encounter_at(flat_idx)
-	return CombatCtx.start(player, String(enc["enemy_id"]), Balance, rng)
+	# Resolve the trainer's team (one_of picks one, sequential is the whole list);
+	# a wild / legacy leader is a 1-Pokemon "team" so combat is unchanged for them.
+	var pool: Array = enc.get("team_pool", [])
+	if pool.is_empty():
+		_active_team = [String(enc["enemy_id"])]
+	else:
+		_active_team = TrainerOps.resolve_team(pool, String(enc.get("team_mode", "sequential")), rng)
+	_active_bout = 0
+	return _start_bout(true)
+
+
+## Whether the current trainer battle has another Pokemon after the current bout.
+func has_next_bout() -> bool:
+	return _active_bout + 1 < _active_team.size()
+
+
+## Send out the trainer's next Pokemon (same player state, combat state reset).
+func begin_next_bout() -> CombatCtx:
+	_active_bout += 1
+	return _start_bout(false)
+
+
+## 1-based (index, total) of the current bout, for the combat UI's "Pokemon i/N".
+func current_bout() -> Vector2i:
+	return Vector2i(_active_bout + 1, maxi(1, _active_team.size()))
+
+
+func _start_bout(first_bout: bool) -> CombatCtx:
+	prepare_between_encounters()
+	# Rainbow badge (Phase 5b): heal a little at the start of the battle (first bout).
+	if first_bout:
+		var heal := BadgeOps.heal_on_combat_start(player.badge_ids, Balance)
+		if heal > 0:
+			player.hp = mini(player.max_hp, player.hp + heal)
+	var pokemon_id := String(_active_team[_active_bout])
+	# Apply any per-map override for this Pokemon (from the owning segment).
+	var seg := _segment_for(String(encounter_at(_active_encounter_idx).get("stage_id", "")))
+	var eff := EnemyResolver.effective_def(Balance, seg, pokemon_id)
+	return CombatCtx.start(player, pokemon_id, Balance, rng, eff)
+
+
+func _segment_for(seg_id: String) -> Dictionary:
+	for seg in Balance.run_config["segments"]:
+		if String(seg["id"]) == seg_id:
+			return seg
+	return {}
 
 
 func begin_combat() -> CombatCtx:
@@ -222,6 +271,11 @@ func _build_encounters() -> void:
 	optional_encounters.clear()
 	var mandatory_slot := 0
 
+	# Explore mode: no encounters, so the world builds with no markers or gates — the
+	# whole map is walkable except for real terrain barriers.
+	if explore_mode:
+		return
+
 	for segment in Balance.run_config["segments"]:
 		var seg_id := String(segment["id"])
 		var reward_key := String(segment["reward_pool_key"])
@@ -233,9 +287,14 @@ func _build_encounters() -> void:
 			for _i in StageLayout.optional_count(Balance, seg_id):
 				var wild_id := String(pool[rng.randi_range(0, pool.size() - 1)])
 				_append_encounter(_make_optional_wild(wild_id, seg_id, reward_key, seg_id))
+		# Route trainers: one opt-in fight per `t` cell, bound in order to the segment's
+		# `trainers` specs (each a trainer + team). Extra `t` cells with no spec are skipped.
+		var trainer_specs: Array = segment.get("trainers", [])
+		for ti in mini(StageLayout.trainer_count(Balance, seg_id), trainer_specs.size()):
+			_append_encounter(_make_route_trainer(trainer_specs[ti], seg_id, reward_key))
 		# A stage with no `L` in its map is a connector — walk through, no gate.
 		if StageLayout.has_leader(Balance, seg_id):
-			_append_encounter(_make_leader_gate(segment, _resolve_leader_id(segment), mandatory_slot))
+			_append_encounter(_make_leader_gate(segment, mandatory_slot))
 			mandatory_slot += 1
 
 
@@ -252,6 +311,9 @@ func _make_optional_wild(enemy_id: String, stage_id: String, reward_pool_key: St
 	return {
 		"kind": kind,
 		"enemy_id": enemy_id,
+		"trainer_id": "",
+		"team_pool": [],
+		"team_mode": "",
 		"stage_id": stage_id,
 		"reward_pool_key": reward_pool_key,
 		"gate_id": gate_id,
@@ -263,6 +325,32 @@ func _make_optional_wild(enemy_id: String, stage_id: String, reward_pool_key: St
 		"shop_window_after": 0,
 		"evolution_after": false,
 		"is_final_boss": false,
+		"placement": "wild",
+	}
+
+
+## An optional route-trainer fight: a trainer (identity) fielding a team of Pokemon.
+## Opt-in like a wild (blocks its own `t` tile until cleared), but gives trainer gold.
+func _make_route_trainer(spec: Dictionary, stage_id: String, reward_pool_key: String) -> Dictionary:
+	var team: Array = spec.get("team", [])
+	return {
+		"kind": "trainer",
+		"enemy_id": String(team[0]) if not team.is_empty() else "",
+		"trainer_id": String(spec.get("trainer", "")),
+		"team_pool": team,
+		"team_mode": String(spec.get("mode", "sequential")),
+		"stage_id": stage_id,
+		"reward_pool_key": reward_pool_key,
+		"gate_id": stage_id,
+		"is_mandatory": false,
+		"is_optional": true,
+		"mandatory_slot": -1,
+		"draft_after": false,
+		"gold": "midboss",
+		"shop_window_after": 0,
+		"evolution_after": false,
+		"is_final_boss": false,
+		"placement": "trainer",
 	}
 
 
@@ -276,12 +364,25 @@ func _resolve_leader_id(segment: Dictionary) -> String:
 	return leader
 
 
-func _make_leader_gate(segment: Dictionary, enemy_id: String, mandatory_slot: int) -> Dictionary:
+func _make_leader_gate(segment: Dictionary, mandatory_slot: int) -> Dictionary:
 	var seg_id := String(segment["id"])
 	var kind := String(segment.get("leader_kind", "trainer"))
+	# A leader with a `leader_team` is a trainer (identity) fielding those Pokemon;
+	# otherwise the leader is itself the single combatant (legacy, back-compatible).
+	var leader_team: Array = segment.get("leader_team", [])
+	var enemy_id: String
+	var trainer_id := ""
+	if not leader_team.is_empty():
+		trainer_id = String(segment["leader"])
+		enemy_id = String(leader_team[0])  # representative Pokemon for name/xp fallbacks
+	else:
+		enemy_id = _resolve_leader_id(segment)
 	return {
 		"kind": kind,
 		"enemy_id": enemy_id,
+		"trainer_id": trainer_id,
+		"team_pool": leader_team,
+		"team_mode": String(segment.get("leader_team_mode", "sequential")),
 		"stage_id": seg_id,
 		"reward_pool_key": String(segment["reward_pool_key"]),
 		"gate_id": seg_id,

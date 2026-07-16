@@ -20,12 +20,13 @@ var slept_this_turn := false      # UI hint: player turn was skipped by Sleep
 
 
 static func start(p_player: PlayerState, enemy_id: String, p_bal,
-		p_rng: RandomNumberGenerator) -> CombatCtx:
+		p_rng: RandomNumberGenerator, def_override: Dictionary = {}) -> CombatCtx:
 	var ctx := CombatCtx.new()
 	ctx.bal = p_bal
 	ctx.rng = p_rng
 	ctx.player = p_player
-	ctx.enemy_def = p_bal.enemies[enemy_id]
+	# A per-map override (from the segment's enemy_overrides) wins over the library def.
+	ctx.enemy_def = def_override if not def_override.is_empty() else p_bal.enemies[enemy_id]
 
 	var e := EnemyState.new()
 	e.hp = int(ctx.enemy_def["max_hp"])

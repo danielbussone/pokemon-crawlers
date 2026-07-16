@@ -35,7 +35,7 @@ var _lunging := false
 
 
 func setup(p_index: int, p_enemy_id: String, display_name: String,
-		p_kind: int = MarkerKind.OPTIONAL) -> void:
+		p_kind: int = MarkerKind.OPTIONAL, companions: Array = []) -> void:
 	encounter_index = p_index
 	enemy_id = p_enemy_id
 	marker_kind = p_kind
@@ -44,16 +44,26 @@ func setup(p_index: int, p_enemy_id: String, display_name: String,
 	add_child(_sprite_group)
 	_sprites.clear()
 
-	var companion := _companion_species_id(p_enemy_id)
-	if companion != "":
+	# Team comes from the encounter (leader_team / route trainer team); fall back to
+	# the legacy id-encoded companion for entries without an explicit team.
+	var partner_ids: Array = companions.duplicate()
+	if partner_ids.is_empty():
+		var legacy := _companion_species_id(p_enemy_id)
+		if legacy != "":
+			partner_ids = [legacy]
+
+	if not partner_ids.is_empty():
 		var trainer := CreatureFactory.build_sprite(p_enemy_id)
 		_sprite_group.add_child(trainer)
 		_sprites.append(trainer)
 
-		var partner := CreatureFactory.build_partner_sprite(companion)
-		_sprite_group.add_child(partner)
-		_sprites.append(partner)
-		_layout_trainer_duo(trainer, partner)
+		var partners: Array[Sprite3D] = []
+		for species in partner_ids:
+			var partner := CreatureFactory.build_partner_sprite(String(species))
+			_sprite_group.add_child(partner)
+			_sprites.append(partner)
+			partners.append(partner)
+		_layout_trainer_group(trainer, partners)
 	else:
 		var solo := CreatureFactory.build_sprite(p_enemy_id)
 		_sprite_group.add_child(solo)
@@ -118,14 +128,27 @@ static func _companion_species_id(p_enemy_id: String) -> String:
 	return ""
 
 
-static func _layout_trainer_duo(trainer: Sprite3D, partner: Sprite3D) -> void:
-	CreatureFactory.center_sprite_on_opaque(trainer)
-	CreatureFactory.center_sprite_on_opaque(partner)
-	var half_t := CreatureFactory.sprite_opaque_half_width(trainer)
-	var half_p := CreatureFactory.sprite_opaque_half_width(partner)
-	var span := half_t + DUO_GAP + half_p
-	trainer.position.x = -span * 0.5
-	partner.position.x = span * 0.5
+## Lay the trainer + their team out in a single centered row, packed edge-to-edge
+## (by opaque width) with a small gap between each. Generalises the old 2-sprite duo.
+static func _layout_trainer_group(trainer: Sprite3D, partners: Array[Sprite3D]) -> void:
+	var row: Array[Sprite3D] = [trainer]
+	for p in partners:
+		row.append(p)
+
+	var halves: Array[float] = []
+	var total := 0.0
+	for spr in row:
+		CreatureFactory.center_sprite_on_opaque(spr)
+		var half := CreatureFactory.sprite_opaque_half_width(spr)
+		halves.append(half)
+		total += half * 2.0
+	total += DUO_GAP * (row.size() - 1)
+
+	var cursor := -total * 0.5
+	for i in row.size():
+		cursor += halves[i]
+		row[i].position.x = cursor
+		cursor += halves[i] + DUO_GAP
 
 
 func set_active(value: bool) -> void:

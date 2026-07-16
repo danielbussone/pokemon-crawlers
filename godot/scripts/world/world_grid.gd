@@ -29,6 +29,7 @@ var tile_meta: Dictionary = {}      # Vector2i -> Dictionary ({encounter_index} 
 var zone_of: Dictionary = {}        # Vector2i -> String (zone id, for wall texture/name lookup)
 var material_of: Dictionary = {}    # Vector2i -> String (cell terrain material / barrier prop)
 var floor_material_of: Dictionary = {} # Vector2i -> String (ground rendered under the cell)
+var surf_cells: Dictionary = {}     # Vector2i -> true (surfable water: walkable only with Surf)
 
 var run_ref  # Run autoload, injected so is_walkable can check live clear state
 
@@ -68,6 +69,10 @@ func is_walkable(cell: Vector2i) -> bool:
 		var required_slot: int = gate_encounter[cell]
 		if run_ref.encounter_index <= required_slot:
 			return false
+	# Surfable water blocks until the run has Surf. Deep water is a WALL (above) and
+	# never crossable. run_ref.has_surf is true for now, so surf water is walkable.
+	if surf_cells.has(cell) and run_ref != null and not run_ref.has_surf:
+		return false
 	return true
 
 

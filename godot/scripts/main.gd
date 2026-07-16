@@ -18,6 +18,24 @@ var _starting := false
 
 
 func _ready() -> void:
+	if OS.get_cmdline_user_args().has("--arttest"):
+		var dir := DirAccess.open("res://art/trainers")
+		print("ARTTEST DirAccess.open: ", dir != null)
+		if dir != null:
+			var files := dir.get_files()
+			print("ARTTEST files count: ", files.size(), "  sample: ", files.slice(0, 4))
+		var img := Image.new()
+		var err := img.load("res://art/trainers/brock.png")
+		print("ARTTEST Image.load err(0=OK): ", err, "  size: ", img.get_size() if err == OK else Vector2i.ZERO)
+		print("ARTTEST ResourceLoader.exists: ", ResourceLoader.exists("res://art/trainers/brock.png"))
+		var res := load("res://art/trainers/brock.png")
+		print("ARTTEST load() result: ", "null" if res == null else str(res.get_class()) + " " + str(res.get_size() if res is Texture2D else ""))
+		var creatures_img := Image.new()
+		print("ARTTEST creatures pikachu Image.load err: ", creatures_img.load("res://art/creatures/pikachu.png"))
+		var t := CreatureArt.get_texture("brock")
+		print("ARTTEST get_texture size: ", "null" if t == null else str(t.get_size()))
+		get_tree().quit()
+		return
 	if OS.get_cmdline_user_args().has("--simcheck"):
 		var engage := SimCheck.DEFAULT_ENGAGEMENT
 		for a in OS.get_cmdline_user_args():
@@ -43,6 +61,12 @@ func _ready() -> void:
 		layer.add_child(editor)
 		return
 	_build_environment()
+	# Explore mode (dev): skip starter select and build a run with no encounters, so
+	# the whole stitched world is walkable for traversal/visual checks.
+	if OS.get_cmdline_user_args().has("--explore"):
+		Run.explore_mode = true
+		_boot_game("squirtle", "boy")
+		return
 	var starter_ui := StarterUI.new()
 	add_child(starter_ui)
 	starter_ui.picked.connect(_on_starter_picked.bind(starter_ui))
@@ -71,7 +95,7 @@ func _build_environment() -> void:
 	env.ambient_light_energy = 1.0
 	env.fog_enabled = true
 	env.fog_light_color = Color(0.75, 0.8, 0.85)
-	env.fog_density = 0.004
+	env.fog_density = 0.01
 	world_env.environment = env
 	add_child(world_env)
 
@@ -115,7 +139,10 @@ func _boot_game(starter_id: String, appearance_id: String) -> void:
 	hud.minimap.grid = world.grid
 	player.tile_entered.connect(hud.minimap.mark_visited)
 	hud.minimap.mark_visited(player.grid_pos, player.facing)
-	hud.toast("Defeat all 13 encounters on the road to Brock!")
+	if Run.explore_mode:
+		hud.toast("Explore mode — no encounters. Walk the whole world.")
+	else:
+		hud.toast("Defeat all 13 encounters on the road to Brock!")
 
 	world.set_active_marker(Run.active_marker_index())
 
@@ -133,6 +160,7 @@ func _on_encounter_triggered(marker: EncounterMarker) -> void:
 	player.set_combat_view(true)
 	var ctx := Run.begin_combat_at(current_marker.encounter_index)
 	combat_ui = CombatUI.new(ctx, marker)
+	combat_ui.bout = Run.current_bout()
 	add_child(combat_ui)
 	combat_ui.finished.connect(_on_combat_finished)
 
@@ -152,6 +180,17 @@ func _snap_player_toward_marker(marker: EncounterMarker) -> void:
 
 
 func _on_combat_finished(win: bool) -> void:
+	# Trainer battle: on a bout win with Pokemon left, send out the next one and stay
+	# in combat (swap the overlay) instead of ending the encounter.
+	if win and Run.has_next_bout():
+		combat_ui.queue_free()
+		var next_ctx := Run.begin_next_bout()
+		combat_ui = CombatUI.new(next_ctx, current_marker)
+		combat_ui.bout = Run.current_bout()
+		add_child(combat_ui)
+		combat_ui.finished.connect(_on_combat_finished)
+		return
+
 	combat_ui.queue_free()
 	combat_ui = null
 	player.set_combat_view(false)
@@ -252,11 +291,9 @@ func _on_shop_entered(window: int, kind: String) -> void:
 		return
 	if Time.get_ticks_msec() < _shop_cooldown_end_ms:
 		return
-	if Run.unlocked_shop_window < window:
-		_shop_cooldown_end_ms = Time.get_ticks_msec() + 2000
-		hud.toast("Closed — beat this stage's trainer first.")
-		return
-
+	# Shops are never leader-gated: they sit where the run is meant to spend, so
+	# reaching one is the only requirement. `window` / Run.unlocked_shop_window are
+	# still tracked, ready to gate behind a toggle if that ever earns its keep.
 	_shop_open = true
 	_shop_entry_cell = player.grid_pos
 	player.frozen = true
