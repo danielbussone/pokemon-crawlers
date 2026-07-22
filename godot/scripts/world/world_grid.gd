@@ -30,6 +30,8 @@ var zone_of: Dictionary = {}        # Vector2i -> String (zone id, for wall text
 var material_of: Dictionary = {}    # Vector2i -> String (cell terrain material / barrier prop)
 var floor_material_of: Dictionary = {} # Vector2i -> String (ground rendered under the cell)
 var surf_cells: Dictionary = {}     # Vector2i -> true (surfable water: walkable only with Surf)
+var roofed_cells: Dictionary = {}   # Vector2i -> true (interior terrain: gets a ceiling)
+var stories_of: Dictionary = {}     # Vector2i -> int (building storeys; absent = material default)
 
 var run_ref  # Run autoload, injected so is_walkable can check live clear state
 

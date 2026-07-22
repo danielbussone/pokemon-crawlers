@@ -14,6 +14,18 @@ static func tier(xp: int, bal) -> int:
 	return count
 
 
+## The player's current evolved species: their starter's line indexed by the number
+## of evolution tiers crossed (clamped to the line). Falls back to the starter id if
+## no line is defined. Drives the party avatar so it evolves with XP.
+static func species(player: PlayerState, bal) -> String:
+	if player == null or player.starter_id == "":
+		return ""
+	var line: Array = bal.starters.get(player.starter_id, {}).get("line", [player.starter_id])
+	if line.is_empty():
+		return player.starter_id
+	return String(line[mini(tier(player.xp, bal), line.size() - 1)])
+
+
 ## Combined starter-line damage multiplier for the player's current XP.
 static func damage_mult(player: PlayerState, bal) -> float:
 	var mult := 1.0

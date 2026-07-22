@@ -2,16 +2,19 @@
   "bulbasaur": {
     "id": "bulbasaur",
     "name": "Bulbasaur",
-    "deck": ["tackle", "tackle", "growl"]
+    "deck": ["tackle", "tackle", "growl"],
+    "line": ["bulbasaur", "ivysaur", "venusaur"]
   },
   "squirtle": {
     "id": "squirtle",
     "name": "Squirtle",
-    "deck": ["tackle", "tackle", "tail_whip"]
+    "deck": ["tackle", "tackle", "tail_whip"],
+    "line": ["squirtle", "wartortle", "blastoise"]
   },
   "charmander": {
     "id": "charmander",
     "name": "Charmander",
-    "deck": ["scratch", "scratch", "growl"]
+    "deck": ["scratch", "scratch", "growl"],
+    "line": ["charmander", "charmeleon", "charizard"]
   }
 }

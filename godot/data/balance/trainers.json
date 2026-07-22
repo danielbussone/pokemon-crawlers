@@ -23,6 +23,7 @@
     { "id": "biker", "name": "Biker", "portrait_id": "biker" },
     { "id": "swimmer", "name": "Swimmer", "portrait_id": "swimmer" },
     { "id": "burglar", "name": "Burglar", "portrait_id": "burglar" },
-    { "id": "cool_trainer", "name": "Cool Trainer", "portrait_id": "cool_trainer" }
+    { "id": "cool_trainer", "name": "Cool Trainer", "portrait_id": "cool_trainer" },
+    { "id": "hiker", "name": "Hiker", "portrait_id": "hiker" }
   ]
 }

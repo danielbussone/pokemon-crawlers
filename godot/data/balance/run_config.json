@@ -80,11 +80,23 @@
     {
       "id": "nugget_bridge",
       "is_final": false,
-      "leader": "brock",
+      "leader": "rival",
       "leader_gold": "midboss",
       "leader_kind": "trainer",
       "reward_pool_key": "stage1",
       "shop_window": 0.0,
+      "trainers": [
+        {
+          "mode": "sequential",
+          "team": [],
+          "trainer": "rocket_grunt"
+        },
+        {
+          "mode": "sequential",
+          "team": [],
+          "trainer": "burglar"
+        }
+      ],
       "wild_pool": [
         "ekans",
         "oddish",
@@ -168,6 +180,12 @@
       "leader": "hiker",
       "leader_gold": "midboss",
       "leader_kind": "trainer",
+      "leader_team": [
+        "geodude",
+        "machop",
+        "onix"
+      ],
+      "leader_team_mode": "sequential",
       "reward_pool_key": "stage1",
       "shop_window": 0.0,
       "wild_pool": [

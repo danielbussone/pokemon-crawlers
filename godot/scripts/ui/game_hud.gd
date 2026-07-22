@@ -20,6 +20,8 @@ var _zone: Label
 var _toast_box: VBoxContainer
 var _minimap_wrap: VBoxContainer
 var _party_layer: CanvasLayer
+var _party_box: HBoxContainer   # [trainer sprite, current-species Pokémon sprite]
+var _party_species := ""        # species the Pokémon avatar currently shows
 
 
 func _ready() -> void:
@@ -91,8 +93,7 @@ func _ready() -> void:
 	portrait_wrap.add_child(party)
 	party.add_child(_make_party_sprite(
 			PortraitFactory.build(Run.trainer_appearance), PARTY_TRAINER_HEIGHT))
-	party.add_child(_make_party_sprite(
-			CreatureArt.get_texture(Run.starter_id), PARTY_POKEMON_HEIGHT))
+	_party_box = party  # the Pokémon sprite is (re)built by refresh(), so it evolves with XP
 
 	var hint := Label.new()
 	hint.text = "WASD/QE — move & strafe.  ← → — turn.  Face a Pokémon to battle.  Walk into a door to shop."
@@ -111,6 +112,18 @@ func _ready() -> void:
 func refresh() -> void:
 	if Run.player == null:
 		return
+	# Evolve the party avatar when XP crosses a tier (rebuild — sprite size is
+	# aspect-dependent, so a texture swap wouldn't resize correctly).
+	var species := StarterEvo.species(Run.player, Balance)
+	if _party_box != null and species != _party_species:
+		_party_species = species
+		while _party_box.get_child_count() > 1:
+			var old := _party_box.get_child(_party_box.get_child_count() - 1)
+			_party_box.remove_child(old)
+			old.queue_free()
+		if species != "":
+			_party_box.add_child(_make_party_sprite(
+					CreatureArt.get_texture(species), PARTY_POKEMON_HEIGHT))
 	var badge_text := "none yet"
 	if not Run.player.badge_ids.is_empty():
 		var names: Array[String] = []

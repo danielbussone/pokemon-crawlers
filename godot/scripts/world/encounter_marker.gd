@@ -21,6 +21,7 @@ var enemy_id := ""
 var marker_kind := MarkerKind.OPTIONAL
 var active := false
 var cleared := false
+var _active_bout := 0  # which team member (0-based) is the current combatant
 
 var _sprite_group: Node3D
 var _sprites: Array[Sprite3D] = []
@@ -171,6 +172,34 @@ func set_active(value: bool) -> void:
 		_label.modulate = Color(1, 1, 1, label_a)
 
 
+## Highlight which team member is the current combatant as a trainer cycles through
+## a sequential team (bout, 0-based): earlier members gray out (defeated), the current
+## is bright, later ones sit dim (waiting). No-op for a solo enemy. `_sprites[0]` is
+## the trainer; `_sprites[1..]` are the team in order.
+func set_active_bout(idx: int) -> void:
+	_active_bout = idx
+	if cleared:
+		return
+	for j in range(1, _sprites.size()):
+		var team_j := j - 1
+		if team_j < idx:
+			_sprites[j].modulate = Color(0.4, 0.4, 0.4, 0.35)  # defeated
+		elif team_j == idx:
+			_sprites[j].modulate = Color(1, 1, 1, 1)           # current
+		else:
+			_sprites[j].modulate = Color(1, 1, 1, 0.6)         # waiting
+
+
+## The sprite being fought right now — the active team member, or the solo enemy.
+func _current_combatant() -> Sprite3D:
+	if _sprites.is_empty():
+		return null
+	if _sprites.size() == 1:
+		return _sprites[0]
+	var i := 1 + _active_bout
+	return _sprites[i] if i < _sprites.size() else _sprites[_sprites.size() - 1]
+
+
 func clear() -> void:
 	cleared = true
 	active = false
@@ -185,19 +214,18 @@ func clear() -> void:
 func hit_flash() -> void:
 	if cleared:
 		return
+	# Only the current combatant flashes, so the team's per-bout dimming survives.
+	var target := _current_combatant()
+	if target == null:
+		return
 	if _flash_tween != null and _flash_tween.is_valid():
 		_flash_tween.kill()
+	target.modulate = Color(1, 1, 1, 1)
 	_flash_tween = create_tween()
-	for spr in _sprites:
-		spr.modulate = Color(1, 1, 1, 1)
-	_flash_tween.set_parallel(true)
-	for spr in _sprites:
-		_flash_tween.tween_property(spr, "modulate", Color(1.0, 0.35, 0.35, 1.0), 0.06) \
-				.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
-	_flash_tween.chain().set_parallel(true)
-	for spr in _sprites:
-		_flash_tween.tween_property(spr, "modulate", Color(1, 1, 1, 1), 0.18) \
-				.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
+	_flash_tween.tween_property(target, "modulate", Color(1.0, 0.35, 0.35, 1.0), 0.06) \
+			.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	_flash_tween.tween_property(target, "modulate", Color(1, 1, 1, 1), 0.18) \
+			.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
 
 
 func attack_lunge() -> void:

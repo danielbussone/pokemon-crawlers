@@ -61,6 +61,12 @@ func _ready() -> void:
 		layer.add_child(editor)
 		return
 	_build_environment()
+	# Single-stage 3D preview (dev): render just one level so rendering changes can be
+	# checked without walking the whole map. `-- --preview=<stage_id>` (map editor button).
+	for a in OS.get_cmdline_user_args():
+		if a.begins_with("--preview="):
+			_boot_preview(a.substr("--preview=".length()))
+			return
 	# Explore mode (dev): skip starter select and build a run with no encounters, so
 	# the whole stitched world is walkable for traversal/visual checks.
 	if OS.get_cmdline_user_args().has("--explore"):
@@ -147,6 +153,31 @@ func _boot_game(starter_id: String, appearance_id: String) -> void:
 	world.set_active_marker(Run.active_marker_index())
 
 
+## Build and walk a single stage (no encounters/gates) to inspect its rendering.
+func _boot_preview(stage_id: String) -> void:
+	Run.start_run("squirtle", "boy")
+	Run.explore_mode = true
+
+	world = WorldMapBuilder.new()
+	add_child(world)
+	world.build_preview(stage_id)
+	world.shop_entered.connect(_on_shop_entered)
+
+	player = PlayerController.new()
+	add_child(player)
+	player.setup(CreatureFactory.type_color(Run.player.ptype))
+	player.grid = world.grid
+	player.tile_entered.connect(world._on_tile_entered)
+	player.warp_to(world.spawn_cell, WorldGrid.Facing.NORTH)
+
+	hud = GameHUD.new()
+	add_child(hud)
+	hud.minimap.grid = world.grid
+	player.tile_entered.connect(hud.minimap.mark_visited)
+	hud.minimap.mark_visited(player.grid_pos, player.facing)
+	hud.toast("Preview: %s — walk to inspect rendering." % stage_id)
+
+
 # --- Combat flow ---
 
 func _on_encounter_triggered(marker: EncounterMarker) -> void:
@@ -161,6 +192,7 @@ func _on_encounter_triggered(marker: EncounterMarker) -> void:
 	var ctx := Run.begin_combat_at(current_marker.encounter_index)
 	combat_ui = CombatUI.new(ctx, marker)
 	combat_ui.bout = Run.current_bout()
+	marker.set_active_bout(Run.current_bout().x - 1)  # highlight the current team member
 	add_child(combat_ui)
 	combat_ui.finished.connect(_on_combat_finished)
 
@@ -187,6 +219,7 @@ func _on_combat_finished(win: bool) -> void:
 		var next_ctx := Run.begin_next_bout()
 		combat_ui = CombatUI.new(next_ctx, current_marker)
 		combat_ui.bout = Run.current_bout()
+		current_marker.set_active_bout(Run.current_bout().x - 1)  # rotate to the next Pokémon
 		add_child(combat_ui)
 		combat_ui.finished.connect(_on_combat_finished)
 		return

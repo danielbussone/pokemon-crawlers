@@ -24,7 +24,12 @@ const VALID_TEMPLATES := [
 
 const VALID_FACINGS := ["north", "east", "south", "west"]
 
+## Legacy barrier glyphs — only used by the legacy `grid` read path.
 const BARRIER_CHARS := ["#", "T", "H", "^", "B", "b", "+", "O", "~", "*", "I"]
+
+## Gameplay markers that sit on walkable terrain (a cell's `object`), independent of
+## its terrain material. Kept distinct from terrain codes so the two never collide.
+const OBJECT_MARKERS := ["S", "X", "c", "m", "w", "t", "L", "D"]
 
 ## Parsed grids, keyed by stage_id. Balance data loads once per session, so this
 ## stays valid for the whole run.
@@ -51,52 +56,76 @@ static func layout_for(bal, stage_id: String) -> Dictionary:
 
 
 ## Normalized cell rows: an Array of rows, each an Array of cell dicts
-## {g: glyph, m: material override ("" = inherit), surf: bool}. Reads the
-## structured `cells` format (each entry a bare glyph string or an object),
-## falling back to the legacy `grid` (row strings of single glyph chars). This is
-## the one place the two on-disk shapes converge; everything else works off the
-## glyph `g` (unchanged semantics) plus these per-cell dicts.
+## {terrain: material, object: marker ("" = none)}. A cell's terrain material is the
+## source of truth (its category decides walk/roof/render); `object` is an optional
+## gameplay marker on walkable terrain. Reads the material-primary `cells` format
+## (a row is a terrain-code string, or an array whose entries are terrain codes /
+## {t, o} objects), and falls back to the legacy `grid`/{g, m} shapes by baking the
+## old glyph+theme into a material.
 static func cell_rows(layout: Dictionary) -> Array:
+	var theme := String(layout.get("template", "open_field"))
 	var out: Array = []
 	if layout.has("cells"):
-		# A row is either a plain glyph string (compact: no overrides) or an array of
-		# cells (each a bare glyph string or a {g, m, ...} object).
 		for row_v in layout["cells"]:
 			var row: Array = []
 			if row_v is String:
 				for ch in String(row_v):
-					row.append(_norm_cell(ch))
+					row.append(_norm_cell(ch, theme))
 			else:
 				for entry in row_v:
-					row.append(_norm_cell(entry))
+					row.append(_norm_cell(entry, theme))
 			out.append(row)
 	else:
+		# Legacy grid: bare glyphs resolved through the theme (material_for).
 		for row_v in layout.get("grid", []):
 			var row: Array = []
 			for ch in String(row_v):
-				row.append(_norm_cell(ch))
+				row.append(_norm_legacy_glyph(String(ch), theme))
 			out.append(row)
 	return out
 
 
-static func _norm_cell(entry) -> Dictionary:
+## Material-primary cell (new format) or a baked legacy {g, m}. `theme` is used only
+## when baking a legacy cell.
+static func _norm_cell(entry, theme: String) -> Dictionary:
 	if entry is Dictionary:
-		return {
-			"g": String(entry.get("g", ".")),
-			"m": String(entry.get("m", "")),
-			"surf": bool(entry.get("surf", false)),
-		}
-	return {"g": String(entry), "m": "", "surf": false}
+		if entry.has("t"):
+			return {"terrain": _resolve_terrain(String(entry["t"])), "object": String(entry.get("o", "")),
+					"stories": int(entry.get("stories", 0))}
+		if entry.has("g"):  # legacy override cell — bake to a material
+			return _norm_legacy_glyph(String(entry["g"]), theme, String(entry.get("m", "")))
+		return {"terrain": ThemePalette.DEFAULT_GROUND, "object": "", "stories": 0}
+	var s := String(entry)
+	if s in OBJECT_MARKERS:  # bare marker (legacy safety) — sits on default ground
+		return {"terrain": ThemePalette.theme_ground(theme), "object": s, "stories": 0}
+	return {"terrain": _resolve_terrain(s), "object": "", "stories": 0}
 
 
-## Bare-glyph rows (each cell's `g`, joined) — the "simplified" ASCII view, used by
-## the char-counting validators and as the editor's readable export.
+## Bake a legacy glyph (+ optional material override) into a {terrain, object} cell.
+static func _norm_legacy_glyph(g: String, theme: String, override_mat: String = "") -> Dictionary:
+	if g in OBJECT_MARKERS:
+		return {"terrain": (override_mat if override_mat != "" else ThemePalette.theme_ground(theme)),
+				"object": g, "stories": 0}
+	return {"terrain": (override_mat if override_mat != "" else ThemePalette.material_for(theme, g)),
+			"object": "", "stories": 0}
+
+
+## A terrain token is a material name (if known) or a 1-char terrain code.
+static func _resolve_terrain(token: String) -> String:
+	if ThemePalette.MATERIALS.has(token):
+		return token
+	return ThemePalette.material_of_code(token)
+
+
+## Per-cell rows of a single char each: the object marker if present, else the
+## terrain code. The "simplified" grid view used by the editor's structural checks.
 static func glyph_rows(layout: Dictionary) -> Array:
 	var out: Array = []
 	for row in cell_rows(layout):
 		var s := ""
 		for c in row:
-			s += String(c["g"])
+			var obj := String(c["object"])
+			s += obj if obj != "" else ThemePalette.code_of_material(String(c["terrain"]))
 		out.append(s)
 	return out
 
@@ -121,10 +150,12 @@ static func parsed(bal, stage_id: String) -> Dictionary:
 	var leader := Vector2i(-1, -1)
 	var gym_door := Vector2i(-1, -1)
 	var surf := {}
-	# Cosmetic terrain material per cell (Phase 7): a per-cell `m` override wins,
-	# else the override char, else the theme default. `material` = the cell itself
-	# (barrier prop for barriers, floor tint for walkable); `floor_material` = the
-	# ground rendered under it (theme ground under a tree, theme floor under `_`).
+	var roofed := {}
+	var stories := {}
+	# Per-cell terrain: `material` is the cell's own material (the barrier prop for a
+	# barrier, the floor tint for walkable ground); `floor_material` is the ground
+	# rendered under it (itself when walkable, a neutral ground under a barrier). The
+	# material's category decides walk (≠barrier), roof (interior), and appearance.
 	var theme := String(layout.get("template", "open_field"))
 	var material := {}
 	var floor_material := {}
@@ -133,26 +164,24 @@ static func parsed(bal, stage_id: String) -> Dictionary:
 		var row: Array = rows[y]
 		for x in row.size():
 			var c: Dictionary = row[x]
-			var g := String(c["g"])
-			var override_mat := String(c["m"])
+			var terrain := String(c["terrain"])
+			var obj := String(c["object"])
 			var cell := Vector2i(x, y)
-			var mat := override_mat if override_mat != "" else ThemePalette.material_for(theme, g)
-			material[cell] = mat
-			if g == "_":
-				floor_material[cell] = ThemePalette.theme_floor(theme)
-			elif g in BARRIER_CHARS:
-				floor_material[cell] = ThemePalette.theme_ground(theme)
+			material[cell] = terrain
+			if ThemePalette.is_walkable_material(terrain):
+				walkable[cell] = true
+				floor_material[cell] = terrain
+				if ThemePalette.is_roofed_material(terrain):  # interior → gets a ceiling
+					roofed[cell] = true
+				if terrain == "water_surf":  # walkable, gated by a surf ability
+					surf[cell] = true
 			else:
-				floor_material[cell] = mat
-			if g in BARRIER_CHARS:
 				blocked.append(cell)
-				continue
-			walkable[cell] = true
-			# Surf water is walkable ground gated by a surf ability (glyph `s`, or an
-			# explicit surf flag). Recorded so is_walkable can enforce it later.
-			if g == "s" or bool(c["surf"]):
-				surf[cell] = true
-			match g:
+				floor_material[cell] = ThemePalette.theme_ground(theme)  # ground under the prop
+			var st := int(c.get("stories", 0))  # per-cell building storeys (0 = material default)
+			if st > 0:
+				stories[cell] = st
+			match obj:
 				"S": spawn = cell
 				"X": exit_cell = cell
 				"c": shops["center"] = cell
@@ -161,7 +190,6 @@ static func parsed(bal, stage_id: String) -> Dictionary:
 				"t": trainer_cells.append(cell)
 				"L": leader = cell
 				"D": gym_door = cell
-				"_": gym_floor.append(cell)
 
 	# `exit_gate` is the authored `X` and nothing else — it is the cell this stage's
 	# leader holds shut. `exit` keeps the legacy meaning (falling back to the leader
@@ -186,6 +214,8 @@ static func parsed(bal, stage_id: String) -> Dictionary:
 		"material": material,
 		"floor_material": floor_material,
 		"surf": surf,
+		"roofed": roofed,
+		"stories": stories,
 	}
 	_cache[stage_id] = result
 	return result
@@ -194,6 +224,16 @@ static func parsed(bal, stage_id: String) -> Dictionary:
 ## Local cells that are surfable water (walkable, gated by a surf ability).
 static func surf_cells_local(bal, stage_id: String) -> Dictionary:
 	return parsed(bal, stage_id)["surf"]
+
+
+## Local building cells with an explicit storey count (cell -> int).
+static func stories_local(bal, stage_id: String) -> Dictionary:
+	return parsed(bal, stage_id)["stories"]
+
+
+## Local cells whose terrain is an interior material — these get a ceiling.
+static func roofed_cells_local(bal, stage_id: String) -> Dictionary:
+	return parsed(bal, stage_id)["roofed"]
 
 
 static func spawn_local(bal, stage_id: String) -> Vector2i:
@@ -373,19 +413,28 @@ static func _validate_stage(bal, layouts: Dictionary, stage_id: String, is_first
 			"Invalid gate_facing in stage '%s'" % stage_id)
 	assert(has_world_pos(bal, stage_id), "Stage '%s' has no world_pos" % stage_id)
 
-	var rows := glyph_rows(layout)
-	assert(not rows.is_empty(), "Stage '%s' has no grid" % stage_id)
-	var width := String(rows[0]).length()
-	assert(width > 0, "Stage '%s' grid row 0 is empty" % stage_id)
+	var rows := cell_rows(layout)
+	assert(not rows.is_empty(), "Stage '%s' has no cells" % stage_id)
+	var width: int = (rows[0] as Array).size()
+	assert(width > 0, "Stage '%s' row 0 is empty" % stage_id)
 	var s_count := 0
 	var l_count := 0
 	var x_count := 0
 	for row_v in rows:
-		var row := String(row_v)
-		assert(row.length() == width, "Stage '%s' has ragged grid rows" % stage_id)
-		s_count += row.count("S")
-		l_count += row.count("L")
-		x_count += row.count("X")
+		var row: Array = row_v
+		assert(row.size() == width, "Stage '%s' has ragged rows" % stage_id)
+		for c in row:
+			var obj := String(c["object"])
+			if obj == "":
+				continue
+			# A marker must sit on walkable terrain, or it can never be reached/used.
+			assert(ThemePalette.is_walkable_material(String(c["terrain"])),
+					"Stage '%s': object '%s' is on non-walkable terrain '%s'"
+							% [stage_id, obj, c["terrain"]])
+			match obj:
+				"S": s_count += 1
+				"L": l_count += 1
+				"X": x_count += 1
 
 	# Stages are stitched into one world by `world_pos`, so only the run's first
 	# stage needs an entry point: one spawn for the whole world, none elsewhere.
@@ -412,30 +461,35 @@ static func _validate_stage(bal, layouts: Dictionary, stage_id: String, is_first
 static func _validate_world(bal, ids: Array[String]) -> void:
 	if ids.is_empty():
 		return
-	var world := {}     # world cell -> glyph
-	var owner := {}     # world cell -> stage_id that stamped it
+	var walk := {}      # world cell -> true (walkable terrain)
+	var owner := {}     # world cell -> stage_id that stamped it (walkable or barrier)
 	var clashed := {}
 	for stage_id in ids:
 		var origin := world_pos_of(bal, stage_id)
-		var grid := glyph_rows(layout_for(bal, stage_id))
-		for y in grid.size():
-			var row := String(grid[y])
-			for x in row.length():
-				var cell := local_to_world(Vector2i(x, y), origin)
-				# The builder stamps in run order, so a later stage silently
-				# overwrites the tiles an earlier one authored here.
-				if owner.has(cell) and not clashed.has(stage_id):
-					clashed[stage_id] = true
-					push_warning("Stage '%s' overlaps '%s' at world cell %s; '%s' overwrites those tiles."
-							% [stage_id, owner[cell], cell, stage_id])
-				world[cell] = row[x]
-				owner[cell] = stage_id
+		var p := parsed(bal, stage_id)
+		# The builder stamps in run order, so a later stage silently overwrites the
+		# tiles an earlier one authored here. Every cell (walkable or barrier) counts.
+		for local_cell in p["walkable"]:
+			var wc := local_to_world(local_cell, origin)
+			if owner.has(wc) and not clashed.has(stage_id):
+				clashed[stage_id] = true
+				push_warning("Stage '%s' overlaps '%s' at world cell %s; '%s' overwrites those tiles."
+						% [stage_id, owner[wc], wc, stage_id])
+			walk[wc] = true
+			owner[wc] = stage_id
+		for local_cell in p["blocked"]:
+			var wc := local_to_world(local_cell, origin)
+			if owner.has(wc) and not clashed.has(stage_id):
+				clashed[stage_id] = true
+				push_warning("Stage '%s' overlaps '%s' at world cell %s; '%s' overwrites those tiles."
+						% [stage_id, owner[wc], wc, stage_id])
+			owner[wc] = stage_id
 
 	var spawn := local_to_world(spawn_local(bal, ids[0]), world_pos_of(bal, ids[0]))
-	assert(world.has(spawn), "Run spawn %s falls outside the stitched world" % spawn)
+	assert(walk.has(spawn), "Run spawn %s is not walkable in the stitched world" % spawn)
 
 	# Nothing the run needs may be sealed off once every gate is open.
-	var open := _flood_world(world, spawn, {}, 0)
+	var open := _flood_world(walk, spawn, {}, 0)
 	for stage_id in ids:
 		var origin := world_pos_of(bal, stage_id)
 		var p := parsed(bal, stage_id)
@@ -449,14 +503,14 @@ static func _validate_world(bal, ids: Array[String]) -> void:
 			assert(open.has(local_to_world(p["shops"][kind], origin)),
 					"Stage '%s': %s is sealed off" % [stage_id, kind])
 
-	_validate_progression(bal, ids, world, spawn)
+	_validate_progression(bal, ids, walk, spawn)
 
 
 ## Walk the run in mandatory order with leader gates enforced exactly as
 ## WorldGrid.is_walkable enforces them: a leader tile stays solid until its own
 ## slot is cleared. Catches a leader authored physically behind a later one,
 ## which strands the run with no legal move.
-static func _validate_progression(bal, ids: Array[String], world: Dictionary,
+static func _validate_progression(bal, ids: Array[String], walk: Dictionary,
 		spawn: Vector2i) -> void:
 	var gates := {}     # world cell -> the mandatory slot that clears it
 	var arcs: Array[Dictionary] = []
@@ -478,7 +532,7 @@ static func _validate_progression(bal, ids: Array[String], world: Dictionary,
 	var pos := spawn
 	for slot in arcs.size():
 		var arc: Dictionary = arcs[slot]
-		var reached := _flood_world(world, pos, gates, slot)
+		var reached := _flood_world(walk, pos, gates, slot)
 		assert(reached.has(arc["trigger"]),
 				"Progression: leader %d ('%s') is unreachable when its turn comes; it sits behind a later leader's gate, so the run strands here."
 						% [slot, arc["stage_id"]])
@@ -493,10 +547,10 @@ static func _validate_progression(bal, ids: Array[String], world: Dictionary,
 		pos = arc["trigger"]
 
 
-## Flood the stitched world from `start`. A gate cell is impassable while
-## `encounter_index <= its slot`, mirroring WorldGrid.is_walkable; pass an empty
-## `gates` to flood with every gate open.
-static func _flood_world(world: Dictionary, start: Vector2i, gates: Dictionary,
+## Flood the walkable map `walk` (world cell -> true) from `start`. A gate cell is
+## impassable while `encounter_index <= its slot`, mirroring WorldGrid.is_walkable;
+## pass an empty `gates` to flood with every gate open.
+static func _flood_world(walk: Dictionary, start: Vector2i, gates: Dictionary,
 		encounter_index: int) -> Dictionary:
 	var seen := {start: true}
 	var frontier: Array[Vector2i] = [start]
@@ -504,9 +558,7 @@ static func _flood_world(world: Dictionary, start: Vector2i, gates: Dictionary,
 		var cell: Vector2i = frontier.pop_back()
 		for dir in [Vector2i(0, 1), Vector2i(0, -1), Vector2i(1, 0), Vector2i(-1, 0)]:
 			var n: Vector2i = cell + dir
-			if seen.has(n) or not world.has(n):
-				continue
-			if String(world[n]) in BARRIER_CHARS:
+			if seen.has(n) or not walk.has(n):
 				continue
 			if gates.has(n) and encounter_index <= int(gates[n]):
 				continue

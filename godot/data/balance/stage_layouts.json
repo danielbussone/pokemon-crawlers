@@ -1,494 +1,212 @@
 {
-  "_legend": "Phase 7 map format (structured cells). Each stage's `cells` is a list of rows; a row is either a plain glyph string (compact, no per-cell overrides) or a list of cells, where a cell is a bare glyph string or an object {\"g\": glyph, \"m\": material}. `m` overrides a cell's cosmetic material regardless of glyph or theme (a wild on water, dirt kept brown in a building area). Legacy `grid` (bare-glyph strings) is still read as a fallback. Every stage is stitched into a single shared world at its `world_pos` (map editor World View), so a stage's cells are frequently reachable only through its neighbour. Terrain glyphs are cosmetic and theme-relative (see docs/TERRAIN_PALETTE.md); walkability is decided here. Barriers: # wall, T tree, H hedge, ^ mountain, B/b building, O boulder, + railing, I pillar, ~ deep water (non-surfable), * lava. Walkable terrain: . ground, ; tall grass, , dirt, = road, : sand, s surf water (walkable, gated by a surf ability), _ interior/gym floor. Objects (walkable): S run spawn (first segment only; exactly one in the whole world), X exit gate (opened by this stage's leader; a stage with no leader is never gated), c center, m mart, w wild encounter (only spawns if the segment has a non-empty `wild_pool`), t route trainer (only spawns if the segment has a `trainers` spec), L leader gate, D gym door. A leader's trigger cell is the tile south of `L` and the arc faces north; the gate blocks only the `L` tile itself until its slot is cleared, so progression must be gated by map chokepoints.",
+  "_legend": "Material-primary map format. Each stage's `cells` is a list of rows; a row is either a terrain-code string (compact) or a list of cells, where a cell is a terrain code or a {\"t\": material, \"o\": marker} object. A cell's terrain MATERIAL is the source of truth: its category decides walkability (barrier blocks), roof (interior is roofed), and appearance. Object markers (o): S run spawn (first segment only), X exit gate, c center, m mart, w wild, t route trainer, L leader, D gym door — they sit on walkable terrain. Terrain codes map to materials in ThemePalette.MATERIAL_CODE. Legacy `grid`/{g,m} cells are still read as a fallback. Stitched into one world at each stage's `world_pos`.",
   "stages": {
     "celadon": {
       "cells": [
         [
+          "#",
+          "#",
+          "#",
+          "#",
           {
-            "g": "B",
-            "m": "building_small"
+            "stories": 6,
+            "t": "building_brick"
           },
           {
-            "g": "B",
-            "m": "building_small"
+            "stories": 6,
+            "t": "building_brick"
           },
           {
-            "g": "B",
-            "m": "building_small"
+            "stories": 6,
+            "t": "building_brick"
           },
           {
-            "g": "B",
-            "m": "building_small"
+            "stories": 6,
+            "t": "building_brick"
           },
           {
-            "g": "B",
-            "m": "building_large"
+            "stories": 6,
+            "t": "building_brick"
+          },
+          "#",
+          {
+            "stories": 3,
+            "t": "building_brick"
           },
           {
-            "g": "B",
-            "m": "building_large"
+            "stories": 3,
+            "t": "building_brick"
           },
           {
-            "g": "B",
-            "m": "building_large"
+            "stories": 3,
+            "t": "building_brick"
           },
-          {
-            "g": "B",
-            "m": "building_large"
-          },
-          {
-            "g": "B",
-            "m": "building_large"
-          },
-          {
-            "g": "B",
-            "m": "building_small"
-          },
-          {
-            "g": "B",
-            "m": "building_large"
-          },
-          {
-            "g": "B",
-            "m": "building_large"
-          },
-          {
-            "g": "B",
-            "m": "building_large"
-          },
-          {
-            "g": "B",
-            "m": "building_small"
-          },
-          {
-            "g": "B",
-            "m": "building_small"
-          },
-          {
-            "g": "B",
-            "m": "building_small"
-          },
-          {
-            "g": "B",
-            "m": "building_small"
-          },
-          {
-            "g": "B",
-            "m": "building_small"
-          },
-          {
-            "g": "B",
-            "m": "building_small"
-          },
-          {
-            "g": "B",
-            "m": "building_small"
-          }
+          "#",
+          "#",
+          "#",
+          "#",
+          "#",
+          "#",
+          "#"
         ],
         [
+          "#",
+          "p",
+          "p",
+          "p",
           {
-            "g": "B",
-            "m": "building_small"
-          },
-          ".",
-          ".",
-          ".",
-          {
-            "g": "B",
-            "m": "building_large"
+            "stories": 6,
+            "t": "building_brick"
           },
           {
-            "g": "B",
-            "m": "building_large"
+            "stories": 6,
+            "t": "building_brick"
           },
           {
-            "g": "B",
-            "m": "building_large"
+            "stories": 6,
+            "t": "building_brick"
           },
           {
-            "g": "B",
-            "m": "building_large"
+            "stories": 6,
+            "t": "building_brick"
           },
           {
-            "g": "B",
-            "m": "building_large"
+            "stories": 6,
+            "t": "building_brick"
           },
-          ".",
+          "p",
           {
-            "g": "B",
-            "m": "building_large"
-          },
-          {
-            "g": "B",
-            "m": "building_large"
+            "stories": 3,
+            "t": "building_brick"
           },
           {
-            "g": "B",
-            "m": "building_large"
+            "stories": 3,
+            "t": "building_brick"
           },
-          ".",
-          ".",
-          ".",
-          ".",
-          ".",
-          ".",
           {
-            "g": "B",
-            "m": "building_small"
-          }
+            "stories": 3,
+            "t": "building_brick"
+          },
+          "p",
+          "p",
+          "p",
+          "p",
+          "p",
+          "p",
+          "#"
         ],
         [
+          "#",
+          "p",
+          "p",
+          "p",
           {
-            "g": "B",
-            "m": "building_small"
-          },
-          ".",
-          ".",
-          ".",
-          {
-            "g": "B",
-            "m": "building_large"
+            "stories": 6,
+            "t": "building_brick"
           },
           {
-            "g": "B",
-            "m": "building_large"
+            "stories": 6,
+            "t": "building_brick"
           },
           {
-            "g": "B",
-            "m": "building_large"
+            "stories": 6,
+            "t": "building_brick"
           },
           {
-            "g": "B",
-            "m": "building_large"
+            "stories": 6,
+            "t": "building_brick"
           },
           {
-            "g": "B",
-            "m": "building_large"
+            "stories": 6,
+            "t": "building_brick"
           },
-          ".",
+          "p",
           {
-            "g": "B",
-            "m": "building_large"
-          },
-          {
-            "g": "B",
-            "m": "building_large"
+            "stories": 3,
+            "t": "building_brick"
           },
           {
-            "g": "B",
-            "m": "building_large"
+            "stories": 3,
+            "t": "building_brick"
           },
-          ".",
-          "c",
-          ".",
-          "m",
-          ".",
-          ".",
           {
-            "g": "B",
-            "m": "building_small"
-          }
+            "stories": 3,
+            "t": "building_brick"
+          },
+          "p",
+          {
+            "o": "c",
+            "t": "pavement"
+          },
+          "p",
+          {
+            "o": "m",
+            "t": "pavement"
+          },
+          "p",
+          "p",
+          "#"
         ],
+        "#pppppppppppppppppp#",
+        "#===================",
+        "#=bbbbbppppppp=pppp#",
         [
           {
-            "g": "B",
-            "m": "building_small"
-          },
-          ".",
-          ".",
-          ".",
-          ".",
-          ".",
-          ".",
-          ".",
-          ".",
-          ".",
-          ".",
-          ".",
-          ".",
-          ".",
-          ".",
-          ".",
-          ".",
-          ".",
-          ".",
-          {
-            "g": "B",
-            "m": "building_small"
-          }
-        ],
-        [
-          {
-            "g": "B",
-            "m": "building_small"
+            "o": "X",
+            "t": "road"
           },
           "=",
-          "=",
-          "=",
-          "=",
-          "=",
-          "=",
-          "=",
-          "=",
-          "=",
-          "=",
-          "=",
-          "=",
-          "=",
-          "=",
-          "=",
-          "=",
-          "=",
-          "=",
-          "="
-        ],
-        [
+          "b",
+          "e",
           {
-            "g": "B",
-            "m": "building_small"
+            "o": "L",
+            "t": "marble"
           },
+          "e",
+          "b",
+          "p",
+          "p",
+          "p",
+          "p",
+          "p",
+          "p",
+          "p",
           "=",
-          "#",
-          "#",
-          "#",
-          "#",
-          "#",
-          ".",
-          ".",
-          ".",
-          ".",
-          ".",
-          ".",
-          ".",
-          "=",
-          ".",
-          ".",
-          ".",
-          ".",
-          {
-            "g": "B",
-            "m": "building_small"
-          }
+          "p",
+          "p",
+          "p",
+          "p",
+          "#"
         ],
+        "#pbeeebppppppp=pppp#",
         [
-          "X",
-          "=",
           "#",
-          "_",
-          "L",
-          "_",
-          "#",
-          ".",
-          ".",
-          ".",
-          ".",
-          ".",
-          ".",
-          ".",
-          "=",
-          ".",
-          ".",
-          ".",
-          ".",
-          {
-            "g": "B",
-            "m": "building_small"
-          }
-        ],
-        [
-          {
-            "g": "B",
-            "m": "building_small"
-          },
-          ".",
-          "#",
-          "_",
-          "_",
-          "_",
-          "#",
-          ".",
-          ".",
-          ".",
-          ".",
-          ".",
-          ".",
-          ".",
-          "=",
-          ".",
-          ".",
-          ".",
-          ".",
-          {
-            "g": "B",
-            "m": "building_small"
-          }
-        ],
-        [
-          {
-            "g": "B",
-            "m": "building_small"
-          },
           "H",
-          "#",
-          "#",
-          "D",
-          "#",
-          "#",
-          ".",
-          ".",
-          ".",
-          ".",
-          ".",
-          ".",
-          ".",
-          "=",
-          ".",
-          ".",
-          ".",
-          ".",
+          "b",
+          "b",
           {
-            "g": "B",
-            "m": "building_small"
-          }
+            "o": "D",
+            "t": "pavement"
+          },
+          "b",
+          "b",
+          "p",
+          "p",
+          "p",
+          "p",
+          "p",
+          "p",
+          "p",
+          "=",
+          "p",
+          "p",
+          "p",
+          "p",
+          "#"
         ],
-        [
-          {
-            "g": "B",
-            "m": "building_small"
-          },
-          ".",
-          ".",
-          ".",
-          "=",
-          "=",
-          "=",
-          "=",
-          "=",
-          "=",
-          "=",
-          "=",
-          "=",
-          "=",
-          "=",
-          ".",
-          ".",
-          ".",
-          ".",
-          {
-            "g": "B",
-            "m": "building_small"
-          }
-        ],
-        [
-          {
-            "g": "B",
-            "m": "building_small"
-          },
-          ".",
-          ".",
-          ".",
-          ".",
-          ".",
-          ".",
-          ".",
-          ".",
-          ".",
-          ".",
-          ".",
-          ".",
-          ".",
-          ".",
-          ".",
-          ".",
-          ".",
-          ".",
-          {
-            "g": "B",
-            "m": "building_small"
-          }
-        ],
-        [
-          {
-            "g": "B",
-            "m": "building_small"
-          },
-          {
-            "g": "B",
-            "m": "building_small"
-          },
-          {
-            "g": "B",
-            "m": "building_small"
-          },
-          {
-            "g": "B",
-            "m": "building_small"
-          },
-          {
-            "g": "B",
-            "m": "building_small"
-          },
-          {
-            "g": "B",
-            "m": "building_small"
-          },
-          {
-            "g": "B",
-            "m": "building_small"
-          },
-          {
-            "g": "B",
-            "m": "building_small"
-          },
-          {
-            "g": "B",
-            "m": "building_small"
-          },
-          {
-            "g": "B",
-            "m": "building_small"
-          },
-          {
-            "g": "B",
-            "m": "building_small"
-          },
-          {
-            "g": "B",
-            "m": "building_small"
-          },
-          {
-            "g": "B",
-            "m": "building_small"
-          },
-          {
-            "g": "B",
-            "m": "building_small"
-          },
-          {
-            "g": "B",
-            "m": "building_small"
-          },
-          {
-            "g": "B",
-            "m": "building_small"
-          },
-          {
-            "g": "B",
-            "m": "building_small"
-          },
-          {
-            "g": "B",
-            "m": "building_small"
-          },
-          {
-            "g": "B",
-            "m": "building_small"
-          },
-          {
-            "g": "B",
-            "m": "building_small"
-          }
-        ]
+        "#ppp===========pppp#",
+        "#pppppppppppppppppp#",
+        "####################"
       ],
       "display_name": "Celadon City",
       "gate_facing": "north",
@@ -506,26 +224,125 @@
     },
     "cerulean": {
       "cells": [
-        "~~~~~~=~~~#####~~~~~",
-        "~~~~~~=~~~#_L_#~~~~~",
-        "~~~~~~=~~~#___#~~~~~",
-        "~~~~~~=~~~#___#~~~~~",
-        "~~~~~~=~~~##D##~~~~~",
-        "~~~~~~=~~~~~=~~~~~~~",
-        "H.....=.....=......H",
-        "H..c..=..m..=......H",
-        "H.....=======......H",
-        "H..........=.......H",
-        "H..........=.......H",
-        "HHHHHHHHHHHXHHHHHHHH"
+        "~~~~~~d~~~bbbbb~~~~~",
+        [
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "d",
+          "~",
+          "~",
+          "~",
+          "b",
+          "e",
+          {
+            "o": "L",
+            "t": "marble"
+          },
+          "e",
+          "b",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~"
+        ],
+        "~~~~~~d~~~beeeb~~~~~",
+        "~~~~~~d~~~beeeb~~~~~",
+        [
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "d",
+          "~",
+          "~",
+          "~",
+          "b",
+          "b",
+          {
+            "o": "D",
+            "t": "pavement"
+          },
+          "b",
+          "b",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~"
+        ],
+        "~~~~~~d~~~~~=~~~~~~~",
+        "Hppppp=ppppp=ppppppH",
+        [
+          "H",
+          "p",
+          "p",
+          {
+            "o": "c",
+            "t": "pavement"
+          },
+          "p",
+          "p",
+          "=",
+          "p",
+          "p",
+          {
+            "o": "m",
+            "t": "pavement"
+          },
+          "p",
+          "p",
+          "=",
+          "p",
+          "p",
+          "p",
+          "p",
+          "p",
+          "p",
+          "H"
+        ],
+        "Hpp==========ppppppH",
+        "Hpppppppppp=pppppppH",
+        "Hpppppppppp=pppppppH",
+        [
+          "H",
+          "H",
+          "H",
+          "H",
+          "H",
+          "H",
+          "H",
+          "H",
+          "H",
+          "H",
+          "H",
+          {
+            "o": "X",
+            "t": "pavement"
+          },
+          "H",
+          "H",
+          "H",
+          "H",
+          "H",
+          "H",
+          "H",
+          "H"
+        ]
       ],
       "display_name": "Cerulean City",
       "gate_facing": "north",
       "gym_name": "Cerulean Gym",
       "id": "cerulean",
       "shop_windows": {
-        "center": 1.0,
-        "mart": 2.0
+        "center": 1,
+        "mart": 2
       },
       "template": "town_pocket",
       "world_pos": [
@@ -535,17 +352,84 @@
     },
     "cinnabar": {
       "cells": [
-        "~~,##X##,,,,",
-        "~~,#*L*#,,,,",
-        "~~,#*_*#,,,,",
-        "~~,##D##,,==",
+        [
+          "~",
+          "~",
+          ",",
+          "^",
+          "^",
+          {
+            "o": "X",
+            "t": "marble"
+          },
+          "^",
+          "^",
+          ",",
+          ",",
+          ",",
+          ","
+        ],
+        [
+          "~",
+          "~",
+          ",",
+          "^",
+          "*",
+          {
+            "o": "L",
+            "t": "marble"
+          },
+          "*",
+          "^",
+          ",",
+          ",",
+          ",",
+          ","
+        ],
+        "~~,^*e*^,,,,",
+        [
+          "~",
+          "~",
+          ",",
+          "^",
+          "^",
+          {
+            "o": "D",
+            "t": "ash"
+          },
+          "^",
+          "^",
+          ",",
+          ",",
+          "=",
+          "="
+        ],
         "~~,,,=,,,,=,",
         "~~,,,======,",
-        "~~,,,,,,=,,,",
-        "~~,c,m,,=,,*",
-        "~~,======,,*",
-        "~~,,,,,,,,**",
-        "~~~~~~~~~~~~",
+        "~~,,,,,,=,aa",
+        [
+          "~",
+          "~",
+          ",",
+          {
+            "o": "c",
+            "t": "ash"
+          },
+          ",",
+          {
+            "o": "m",
+            "t": "ash"
+          },
+          ",",
+          ",",
+          "=",
+          "a",
+          "a",
+          "*"
+        ],
+        "~~,======aO*",
+        "~~aaaaaaaa**",
+        "~~~aa~~~~~~~",
         "~~~~~~~~~~~~"
       ],
       "display_name": "Cinnabar Island",
@@ -564,36 +448,36 @@
     },
     "cycling_road": {
       "cells": [
-        "#########",
-        "#.......B",
-        "#.......B",
-        "#...=====",
-        "#...=...B",
-        "#...=...B",
-        "#...=...#",
-        "#.=====.#",
-        "#.=~~~=.#",
-        "#.=~~~=.#",
-        "#.=~~~=.#",
-        "#.=~~~=.#",
-        "#.=~~~=.#",
-        "#.=~~~=.#",
-        "#.=~~~=.#",
-        "#.=~~~=.#",
-        "#.=~~~=.#",
-        "#.=~~~=.#",
-        "#.=~~~=.#",
-        "#.=~~~=.#",
-        "#.=~~~=.#",
-        "#.=====.#",
-        "#...=...#",
-        "#...=...B",
-        "#...=...B",
-        "#...=====",
-        "#.......B",
-        "#.......B",
-        "#.......#",
-        "#########"
+        "+++++++++",
+        "+.......B",
+        "+.......B",
+        "+...=====",
+        "+...=...B",
+        "+...=...B",
+        "+...=...+",
+        "+.=====.+",
+        "+.=~~~=.+",
+        "+.=~~~=.+",
+        "+.=~~~=.+",
+        "+.=~~~=.+",
+        "+.=~~~=.+",
+        "+.=~~~=.+",
+        "+.=~~~=.+",
+        "+.=~~~=.+",
+        "+.=~~~=.+",
+        "+.=~~~=.+",
+        "+.=~~~=.+",
+        "+.=~~~=.+",
+        "+.=~~~=.+",
+        "+.=====.+",
+        "+...=...+",
+        "+...=...B",
+        "+...=...B",
+        "+...=====",
+        "+.......B",
+        "+.......B",
+        "+.......+",
+        "+++++++++"
       ],
       "display_name": "Cycling Road",
       "gate_facing": "north",
@@ -610,11 +494,22 @@
     },
     "e4_agatha": {
       "cells": [
-        "##_L_##",
-        "#_____#",
-        "#_____#",
-        "#_____#",
-        "###_###"
+        [
+          "n",
+          "n",
+          "e",
+          {
+            "o": "L",
+            "t": "marble"
+          },
+          "e",
+          "n",
+          "n"
+        ],
+        "neeeeen",
+        "neIeIen",
+        "neeeeen",
+        "nnnennn"
       ],
       "display_name": "Indigo Plateau — Agatha",
       "gate_facing": "north",
@@ -632,11 +527,22 @@
     },
     "e4_bruno": {
       "cells": [
-        "##_L_##",
-        "#,___,#",
-        "#,,_,,#",
-        "#,,_,,#",
-        "###_###"
+        [
+          "n",
+          "n",
+          "e",
+          {
+            "o": "L",
+            "t": "marble"
+          },
+          "e",
+          "n",
+          "n"
+        ],
+        "neeeeen",
+        "neIeIen",
+        "neeeeen",
+        "nnnennn"
       ],
       "display_name": "Indigo Plateau — Bruno",
       "gate_facing": "north",
@@ -654,11 +560,22 @@
     },
     "e4_champion": {
       "cells": [
-        "#######",
-        "#__L__#",
-        "#_____#",
-        "#_____#",
-        "###_###"
+        "nnnnnnn",
+        [
+          "n",
+          "e",
+          "e",
+          {
+            "o": "L",
+            "t": "marble"
+          },
+          "e",
+          "e",
+          "n"
+        ],
+        "neeeeen",
+        "neeeeen",
+        "nnnennn"
       ],
       "display_name": "Indigo Plateau — Champion",
       "gate_facing": "north",
@@ -676,11 +593,22 @@
     },
     "e4_lance": {
       "cells": [
-        "##_L_##",
-        "#_____#",
-        "#_____#",
-        "#_____#",
-        "###_###"
+        [
+          "n",
+          "n",
+          "e",
+          {
+            "o": "L",
+            "t": "marble"
+          },
+          "e",
+          "n",
+          "n"
+        ],
+        "neeeeen",
+        "neIeIen",
+        "neeeeen",
+        "nnnennn"
       ],
       "display_name": "Indigo Plateau — Lance",
       "gate_facing": "north",
@@ -698,11 +626,22 @@
     },
     "e4_lorelei": {
       "cells": [
-        "##_L_##",
-        "#~___~#",
-        "#~~_~~#",
-        "#~~_~~#",
-        "###_###"
+        [
+          "n",
+          "n",
+          "e",
+          {
+            "o": "L",
+            "t": "marble"
+          },
+          "e",
+          "n",
+          "n"
+        ],
+        "neeeeen",
+        "neIeIen",
+        "neeeeen",
+        "nnnennn"
       ],
       "display_name": "Indigo Plateau — Lorelei",
       "gate_facing": "north",
@@ -720,17 +659,92 @@
     },
     "fuchsia": {
       "cells": [
-        "BBB#_L_#BBB",
-        "B####D####B",
-        "B....=....B",
-        "B....======",
-        "B..c.=....B",
-        "X=====....B",
-        "B....=....B",
-        "B....=.m..B",
-        "B....===..B",
-        "B.........B",
-        "B.........B",
+        [
+          "B",
+          "B",
+          "B",
+          "b",
+          "e",
+          {
+            "o": "L",
+            "t": "marble"
+          },
+          "e",
+          "b",
+          "B",
+          "B",
+          "B"
+        ],
+        [
+          "B",
+          "b",
+          "b",
+          "b",
+          "b",
+          {
+            "o": "D",
+            "t": "pavement"
+          },
+          "b",
+          "b",
+          "b",
+          "b",
+          "B"
+        ],
+        "Bpppp=ppppB",
+        "Bpppp======",
+        [
+          "B",
+          "p",
+          "p",
+          {
+            "o": "c",
+            "t": "pavement"
+          },
+          "p",
+          "=",
+          "p",
+          "p",
+          "p",
+          "p",
+          "B"
+        ],
+        [
+          {
+            "o": "X",
+            "t": "pavement"
+          },
+          "=",
+          "=",
+          "=",
+          "=",
+          "=",
+          "p",
+          "p",
+          "p",
+          "p",
+          "B"
+        ],
+        "Bpppp=ppppB",
+        [
+          "B",
+          "p",
+          "p",
+          "p",
+          "p",
+          "=",
+          "p",
+          {
+            "o": "m",
+            "t": "pavement"
+          },
+          "p",
+          "p",
+          "B"
+        ],
+        "Bpppp===ppB",
+        "BpppppppppB",
+        "BpppppppppB",
         "BBBBBBBBBBB"
       ],
       "display_name": "Fuchsia City",
@@ -749,25 +763,73 @@
     },
     "game_corner": {
       "cells": [
-        "############",
-        "#_______#w..",
-        "#_______#...",
-        "#_______#...",
-        "________#...",
-        "#_______#.,,",
-        "####_####.,.",
+        "nnnnnnnnnzzz",
+        [
+          "n",
+          "i",
+          "i",
+          "i",
+          "i",
+          "i",
+          "i",
+          "i",
+          "n",
+          {
+            "o": "w",
+            "t": "tall_grass"
+          },
+          ";",
+          ";"
+        ],
+        "niiiiiiin;;;",
+        "niiiiiiin;;;",
+        "iiiiiiiin...",
+        "niiiiiiin.,,",
+        "nnnninnnn.,.",
         "....,.....,.",
-        "w...,.....,.",
-        "....,,,,,,,.",
-        ".......w....",
-        "............"
+        [
+          {
+            "o": "w",
+            "t": "tall_grass"
+          },
+          ";",
+          ";",
+          ".",
+          ",",
+          ".",
+          ".",
+          ".",
+          ".",
+          ".",
+          ",",
+          "."
+        ],
+        ";;;.,,,,,,,.",
+        [
+          ";",
+          ";",
+          ";",
+          ";",
+          ";",
+          ";",
+          ";",
+          {
+            "o": "w",
+            "t": "tall_grass"
+          },
+          ";",
+          ";",
+          ";",
+          "."
+        ],
+        ";;;;;;;;;;;."
       ],
       "display_name": "Celadon Game Corner",
       "gate_facing": "north",
       "id": "game_corner",
       "shop_windows": {
-        "center": 1.0,
-        "mart": 2.0
+        "center": 1,
+        "mart": 2
       },
       "template": "corporate",
       "world_pos": [
@@ -777,33 +839,446 @@
     },
     "lavendar_town": {
       "cells": [
-        "###=############",
-        "#..=.....#_____#",
-        "#..=.....#______",
-        "#..=.....#_#####",
-        "#..=.....#____w#",
-        "#..=.....#_____#",
-        "#..=.....#_____#",
-        "#..=.....#####_#",
-        "#..=.....#w____#",
-        "#..=.....#_____#",
-        "#..=.....#_____#",
-        "#..=.....#_#####",
-        "#..=.....#____w#",
-        "#..=.....#_____#",
-        "#..=.....#_____#",
-        "#..=.c.m.###_###",
-        "#..==========..#",
-        "#..............#",
-        "#..............#",
+        [
+          "^",
+          "^",
+          "^",
+          "=",
+          "^",
+          "^",
+          "^",
+          "^",
+          "^",
+          {
+            "stories": 1,
+            "t": "building_brick"
+          },
+          {
+            "stories": 3,
+            "t": "building_brick"
+          },
+          {
+            "stories": 3,
+            "t": "building_brick"
+          },
+          {
+            "stories": 3,
+            "t": "building_brick"
+          },
+          {
+            "stories": 3,
+            "t": "building_brick"
+          },
+          {
+            "stories": 3,
+            "t": "building_brick"
+          },
+          {
+            "stories": 3,
+            "t": "building_brick"
+          }
+        ],
+        [
+          "^",
+          "p",
+          "p",
+          "=",
+          "p",
+          "p",
+          "p",
+          "p",
+          "p",
+          {
+            "stories": 1,
+            "t": "building_brick"
+          },
+          "i",
+          "i",
+          "i",
+          "i",
+          "i",
+          {
+            "stories": 3,
+            "t": "building_brick"
+          }
+        ],
+        [
+          "^",
+          "p",
+          "p",
+          "=",
+          "p",
+          "p",
+          "p",
+          "p",
+          "p",
+          {
+            "stories": 1,
+            "t": "building_brick"
+          },
+          "i",
+          "i",
+          "i",
+          "i",
+          "i",
+          "i"
+        ],
+        [
+          "^",
+          "p",
+          "p",
+          "=",
+          "p",
+          "p",
+          "p",
+          "p",
+          "p",
+          {
+            "stories": 1,
+            "t": "building_brick"
+          },
+          "i",
+          "n",
+          "n",
+          "n",
+          "n",
+          {
+            "stories": 3,
+            "t": "building_brick"
+          }
+        ],
+        [
+          "#",
+          "p",
+          "p",
+          "=",
+          "p",
+          "p",
+          "p",
+          "p",
+          "p",
+          {
+            "stories": 1,
+            "t": "building_brick"
+          },
+          "i",
+          "i",
+          "i",
+          "i",
+          {
+            "o": "w",
+            "t": "tile"
+          },
+          {
+            "stories": 3,
+            "t": "building_brick"
+          }
+        ],
+        [
+          "#",
+          "p",
+          "p",
+          "=",
+          "p",
+          "p",
+          "p",
+          "p",
+          "p",
+          {
+            "stories": 1,
+            "t": "building_brick"
+          },
+          "i",
+          "i",
+          "i",
+          "i",
+          "i",
+          {
+            "stories": 3,
+            "t": "building_brick"
+          }
+        ],
+        [
+          "#",
+          "p",
+          "p",
+          "=",
+          "p",
+          "p",
+          "p",
+          "p",
+          "p",
+          {
+            "stories": 1,
+            "t": "building_brick"
+          },
+          "i",
+          "i",
+          "i",
+          "i",
+          "i",
+          {
+            "stories": 3,
+            "t": "building_brick"
+          }
+        ],
+        [
+          "#",
+          "p",
+          "p",
+          "=",
+          "p",
+          "p",
+          "p",
+          "p",
+          "p",
+          {
+            "stories": 1,
+            "t": "building_brick"
+          },
+          "n",
+          "n",
+          "n",
+          "n",
+          "i",
+          {
+            "stories": 3,
+            "t": "building_brick"
+          }
+        ],
+        [
+          "#",
+          "p",
+          "p",
+          "=",
+          "p",
+          {
+            "stories": 3,
+            "t": "building_wood"
+          },
+          "p",
+          {
+            "stories": 2,
+            "t": "building_brick"
+          },
+          "p",
+          {
+            "stories": 1,
+            "t": "building_brick"
+          },
+          {
+            "o": "w",
+            "t": "tile"
+          },
+          "i",
+          "i",
+          "i",
+          "i",
+          {
+            "stories": 3,
+            "t": "building_brick"
+          }
+        ],
+        [
+          "#",
+          "p",
+          "p",
+          "=",
+          "=",
+          "=",
+          "=",
+          "=",
+          "p",
+          {
+            "stories": 1,
+            "t": "building_brick"
+          },
+          "i",
+          "i",
+          "i",
+          "i",
+          "i",
+          {
+            "stories": 3,
+            "t": "building_brick"
+          }
+        ],
+        [
+          "#",
+          "p",
+          "p",
+          "=",
+          "p",
+          "p",
+          "p",
+          "p",
+          "p",
+          {
+            "stories": 1,
+            "t": "building_brick"
+          },
+          "i",
+          "i",
+          "i",
+          "i",
+          "i",
+          {
+            "stories": 3,
+            "t": "building_brick"
+          }
+        ],
+        [
+          "#",
+          "p",
+          "p",
+          "=",
+          "p",
+          "p",
+          "p",
+          "p",
+          "p",
+          {
+            "stories": 1,
+            "t": "building_brick"
+          },
+          "i",
+          "n",
+          "n",
+          "n",
+          "n",
+          {
+            "stories": 3,
+            "t": "building_brick"
+          }
+        ],
+        [
+          "#",
+          "p",
+          "p",
+          "=",
+          "p",
+          {
+            "o": "m",
+            "t": "pavement"
+          },
+          "p",
+          "p",
+          "p",
+          {
+            "stories": 1,
+            "t": "building_brick"
+          },
+          "i",
+          "i",
+          "i",
+          "i",
+          {
+            "o": "w",
+            "t": "tile"
+          },
+          {
+            "stories": 3,
+            "t": "building_brick"
+          }
+        ],
+        [
+          "#",
+          "p",
+          "p",
+          "=",
+          "=",
+          "=",
+          "=",
+          "p",
+          "p",
+          {
+            "stories": 1,
+            "t": "building_brick"
+          },
+          "i",
+          "i",
+          "i",
+          "i",
+          "i",
+          {
+            "stories": 3,
+            "t": "building_brick"
+          }
+        ],
+        [
+          "#",
+          "p",
+          "p",
+          "=",
+          "p",
+          "p",
+          "p",
+          "p",
+          "p",
+          {
+            "stories": 1,
+            "t": "building_brick"
+          },
+          "i",
+          "i",
+          "i",
+          "i",
+          "i",
+          {
+            "stories": 3,
+            "t": "building_brick"
+          }
+        ],
+        [
+          "#",
+          "p",
+          "p",
+          "=",
+          "p",
+          {
+            "o": "c",
+            "t": "pavement"
+          },
+          "p",
+          "p",
+          "p",
+          {
+            "stories": 1,
+            "t": "building_brick"
+          },
+          {
+            "stories": 1,
+            "t": "building_brick"
+          },
+          {
+            "stories": 1,
+            "t": "building_brick"
+          },
+          "i",
+          {
+            "stories": 3,
+            "t": "building_brick"
+          },
+          {
+            "stories": 3,
+            "t": "building_brick"
+          },
+          {
+            "stories": 3,
+            "t": "building_brick"
+          }
+        ],
+        "#pp==========pp#",
+        "#pppppppppppppp#",
+        "#pppppppppppppp#",
         "################"
       ],
       "display_name": "Lavendar Town",
       "gate_facing": "north",
       "id": "lavendar_town",
       "shop_windows": {
-        "center": 1.0,
-        "mart": 2.0
+        "center": 1,
+        "mart": 2
       },
       "template": "town_pocket",
       "world_pos": [
@@ -813,222 +1288,58 @@
     },
     "mansion": {
       "cells": [
+        "nnnnnnnnnO",
         [
-          "#",
-          "#",
-          "#",
-          "#",
-          "#",
-          "#",
-          "#",
-          "#",
-          "#",
+          "n",
           {
-            "g": ",",
-            "m": "dirt"
-          }
+            "o": "w",
+            "t": "wood"
+          },
+          "o",
+          "o",
+          "o",
+          "o",
+          "o",
+          "o",
+          "n",
+          ","
         ],
+        "nooooooon,",
+        "oooooooon,",
+        "nooooooon,",
         [
-          "#",
-          "w",
-          "_",
-          "_",
-          "_",
-          "_",
-          "_",
-          "_",
-          "#",
+          "n",
+          "o",
+          "o",
+          "o",
+          "o",
+          "o",
+          "o",
           {
-            "g": ",",
-            "m": "dirt"
-          }
+            "o": "w",
+            "t": "wood"
+          },
+          "n",
+          ","
         ],
-        [
-          "#",
-          "_",
-          "_",
-          "_",
-          "_",
-          "_",
-          "_",
-          "_",
-          "#",
-          {
-            "g": ",",
-            "m": "dirt"
-          }
-        ],
-        [
-          "_",
-          "_",
-          "_",
-          "_",
-          "_",
-          "_",
-          "_",
-          "_",
-          "#",
-          {
-            "g": ",",
-            "m": "dirt"
-          }
-        ],
-        [
-          "#",
-          "_",
-          "_",
-          "_",
-          "_",
-          "_",
-          "_",
-          "_",
-          "#",
-          {
-            "g": ",",
-            "m": "dirt"
-          }
-        ],
-        [
-          "#",
-          "_",
-          "_",
-          "_",
-          "_",
-          "_",
-          "_",
-          "w",
-          "#",
-          {
-            "g": ",",
-            "m": "dirt"
-          }
-        ],
-        [
-          "#",
-          "#",
-          "#",
-          "#",
-          "_",
-          "#",
-          "#",
-          "#",
-          "#",
-          {
-            "g": ",",
-            "m": "dirt"
-          }
-        ],
+        "nnnnonnnn,",
+        "*a,,,,,,,,",
         [
           "*",
           {
-            "g": ",",
-            "m": "dirt"
+            "o": "w",
+            "t": "ash"
           },
-          {
-            "g": ",",
-            "m": "dirt"
-          },
-          {
-            "g": ",",
-            "m": "dirt"
-          },
-          {
-            "g": ",",
-            "m": "dirt"
-          },
-          {
-            "g": ",",
-            "m": "dirt"
-          },
-          {
-            "g": ",",
-            "m": "dirt"
-          },
-          {
-            "g": ",",
-            "m": "dirt"
-          },
-          {
-            "g": ",",
-            "m": "dirt"
-          },
-          {
-            "g": ",",
-            "m": "dirt"
-          }
+          "a",
+          ",",
+          ",",
+          ",",
+          ",",
+          ",",
+          ",",
+          ","
         ],
-        [
-          "*",
-          "w",
-          {
-            "g": ",",
-            "m": "dirt"
-          },
-          {
-            "g": ",",
-            "m": "dirt"
-          },
-          {
-            "g": ",",
-            "m": "dirt"
-          },
-          {
-            "g": ",",
-            "m": "dirt"
-          },
-          {
-            "g": ",",
-            "m": "dirt"
-          },
-          {
-            "g": ",",
-            "m": "dirt"
-          },
-          {
-            "g": ",",
-            "m": "dirt"
-          },
-          {
-            "g": ",",
-            "m": "dirt"
-          }
-        ],
-        [
-          "*",
-          "*",
-          {
-            "g": ",",
-            "m": "dirt"
-          },
-          {
-            "g": ",",
-            "m": "dirt"
-          },
-          {
-            "g": ",",
-            "m": "dirt"
-          },
-          {
-            "g": ",",
-            "m": "dirt"
-          },
-          {
-            "g": ",",
-            "m": "dirt"
-          },
-          {
-            "g": ",",
-            "m": "dirt"
-          },
-          {
-            "g": ",",
-            "m": "dirt"
-          },
-          {
-            "g": ",",
-            "m": "dirt"
-          }
-        ],
+        "**aa,,O,,,",
         "~~~~~~~~~~",
         "~~~~~~~~~~"
       ],
@@ -1048,16 +1359,67 @@
     "mt_moon": {
       "cells": [
         "^^^^^^^^^^^^^",
-        "^,,,,,,,,,^^^",
-        "^,,,,,,,,,w^^",
-        "^,,^^^^^,,,^^",
-        "^,,,,,,^,,,,,",
-        "^w,,,,,^,^^^^",
-        "^^^^^^,^,^w,^",
-        "^^^^^^,^^^,,^",
-        "^,,,,,,,,,,,^",
-        "^,,,,,,,,,,,^",
-        "^^,^^^^^^^^^^"
+        "^vvvvvvvvv^^^",
+        [
+          "^",
+          "v",
+          "v",
+          "v",
+          "v",
+          "v",
+          "v",
+          "v",
+          "v",
+          "v",
+          {
+            "o": "w",
+            "t": "floor_cave"
+          },
+          "^",
+          "^"
+        ],
+        "^vv^^^^^vvv^^",
+        "^vvvvvv^vvvvv",
+        [
+          "^",
+          {
+            "o": "w",
+            "t": "floor_cave"
+          },
+          "v",
+          "v",
+          "v",
+          "v",
+          "v",
+          "^",
+          "v",
+          "^",
+          "^",
+          "^",
+          "^"
+        ],
+        [
+          "^",
+          "^",
+          "^",
+          "^",
+          "^",
+          "^",
+          "v",
+          "^",
+          "v",
+          "^",
+          {
+            "o": "w",
+            "t": "floor_cave"
+          },
+          "v",
+          "^"
+        ],
+        "^^^^^^v^^^vv^",
+        "^vvvvvvvvvvv^",
+        "^vvvvvvvvvvv^",
+        "^^v^^^^^^^^^^"
       ],
       "display_name": "Mt. Moon",
       "gate_facing": "east",
@@ -1077,14 +1439,113 @@
         "HHHHHHHHHHHHH~~~~~~~",
         "H...........H~~~~~~~",
         "H..,,,,.....H~~~~~~~",
-        "H..,~~=~~...H~~~~~~~",
-        "H..,~~=~~...H~~~~~~~",
-        "H..,~~=~~...H~~~~~~~",
-        "Hw.,~~=~~...H~~~~~~~",
-        ",,,,~~=~~...H~~~~~~~",
-        "H...~~=~~...H~~~~~~~",
-        "H...~~=~~w..H~~~~~~~",
-        "H~~~~~=~~~~~~~~~~~~~"
+        "H..,~~d~~...H~~~~~~~",
+        "H..,~~d~~...H~~~~~~~",
+        "H..,~~d~~...H~~~~~~~",
+        [
+          "H",
+          {
+            "o": "w",
+            "t": "grass"
+          },
+          ".",
+          ",",
+          "~",
+          "~",
+          {
+            "o": "t",
+            "t": "dock"
+          },
+          "~",
+          "~",
+          ".",
+          ".",
+          ".",
+          "H",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~"
+        ],
+        ",,,,~~d~~...H~~~~~~~",
+        [
+          "H",
+          ".",
+          ".",
+          ".",
+          "~",
+          "~",
+          {
+            "o": "t",
+            "t": "dock"
+          },
+          "~",
+          "~",
+          ".",
+          ".",
+          ".",
+          "H",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~"
+        ],
+        [
+          "H",
+          ".",
+          ".",
+          ".",
+          "~",
+          "~",
+          "d",
+          "~",
+          "~",
+          {
+            "o": "w",
+            "t": "grass"
+          },
+          ".",
+          ".",
+          "H",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~"
+        ],
+        [
+          "H",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          {
+            "o": "L",
+            "t": "dock"
+          },
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~"
+        ]
       ],
       "display_name": "Nugget Bridge",
       "gate_facing": "south",
@@ -1101,40 +1562,28 @@
     },
     "pallet_revisited": {
       "cells": [
-        "####X####",
-        "#.......#",
-        "#.......#",
-        "#.......#",
-        "#.......#",
-        "#.......#",
-        "####.####",
-        "~.......~",
         [
-          "~",
-          "~",
+          "^",
+          "^",
+          "^",
+          "^",
           {
-            "g": ",",
-            "m": "sand"
+            "o": "X",
+            "t": "grass"
           },
-          {
-            "g": ",",
-            "m": "sand"
-          },
-          {
-            "g": ",",
-            "m": "sand"
-          },
-          {
-            "g": ",",
-            "m": "sand"
-          },
-          {
-            "g": ",",
-            "m": "sand"
-          },
-          "~",
-          "~"
-        ]
+          "^",
+          "^",
+          "^",
+          "^"
+        ],
+        "^.......^",
+        "^.......^",
+        "^.......^",
+        "^.......^",
+        "^.......^",
+        "^^^^.^^^^",
+        "~.......~",
+        "~~:::::~~"
       ],
       "display_name": "Pallet Town (Revisited)",
       "gate_facing": "north",
@@ -1153,288 +1602,81 @@
       "cells": [
         [
           "T",
+          "b",
+          "b",
+          "b",
+          "b",
+          "e",
           {
-            "g": "B",
-            "m": "building_small"
+            "o": "L",
+            "t": "marble"
           },
-          {
-            "g": "B",
-            "m": "building_small"
-          },
-          {
-            "g": "B",
-            "m": "building_small"
-          },
-          "#",
-          "_",
-          "L",
-          "_",
-          "#",
-          {
-            "g": "B",
-            "m": "building_small"
-          },
-          {
-            "g": "B",
-            "m": "building_small"
-          },
-          {
-            "g": "B",
-            "m": "building_small"
-          },
+          "e",
+          "b",
+          "b",
+          "b",
+          "b",
           "^",
           "^",
           "^",
           "^",
           "^"
         ],
+        "Tbbbbeeebbbb^^^^^",
+        "Tbbbbeeebbbb^^^^^",
         [
           "T",
+          "b",
+          "b",
+          "b",
+          "b",
+          "b",
           {
-            "g": "B",
-            "m": "building_small"
+            "o": "D",
+            "t": "pavement"
           },
-          {
-            "g": "B",
-            "m": "building_small"
-          },
-          {
-            "g": "B",
-            "m": "building_small"
-          },
-          "#",
-          "_",
-          "_",
-          "_",
-          "#",
-          {
-            "g": "B",
-            "m": "building_small"
-          },
-          {
-            "g": "B",
-            "m": "building_small"
-          },
-          {
-            "g": "B",
-            "m": "building_small"
-          },
+          "b",
+          "b",
+          "b",
+          "b",
+          "b",
           "^",
           "^",
           "^",
           "^",
           "^"
         ],
+        "Tppppp=ppppp^^^^^",
+        "Tppppp=ppppp^^^^^",
+        "Tppppp=ppppp^^^^^",
         [
           "T",
+          "p",
+          "p",
           {
-            "g": "B",
-            "m": "building_small"
+            "o": "c",
+            "t": "pavement"
           },
+          "p",
+          "p",
+          "=",
+          "p",
+          "p",
           {
-            "g": "B",
-            "m": "building_small"
+            "o": "m",
+            "t": "pavement"
           },
-          {
-            "g": "B",
-            "m": "building_small"
-          },
-          "#",
-          "_",
-          "_",
-          "_",
-          "#",
-          {
-            "g": "B",
-            "m": "building_small"
-          },
-          {
-            "g": "B",
-            "m": "building_small"
-          },
-          {
-            "g": "B",
-            "m": "building_small"
-          },
+          "p",
+          "p",
           "^",
           "^",
           "^",
           "^",
           "^"
         ],
-        "T#####D#####^^^^^",
-        [
-          "T",
-          ".",
-          ".",
-          ".",
-          ".",
-          ".",
-          {
-            "g": "=",
-            "m": "road"
-          },
-          ".",
-          ".",
-          ".",
-          ".",
-          ".",
-          "^",
-          "^",
-          "^",
-          "^",
-          "^"
-        ],
-        [
-          "T",
-          ".",
-          ".",
-          ".",
-          ".",
-          ".",
-          {
-            "g": "=",
-            "m": "road"
-          },
-          ".",
-          ".",
-          ".",
-          ".",
-          ".",
-          "^",
-          "^",
-          "^",
-          "^",
-          "^"
-        ],
-        [
-          "T",
-          ".",
-          ".",
-          ".",
-          ".",
-          ".",
-          {
-            "g": "=",
-            "m": "road"
-          },
-          ".",
-          ".",
-          ".",
-          ".",
-          ".",
-          "^",
-          "^",
-          "^",
-          "^",
-          "^"
-        ],
-        [
-          "T",
-          ".",
-          ".",
-          "c",
-          ".",
-          ".",
-          {
-            "g": "=",
-            "m": "road"
-          },
-          ".",
-          ".",
-          "m",
-          ".",
-          ".",
-          "^",
-          "^",
-          "^",
-          "^",
-          "^"
-        ],
-        [
-          "T",
-          ".",
-          ".",
-          {
-            "g": "=",
-            "m": "road"
-          },
-          {
-            "g": "=",
-            "m": "road"
-          },
-          {
-            "g": "=",
-            "m": "road"
-          },
-          {
-            "g": "=",
-            "m": "road"
-          },
-          {
-            "g": "=",
-            "m": "road"
-          },
-          {
-            "g": "=",
-            "m": "road"
-          },
-          {
-            "g": "=",
-            "m": "road"
-          },
-          ".",
-          ".",
-          "^",
-          "^",
-          "^",
-          "^",
-          "^"
-        ],
-        [
-          "T",
-          ".",
-          ".",
-          ".",
-          ".",
-          ".",
-          {
-            "g": "=",
-            "m": "road"
-          },
-          ".",
-          ".",
-          ".",
-          ".",
-          ".",
-          "^",
-          "^",
-          "^",
-          "^",
-          "^"
-        ],
-        [
-          "T",
-          "T",
-          "T",
-          "T",
-          "T",
-          "T",
-          {
-            "g": "=",
-            "m": "road"
-          },
-          "T",
-          "T",
-          "T",
-          "T",
-          "T",
-          "^",
-          "^",
-          "^",
-          "^",
-          "^"
-        ]
+        "Tpp=======pp^^^^^",
+        "Tppppp=ppppp^^^^^",
+        "TTTTTT=TTTTT^^^^^"
       ],
       "display_name": "Pewter City",
       "gate_facing": "north",
@@ -1453,17 +1695,137 @@
     "rock_tunnel": {
       "cells": [
         "^^^^^^^^^^^^^^^^^^^^",
-        "^,,,,,#,,,,,,,,,,,w^",
-        "^,,,,w#,,,,,,,,,,,,^",
-        "^,,####,,########,,^",
-        "^,,,,,,,,,,,,,,,#,,^",
-        "^###########,,,,#,,^",
-        "^,,,,,,,,,,#,,,,#,,^",
-        ",,,,,,,,,,,#,,,w#,,^",
-        "^,,######,,#,,###,,^",
-        "^,,,,,,w#,,,,,#,,,,^",
-        "^,,,,,,,#,,,,,#,,,,^",
-        "^^^^^^^^^^^^^^^^L^^^"
+        [
+          "^",
+          "v",
+          "v",
+          "v",
+          "v",
+          "v",
+          "^",
+          "v",
+          "v",
+          "v",
+          "v",
+          "v",
+          "v",
+          "v",
+          "v",
+          "v",
+          "v",
+          "v",
+          {
+            "o": "w",
+            "t": "floor_cave"
+          },
+          "^"
+        ],
+        [
+          "^",
+          "v",
+          "v",
+          "v",
+          "v",
+          {
+            "o": "w",
+            "t": "floor_cave"
+          },
+          "^",
+          "v",
+          "v",
+          "v",
+          "v",
+          "v",
+          "v",
+          "v",
+          "v",
+          "v",
+          "v",
+          "v",
+          "v",
+          "^"
+        ],
+        "^vv^^^^vv^^^^^^^^vv^",
+        "^vvvvvvvvvvvvvvv^vv^",
+        "^^^^^^^^^^^^vvvv^vv^",
+        "^vvvvvvvvvv^vvvv^vv^",
+        [
+          "v",
+          "v",
+          "v",
+          "v",
+          "v",
+          "v",
+          "v",
+          "v",
+          "v",
+          "v",
+          "v",
+          "^",
+          "v",
+          "v",
+          "v",
+          {
+            "o": "w",
+            "t": "floor_cave"
+          },
+          "^",
+          "v",
+          "v",
+          "^"
+        ],
+        "^vv^^^^^^vv^vv^^^vv^",
+        [
+          "^",
+          "v",
+          "v",
+          "v",
+          "v",
+          "v",
+          "v",
+          {
+            "o": "w",
+            "t": "floor_cave"
+          },
+          "^",
+          "v",
+          "v",
+          "v",
+          "v",
+          "v",
+          "^",
+          "v",
+          "v",
+          "v",
+          "v",
+          "^"
+        ],
+        "^vvvvvvv^vvvvv^vvvv^",
+        [
+          "^",
+          "^",
+          "^",
+          "^",
+          "^",
+          "^",
+          "^",
+          "^",
+          "^",
+          "^",
+          "^",
+          "^",
+          "^",
+          "^",
+          "^",
+          "^",
+          {
+            "o": "L",
+            "t": "floor_cave"
+          },
+          "^",
+          "^",
+          "^"
+        ]
       ],
       "display_name": "Rock Tunnel",
       "gate_facing": "north",
@@ -1515,303 +1877,70 @@
         "~~~~~~~~~~",
         "~~~~~~~~~~",
         "~~~~~~~~~~",
+        "kkddd~~~~~",
+        "~~~~d~~~~~",
+        "~~~~d~~~~~",
         [
-          {
-            "g": "=",
-            "m": "dock"
-          },
-          {
-            "g": "=",
-            "m": "dock"
-          },
-          {
-            "g": "=",
-            "m": "dock"
-          },
-          {
-            "g": "=",
-            "m": "dock"
-          },
-          {
-            "g": "=",
-            "m": "dock"
-          },
           "~",
-          "~",
+          "d",
+          "d",
+          "d",
+          "d",
+          "d",
+          {
+            "o": "w",
+            "t": "water"
+          },
           "~",
           "~",
           "~"
         ],
+        "~d~~~~~~~~",
+        "~d~~~~~~~~",
+        "~dddddd~~~",
         [
           "~",
-          "~",
-          "~",
-          "~",
           {
-            "g": "=",
-            "m": "dock"
+            "o": "w",
+            "t": "water"
           },
           "~",
           "~",
+          "d",
+          "d",
+          "d",
           "~",
           "~",
           "~"
         ],
+        "~~~~ddd~~~",
+        "~~~~~d~~~~",
+        "~~~~~d~~~~",
+        "~~~~~d~~~~",
+        "...~~d~~~~",
+        "...~~d~~~~",
         [
-          "~",
-          "~",
-          "~",
-          "~",
           {
-            "g": "=",
-            "m": "dock"
+            "o": "w",
+            "t": "grass"
           },
-          "~",
-          "~",
-          "~",
-          "~",
-          "~"
-        ],
-        [
-          "~",
-          {
-            "g": "=",
-            "m": "dock"
-          },
-          {
-            "g": "=",
-            "m": "dock"
-          },
-          {
-            "g": "=",
-            "m": "dock"
-          },
-          {
-            "g": "=",
-            "m": "dock"
-          },
-          {
-            "g": "=",
-            "m": "dock"
-          },
-          "w",
-          "~",
-          "~",
-          "~"
-        ],
-        [
-          "~",
-          {
-            "g": "=",
-            "m": "dock"
-          },
-          "~",
-          "~",
-          "~",
-          "~",
-          "~",
-          "~",
-          "~",
-          "~"
-        ],
-        [
-          "~",
-          {
-            "g": "=",
-            "m": "dock"
-          },
-          "~",
-          "~",
-          "~",
-          "~",
-          "~",
-          "~",
-          "~",
-          "~"
-        ],
-        [
-          "~",
-          {
-            "g": "=",
-            "m": "dock"
-          },
-          {
-            "g": "=",
-            "m": "dock"
-          },
-          {
-            "g": "=",
-            "m": "dock"
-          },
-          {
-            "g": "=",
-            "m": "dock"
-          },
-          {
-            "g": "=",
-            "m": "dock"
-          },
-          "~",
-          "~",
-          "~",
-          "~"
-        ],
-        [
-          "~",
-          "w",
-          "~",
-          "~",
-          "~",
-          {
-            "g": "=",
-            "m": "dock"
-          },
-          "~",
-          "~",
-          "~",
-          "~"
-        ],
-        [
-          "~",
-          "~",
-          "~",
-          "~",
-          "~",
-          {
-            "g": "=",
-            "m": "dock"
-          },
-          "~",
-          "~",
-          "~",
-          "~"
-        ],
-        [
-          "~",
-          "~",
-          "~",
-          "~",
-          "~",
-          {
-            "g": "=",
-            "m": "dock"
-          },
-          "~",
-          "~",
-          "~",
-          "~"
-        ],
-        [
-          "~",
-          "~",
-          "~",
-          "~",
-          "~",
-          {
-            "g": "=",
-            "m": "dock"
-          },
-          "~",
-          "~",
-          "~",
-          "~"
-        ],
-        [
-          "~",
-          "~",
-          "~",
-          "~",
-          "~",
-          {
-            "g": "=",
-            "m": "dock"
-          },
-          "~",
-          "~",
-          "~",
-          "~"
-        ],
-        [
           ".",
           ".",
-          ".",
-          "~",
-          "~",
-          {
-            "g": "=",
-            "m": "dock"
-          },
+          "d",
+          "d",
+          "d",
           "~",
           "~",
           "~",
           "~"
         ],
-        [
-          ".",
-          ".",
-          ".",
-          "~",
-          "~",
-          {
-            "g": "=",
-            "m": "dock"
-          },
-          "~",
-          "~",
-          "~",
-          "~"
-        ],
-        [
-          "w",
-          ".",
-          ".",
-          {
-            "g": "=",
-            "m": "dock"
-          },
-          {
-            "g": "=",
-            "m": "dock"
-          },
-          {
-            "g": "=",
-            "m": "dock"
-          },
-          "~",
-          "~",
-          "~",
-          "~"
-        ],
-        [
-          ".",
-          ".",
-          ".",
-          "~",
-          "~",
-          {
-            "g": "=",
-            "m": "dock"
-          },
-          "~",
-          "~",
-          "~",
-          "~"
-        ],
-        [
-          ".",
-          ".",
-          ".",
-          "~",
-          "~",
-          {
-            "g": "=",
-            "m": "dock"
-          },
-          "~",
-          "~",
-          "~",
-          "~"
-        ],
+        "...~~d~~~~",
+        "...~~d~~~~",
+        "~~~~~d~~~~",
+        "~~~~~d~~~~",
+        "~~~~~d~~~~",
+        "~~~~~d~~~~",
+        "dddddd~~~~",
         [
           "~",
           "~",
@@ -1819,90 +1948,14 @@
           "~",
           "~",
           {
-            "g": "=",
-            "m": "dock"
+            "o": "w",
+            "t": "water"
           },
           "~",
           "~",
           "~",
           "~"
         ],
-        [
-          "~",
-          "~",
-          "~",
-          "~",
-          "~",
-          {
-            "g": "=",
-            "m": "dock"
-          },
-          "~",
-          "~",
-          "~",
-          "~"
-        ],
-        [
-          "~",
-          "~",
-          "~",
-          "~",
-          "~",
-          {
-            "g": "=",
-            "m": "dock"
-          },
-          "~",
-          "~",
-          "~",
-          "~"
-        ],
-        [
-          "~",
-          "~",
-          "~",
-          "~",
-          "~",
-          {
-            "g": "=",
-            "m": "dock"
-          },
-          "~",
-          "~",
-          "~",
-          "~"
-        ],
-        [
-          {
-            "g": "=",
-            "m": "dock"
-          },
-          {
-            "g": "=",
-            "m": "dock"
-          },
-          {
-            "g": "=",
-            "m": "dock"
-          },
-          {
-            "g": "=",
-            "m": "dock"
-          },
-          {
-            "g": "=",
-            "m": "dock"
-          },
-          {
-            "g": "=",
-            "m": "dock"
-          },
-          "~",
-          "~",
-          "~",
-          "~"
-        ],
-        "~~~~~w~~~~",
         "~~~~~~~~~~",
         "~~~~~~~~~~",
         "~~~~~~~~~~",
@@ -1914,8 +1967,8 @@
       "gate_facing": "north",
       "id": "route6_7",
       "shop_windows": {
-        "center": 1.0,
-        "mart": 2.0
+        "center": 1,
+        "mart": 2
       },
       "template": "bridge",
       "world_pos": [
@@ -1925,13 +1978,103 @@
     },
     "route_vermilion": {
       "cells": [
-        "~~~..H.....,..w.H~~~~~~~~~",
-        "~~~..H.....,....H~~~~~~~~~",
-        "~~~..H..w..,,,..H~~~~~~~~~",
+        [
+          "~",
+          "~",
+          "~",
+          ".",
+          ".",
+          "H",
+          ";",
+          ";",
+          ";",
+          ".",
+          ".",
+          ",",
+          ";",
+          ";",
+          {
+            "o": "w",
+            "t": "tall_grass"
+          },
+          ";",
+          "H",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~"
+        ],
+        "~~~..H;;;..,;;;;H~~~~~~~~~",
+        [
+          "~",
+          "~",
+          "~",
+          ".",
+          ".",
+          "H",
+          ";",
+          ";",
+          {
+            "o": "w",
+            "t": "tall_grass"
+          },
+          ".",
+          ".",
+          ",",
+          ",",
+          ",",
+          ".",
+          ".",
+          "H",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~"
+        ],
         "~~~..H~~~~~~~,..H~~~~~~~~~",
         "~~~..H~~~~~~~,..H~~~~~~~~~",
-        "~~~..H....,,,,..H~~~~~~~~~",
-        "~~~..H...w,.....H~~~~~~~~~",
+        "~~~..H;;;;,,,,..H~~~~~~~~~",
+        [
+          "~",
+          "~",
+          "~",
+          ".",
+          ".",
+          "H",
+          ";",
+          ";",
+          ";",
+          {
+            "o": "w",
+            "t": "tall_grass"
+          },
+          ",",
+          ".",
+          ".",
+          ".",
+          ".",
+          ".",
+          "H",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~"
+        ],
         "~~~..HHHHH,HHHHHH~~~~~~~~~",
         "~~~~~~~~~~=~~~~~~~~~~~~~~~"
       ],
@@ -1950,35 +2093,45 @@
     },
     "route_viridian": {
       "cells": [
-        "HHHHHLHHHHH..,~~~~~~~",
         [
           "H",
+          "H",
+          "H",
+          "H",
+          "H",
           {
-            "g": ".",
-            "m": "tall_grass"
+            "o": "L",
+            "t": "grass"
           },
-          {
-            "g": ".",
-            "m": "tall_grass"
-          },
-          {
-            "g": ".",
-            "m": "tall_grass"
-          },
+          "H",
+          "H",
+          "H",
+          "H",
+          "H",
+          ".",
+          ".",
+          ",",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~"
+        ],
+        [
+          "H",
+          ";",
+          ";",
+          ";",
           ".",
           "=",
           ".",
+          ";",
+          ";",
           {
-            "g": ".",
-            "m": "tall_grass"
-          },
-          {
-            "g": ".",
-            "m": "tall_grass"
-          },
-          {
-            "g": "w",
-            "m": "tall_grass"
+            "o": "w",
+            "t": "tall_grass"
           },
           "H",
           ".",
@@ -1995,32 +2148,17 @@
         [
           "H",
           {
-            "g": "w",
-            "m": "tall_grass"
+            "o": "w",
+            "t": "tall_grass"
           },
-          {
-            "g": ".",
-            "m": "tall_grass"
-          },
-          {
-            "g": ".",
-            "m": "tall_grass"
-          },
+          ";",
+          ";",
           ".",
           "=",
           ".",
-          {
-            "g": ".",
-            "m": "tall_grass"
-          },
-          {
-            "g": ".",
-            "m": "tall_grass"
-          },
-          {
-            "g": ".",
-            "m": "tall_grass"
-          },
+          ";",
+          ";",
+          ";",
           "H",
           ".",
           ".",
@@ -2033,45 +2171,29 @@
           "~",
           "~"
         ],
+        "H++++=++++H..,~~~~~~~",
+        "H....=....H..,~~~~~~~",
+        "H....=....H..,~~~~~~~",
+        "H....=....H..,~~~~~~~",
+        "H....=....H..,~~~~~~~",
         [
           "H",
+          "H",
+          "H",
+          "H",
+          "H",
           {
-            "g": "H",
-            "m": "railing"
-          },
-          {
-            "g": "H",
-            "m": "railing"
-          },
-          {
-            "g": "H",
-            "m": "railing"
-          },
-          {
-            "g": "H",
-            "m": "railing"
-          },
-          "=",
-          {
-            "g": "H",
-            "m": "railing"
-          },
-          {
-            "g": "H",
-            "m": "railing"
-          },
-          {
-            "g": "H",
-            "m": "railing"
-          },
-          {
-            "g": "H",
-            "m": "railing"
+            "o": "S",
+            "t": "grass"
           },
           "H",
-          ".",
-          ".",
+          "H",
+          "H",
+          "H",
+          "H",
           ",",
+          ",",
+          "~",
           "~",
           "~",
           "~",
@@ -2080,11 +2202,6 @@
           "~",
           "~"
         ],
-        "H....=....H..,~~~~~~~",
-        "H....=....H..,~~~~~~~",
-        "H....=....H..,~~~~~~~",
-        "H....=....H..,~~~~~~~",
-        "HHHHHSHHHHH,,~~~~~~~~",
         ",,,,,...,,,~~~~~~~~~~",
         "~~~~,,,,,~~~~~~~~~~~~",
         "~~~~~~~~~~~~~~~~~~~~~",
@@ -2111,118 +2228,106 @@
     },
     "saffron": {
       "cells": [
-        "####_L_#####",
-        "#####D######",
-        "#.w..,..w..#",
-        "#.,,,,,,,,.#",
-        ",,,......,.#",
-        "#.,.c..m.,.#",
-        "#.,,,,,,,,.#",
-        "#..........#",
-        "#..........#",
-        "#..........#",
-        "#..........#",
         [
+          "B",
+          "B",
+          "B",
+          "B",
+          "e",
           {
-            "g": ",",
-            "m": "sand"
+            "o": "L",
+            "t": "marble"
           },
-          {
-            "g": ",",
-            "m": "sand"
-          },
-          {
-            "g": ",",
-            "m": "sand"
-          },
-          {
-            "g": ",",
-            "m": "sand"
-          },
-          {
-            "g": ",",
-            "m": "sand"
-          },
-          {
-            "g": ",",
-            "m": "sand"
-          },
-          {
-            "g": ",",
-            "m": "sand"
-          },
-          {
-            "g": ",",
-            "m": "sand"
-          },
-          {
-            "g": ",",
-            "m": "sand"
-          },
-          {
-            "g": ",",
-            "m": "sand"
-          },
-          {
-            "g": ",",
-            "m": "sand"
-          },
-          {
-            "g": ",",
-            "m": "sand"
-          }
+          "e",
+          "B",
+          "B",
+          "B",
+          "B",
+          "B"
         ],
         [
+          "B",
+          "B",
+          "B",
+          "B",
+          "B",
           {
-            "g": ",",
-            "m": "sand"
+            "o": "D",
+            "t": "pavement"
           },
-          {
-            "g": ",",
-            "m": "sand"
-          },
-          {
-            "g": ",",
-            "m": "sand"
-          },
-          {
-            "g": ",",
-            "m": "sand"
-          },
-          {
-            "g": ",",
-            "m": "sand"
-          },
-          {
-            "g": ",",
-            "m": "sand"
-          },
-          {
-            "g": ",",
-            "m": "sand"
-          },
-          {
-            "g": ",",
-            "m": "sand"
-          },
-          {
-            "g": ",",
-            "m": "sand"
-          },
-          {
-            "g": ",",
-            "m": "sand"
-          },
-          {
-            "g": ",",
-            "m": "sand"
-          },
-          {
-            "g": ",",
-            "m": "sand"
-          }
+          "B",
+          "B",
+          "B",
+          "B",
+          "B",
+          "B"
         ],
-        "~~~~~~X~~~~~",
+        [
+          "B",
+          "p",
+          {
+            "o": "w",
+            "t": "pavement"
+          },
+          "p",
+          "p",
+          ",",
+          "p",
+          "p",
+          {
+            "o": "w",
+            "t": "pavement"
+          },
+          "p",
+          "p",
+          "B"
+        ],
+        "Bp,,,,,,,,pB",
+        ",,,pppppp,pB",
+        [
+          "B",
+          "p",
+          ",",
+          "p",
+          {
+            "o": "c",
+            "t": "pavement"
+          },
+          "p",
+          "p",
+          {
+            "o": "m",
+            "t": "pavement"
+          },
+          "p",
+          ",",
+          "p",
+          "B"
+        ],
+        "Bp,,,,,,,,pB",
+        "BppppppppppB",
+        "BppppppppppB",
+        "BppppppppppB",
+        "BppppppppppB",
+        "::::::::::::",
+        "::::::::::::",
+        [
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          "~",
+          {
+            "o": "X",
+            "t": "pavement"
+          },
+          "~",
+          "~",
+          "~",
+          "~",
+          "~"
+        ],
         "~~~~~~s~~~~~",
         "~~~~~~s~~~~~"
       ],
@@ -2231,8 +2336,8 @@
       "gym_name": "Saffron Gym",
       "id": "saffron",
       "shop_windows": {
-        "center": 1.0,
-        "mart": 2.0
+        "center": 1,
+        "mart": 2
       },
       "template": "big_city",
       "world_pos": [
@@ -2245,258 +2350,12 @@
         "~~~~~~~~~~~~~~~~~~~~~~~sss~~~~",
         "~~~~~~~~~~~~~~~~~~~~~~~sss~~~~",
         "~~~~~~~~~~~~~~~~~~~~~~~sss~~~~",
-        [
-          "~",
-          "~",
-          "~",
-          "~",
-          "~",
-          "~",
-          "~",
-          {
-            "g": "s",
-            "m": "dirt"
-          },
-          {
-            "g": "s",
-            "m": "dirt"
-          },
-          "^",
-          "^",
-          "^",
-          "^",
-          "^",
-          "^",
-          "^",
-          "^",
-          "~",
-          "~",
-          "~",
-          "~",
-          "~",
-          "~",
-          "s",
-          "s",
-          "s",
-          "~",
-          "~",
-          "~",
-          "~"
-        ],
-        [
-          "~",
-          "~",
-          "~",
-          "~",
-          "~",
-          "~",
-          "~",
-          {
-            "g": "s",
-            "m": "dirt"
-          },
-          {
-            "g": "s",
-            "m": "dirt"
-          },
-          ",",
-          ",",
-          ",",
-          ",",
-          ",",
-          ",",
-          ",",
-          "^",
-          {
-            "g": "s",
-            "m": "dirt"
-          },
-          {
-            "g": "s",
-            "m": "dirt"
-          },
-          "~",
-          "~",
-          "~",
-          "~",
-          "s",
-          "s",
-          "s",
-          "~",
-          "~",
-          "~",
-          "~"
-        ],
-        [
-          "s",
-          "s",
-          "s",
-          "s",
-          "s",
-          "s",
-          "s",
-          {
-            "g": "s",
-            "m": "dirt"
-          },
-          {
-            "g": "s",
-            "m": "dirt"
-          },
-          "^",
-          ",",
-          ",",
-          ",",
-          ",",
-          ",",
-          ",",
-          "^",
-          {
-            "g": "s",
-            "m": "dirt"
-          },
-          {
-            "g": "s",
-            "m": "dirt"
-          },
-          "~",
-          "~",
-          "~",
-          "~",
-          "s",
-          "s",
-          "s",
-          "~",
-          "~",
-          "~",
-          "~"
-        ],
-        [
-          "s",
-          "s",
-          "s",
-          "s",
-          "s",
-          "s",
-          "s",
-          {
-            "g": "s",
-            "m": "dirt"
-          },
-          {
-            "g": "s",
-            "m": "dirt"
-          },
-          "^",
-          ",",
-          ",",
-          ",",
-          ",",
-          ",",
-          ",",
-          "^",
-          {
-            "g": "s",
-            "m": "dirt"
-          },
-          {
-            "g": "s",
-            "m": "dirt"
-          },
-          "s",
-          "s",
-          "s",
-          "s",
-          "s",
-          "s",
-          "s",
-          "~",
-          "~",
-          "~",
-          "~"
-        ],
-        [
-          "s",
-          "s",
-          "s",
-          "s",
-          "s",
-          "s",
-          "s",
-          {
-            "g": "s",
-            "m": "dirt"
-          },
-          {
-            "g": "s",
-            "m": "dirt"
-          },
-          "^",
-          ",",
-          ",",
-          ",",
-          ",",
-          ",",
-          ",",
-          ",",
-          {
-            "g": "s",
-            "m": "dirt"
-          },
-          {
-            "g": "s",
-            "m": "dirt"
-          },
-          "s",
-          "s",
-          "s",
-          "s",
-          "s",
-          "s",
-          "s",
-          "~",
-          "~",
-          "~",
-          "~"
-        ],
-        [
-          "~",
-          "~",
-          "~",
-          "~",
-          "~",
-          "~",
-          "~",
-          "~",
-          "~",
-          "^",
-          "^",
-          "^",
-          "^",
-          "^",
-          "^",
-          "^",
-          "^",
-          {
-            "g": "s",
-            "m": "dirt"
-          },
-          {
-            "g": "s",
-            "m": "dirt"
-          },
-          "s",
-          "s",
-          "s",
-          "s",
-          "s",
-          "s",
-          "s",
-          "~",
-          "~",
-          "~",
-          "~"
-        ],
+        "~~~~~~~,,^^^^^^^^~~~~~~sss~~~~",
+        "~~~~~~~,,vvvvvvv^,,~~~~sss~~~~",
+        "sssssss,,^vvvvvv^,,~~~~sss~~~~",
+        "sssssss,,^vvvvvv^,,sssssss~~~~",
+        "sssssss,,^vvvvvvv,,sssssss~~~~",
+        "~~~~~~~~~^^^^^^^^,,sssssss~~~~",
         "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
         "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
         "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
@@ -2505,8 +2364,8 @@
       "gate_facing": "north",
       "id": "sea_route",
       "shop_windows": {
-        "center": 1.0,
-        "mart": 2.0
+        "center": 1,
+        "mart": 2
       },
       "template": "open_field",
       "world_pos": [
@@ -2516,13 +2375,26 @@
     },
     "silence_bridge": {
       "cells": [
-        "#########",
-        "B.......#",
-        "B.......#",
-        "L,,,,,,,,",
-        "B.......#",
-        "B.......#",
-        "#########"
+        "+++++++++",
+        "B.......+",
+        "B.......+",
+        [
+          {
+            "o": "L",
+            "t": "planks"
+          },
+          ",",
+          ",",
+          ",",
+          ",",
+          ",",
+          ",",
+          ",",
+          ","
+        ],
+        "B.......+",
+        "B.......+",
+        "+++++++++"
       ],
       "display_name": "Route 12 — Silence Bridge",
       "gate_facing": "north",
@@ -2539,15 +2411,28 @@
     },
     "silph_lower": {
       "cells": [
-        "####L####",
-        "#_______#",
-        "#_______#",
-        "#_______#",
-        "#________",
-        "#_______#",
-        "#_______#",
-        "#_______#",
-        "#########"
+        [
+          "n",
+          "n",
+          "n",
+          "n",
+          {
+            "o": "L",
+            "t": "metal_floor"
+          },
+          "n",
+          "n",
+          "n",
+          "n"
+        ],
+        "niiiiniin",
+        "niiiiniin",
+        "niiinniin",
+        "niinniiii",
+        "niiniiiin",
+        "niiiiiiin",
+        "niiiiiiin",
+        "nnnnnnnnn"
       ],
       "display_name": "Silph Co. — Lower",
       "gate_facing": "north",
@@ -2564,21 +2449,34 @@
     },
     "silph_upper": {
       "cells": [
-        "#########",
-        "#_______#",
-        "#____#__#",
-        "#_####__#",
-        "#____#__#",
-        "L____#__#",
-        "######__#",
-        "#____#__#",
-        "#__#_##_#",
-        "#__#__#_#",
-        "#__####_#",
-        "#_______#",
-        "#__###__#",
-        "#____#__#",
-        "####_####"
+        "nnnnnnnnn",
+        "niiiiiiin",
+        "niiiiiiin",
+        "niiiiiiin",
+        "niiiiiiin",
+        [
+          {
+            "o": "L",
+            "t": "tile"
+          },
+          "i",
+          "i",
+          "i",
+          "i",
+          "i",
+          "i",
+          "i",
+          "n"
+        ],
+        "nnnnnniin",
+        "niiiiniin",
+        "niininnin",
+        "niiniinin",
+        "niinnnnin",
+        "niiiiiiin",
+        "niinnniin",
+        "niiiiniin",
+        "nnnninnnn"
       ],
       "display_name": "Silph Co. — Upper",
       "gate_facing": "north",
@@ -2595,27 +2493,32 @@
     },
     "ss_anne": {
       "cells": [
+        "~~~~~~~~~~d~~~~~~~~~~~~~~~",
+        "~~~zzzzzzzdzzzzzz~~~~~~~~~",
+        "~~~zooooooooooooz~~~~~~~~~",
+        "~~~zooooooooooooz~~~~~~~~~",
+        "~~~zozzzzzzzzzzoz~~~~~~~~~",
         [
           "~",
           "~",
           "~",
-          "~",
-          "~",
-          "~",
-          "~",
-          "~",
-          "~",
-          "~",
+          "z",
+          "o",
+          "o",
+          "o",
+          "o",
+          "o",
+          "o",
+          "o",
+          "o",
           {
-            "g": "=",
-            "m": "dock"
+            "o": "w",
+            "t": "wood"
           },
-          "~",
-          "~",
-          "~",
-          "~",
-          "~",
-          "~",
+          "o",
+          "o",
+          "o",
+          "z",
           "~",
           "~",
           "~",
@@ -2630,23 +2533,23 @@
           "~",
           "~",
           "~",
-          "#",
-          "#",
-          "#",
-          "#",
-          "#",
-          "#",
-          "#",
+          "z",
+          "o",
+          "o",
+          "o",
+          "o",
           {
-            "g": "=",
-            "m": "dock"
+            "o": "w",
+            "t": "wood"
           },
-          "#",
-          "#",
-          "#",
-          "#",
-          "#",
-          "#",
+          "o",
+          "o",
+          "o",
+          "o",
+          "o",
+          "o",
+          "o",
+          "z",
           "~",
           "~",
           "~",
@@ -2657,35 +2560,30 @@
           "~",
           "~"
         ],
-        "~~~#____________#~~~~~~~~~",
-        "~~~#____________#~~~~~~~~~",
-        "~~~#_##########_#~~~~~~~~~",
-        "~~~#________w___#~~~~~~~~~",
-        "~~~#____w_______#~~~~~~~~~",
-        "~~~#_##########_#~~~~~~~~~",
-        "~~~#____________#~~~~~~~~~",
-        "~~~#____________#~~~~~~~~~",
+        "~~~zozzzzzzzzzzoz~~~~~~~~~",
+        "~~~zooooooooooooz~~~~~~~~~",
+        "~~~zooooooooooooz~~~~~~~~~",
         [
           "~",
           "~",
           "~",
-          "#",
-          "#",
-          "#",
-          "#",
-          "#",
-          "#",
-          "#",
+          "z",
+          "z",
+          "z",
+          "z",
+          "z",
+          "z",
+          "z",
           {
-            "g": "L",
-            "m": "dock"
+            "o": "L",
+            "t": "dock"
           },
-          "#",
-          "#",
-          "#",
-          "#",
-          "#",
-          "#",
+          "z",
+          "z",
+          "z",
+          "z",
+          "z",
+          "z",
           "~",
           "~",
           "~",
@@ -2696,37 +2594,7 @@
           "~",
           "~"
         ],
-        [
-          "~",
-          "~",
-          "~",
-          "~",
-          "~",
-          "~",
-          "~",
-          "~",
-          "~",
-          "~",
-          {
-            "g": "=",
-            "m": "dock"
-          },
-          "~",
-          "~",
-          "~",
-          "~",
-          "~",
-          "~",
-          "~",
-          "~",
-          "~",
-          "~",
-          "~",
-          "~",
-          "~",
-          "~",
-          "~"
-        ]
+        "~~~~~~~~~~d~~~~~~~~~~~~~~~"
       ],
       "display_name": "S.S. Anne",
       "gate_facing": "north",
@@ -2744,24 +2612,107 @@
     "vermilion": {
       "cells": [
         "~~~~~~~~~~=~~~~~",
-        "~~~.......=....#",
-        "~~~..c.m..=....#",
-        "~~~.......=....#",
-        "~~~.......=....#",
-        "~~#####...=....#",
-        "~~#_L_#...=....#",
-        "~~#___#========X",
-        "~~##D##=.......#",
-        "~~~.====.......#",
-        "~~~HHHHHHHHHHHH#"
+        [
+          "~",
+          "~",
+          "~",
+          "p",
+          "b",
+          "p",
+          {
+            "o": "c",
+            "t": "pavement"
+          },
+          "p",
+          {
+            "o": "m",
+            "t": "pavement"
+          },
+          "p",
+          "=",
+          "p",
+          "p",
+          "p",
+          "p",
+          "b"
+        ],
+        "~~~p=======ppppb",
+        "~~~ppppppp=p..pb",
+        "~~~ppppppp=p..pb",
+        "~~bbbbbppp=ppppb",
+        [
+          "~",
+          "~",
+          "b",
+          "i",
+          {
+            "o": "L",
+            "t": "pavement"
+          },
+          "i",
+          "b",
+          "p",
+          "p",
+          "p",
+          "=",
+          "p",
+          "p",
+          "p",
+          "p",
+          "b"
+        ],
+        [
+          "~",
+          "~",
+          "b",
+          "i",
+          "i",
+          "i",
+          "b",
+          "=",
+          "=",
+          "=",
+          "=",
+          "=",
+          "=",
+          "=",
+          "=",
+          {
+            "o": "X",
+            "t": "pavement"
+          }
+        ],
+        [
+          "~",
+          "~",
+          "b",
+          "b",
+          {
+            "o": "D",
+            "t": "pavement"
+          },
+          "b",
+          "b",
+          "=",
+          "p",
+          "p",
+          "p",
+          "p",
+          "p",
+          "p",
+          "p",
+          "b"
+        ],
+        "~~~p====pppppppb",
+        "~~~HHHHHHHHHHHHb"
       ],
       "display_name": "Vermilion City",
       "gate_facing": "north",
       "gym_name": "Vermilion Gym",
       "id": "vermilion",
       "shop_windows": {
-        "center": 1.0,
-        "mart": 2.0
+        "center": 1,
+        "mart": 2
       },
       "template": "town_pocket",
       "world_pos": [
@@ -2772,21 +2723,37 @@
     "victory_road": {
       "cells": [
         "####=####",
-        "#.c.=.m.#",
+        [
+          "#",
+          ".",
+          {
+            "o": "c",
+            "t": "rock_floor"
+          },
+          ".",
+          "=",
+          ".",
+          {
+            "o": "m",
+            "t": "rock_floor"
+          },
+          ".",
+          "#"
+        ],
+        "#.=====.#",
         "#...=...#",
         "#...=...#",
-        "#...=...#",
-        "#^^^,^^^#",
-        "#,,,,#,,#",
-        "#,,,,#,,#",
-        "#,,###,,#",
-        "#,,#,,,,#",
-        "#,,,,,,,#",
-        "#,,,,#,,#",
-        "#,,###,,#",
-        "#,,#,,,,#",
-        "#,,#,,,,#",
-        "#^^^,^^^#",
+        "^^^^v^^^^",
+        "^vvvv^vv^",
+        "^vvvv^vv^",
+        "^vv^^^vv^",
+        "^vv^vvvv^",
+        "^vvvvvvv^",
+        "^vvvv^vv^",
+        "^vv^^^vv^",
+        "^vv^vvvv^",
+        "^vv^vvvv^",
+        "^^^^v^^^^",
         "#...=...#",
         "#~~.=...#",
         "#~~.=====",
@@ -2808,14 +2775,65 @@
     },
     "viridian": {
       "cells": [
-        "###########",
-        "#.....#_L_#",
-        "#.....#___#",
-        "X==...#___#",
-        "#.=.cm##D##",
-        "#.=======.#",
-        "#....=....#",
-        "#####=#####"
+        "BBBBBBBBBBB",
+        [
+          "B",
+          "p",
+          "p",
+          "p",
+          "p",
+          "p",
+          "B",
+          "e",
+          {
+            "o": "L",
+            "t": "marble"
+          },
+          "e",
+          "B"
+        ],
+        "BpppppBeeeB",
+        [
+          {
+            "o": "X",
+            "t": "pavement"
+          },
+          "=",
+          "=",
+          "p",
+          "p",
+          "p",
+          "B",
+          "e",
+          "e",
+          "e",
+          "B"
+        ],
+        [
+          "B",
+          "p",
+          "=",
+          "p",
+          {
+            "o": "c",
+            "t": "pavement"
+          },
+          {
+            "o": "m",
+            "t": "pavement"
+          },
+          "B",
+          "B",
+          {
+            "o": "D",
+            "t": "pavement"
+          },
+          "B",
+          "B"
+        ],
+        "Bp=======pB",
+        "Bpppp=ppppB",
+        "BBBBB=BBBBB"
       ],
       "display_name": "Viridian City",
       "gate_facing": "north",
@@ -2833,14 +2851,114 @@
     },
     "viridian_forest": {
       "cells": [
-        "TTTTTTTTTTLTTTTTTTTT~",
+        [
+          "T",
+          "T",
+          "T",
+          "T",
+          "T",
+          "T",
+          "T",
+          "T",
+          "T",
+          "T",
+          {
+            "o": "L",
+            "t": "grass"
+          },
+          "T",
+          "T",
+          "T",
+          "T",
+          "T",
+          "T",
+          "T",
+          "T",
+          "T",
+          "~"
+        ],
         "TTT......T.......TTT~",
         "TTT..T...TTTTTTT.TTT~",
-        "TTT..T......w..T.TTT~",
+        [
+          "T",
+          "T",
+          "T",
+          ".",
+          ".",
+          "T",
+          ".",
+          ".",
+          ".",
+          ".",
+          ".",
+          ".",
+          {
+            "o": "w",
+            "t": "grass"
+          },
+          ".",
+          ".",
+          "T",
+          ".",
+          "T",
+          "T",
+          "T",
+          "~"
+        ],
         "TTT..TTTTTTTT..T.TTT~",
-        "TTT.....w...T....TTT~",
+        [
+          "T",
+          "T",
+          "T",
+          ".",
+          ".",
+          ".",
+          ".",
+          ".",
+          {
+            "o": "w",
+            "t": "grass"
+          },
+          ".",
+          ".",
+          ".",
+          "T",
+          ".",
+          ".",
+          ".",
+          ".",
+          "T",
+          "T",
+          "T",
+          "~"
+        ],
         "TTT.TTTTTT..T....TTT~",
-        "TTT.....wT..TTT..TTT~",
+        [
+          "T",
+          "T",
+          "T",
+          ".",
+          ".",
+          ".",
+          ".",
+          ".",
+          {
+            "o": "w",
+            "t": "grass"
+          },
+          "T",
+          ".",
+          ".",
+          "T",
+          "T",
+          "T",
+          ".",
+          ".",
+          "T",
+          "T",
+          "T",
+          "~"
+        ],
         "TTT......T.......TTT~",
         "TTT..............TTT~",
         "TTTTT.TTTTTTTTTTTTTT~"

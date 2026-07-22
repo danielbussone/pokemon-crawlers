@@ -6,6 +6,7 @@ extends Node3D
 
 const StageLayout = preload("res://scripts/world/stage_layout.gd")
 const WG = preload("res://scripts/world/world_grid.gd")
+const TerrainTex = preload("res://scripts/world/terrain_tex.gd")
 
 ## Tiny 5x7 block font, just the glyphs shop signage needs ("P.C" / "MART").
 const _SIGN_GLYPHS := {
@@ -33,24 +34,23 @@ var _ship_bounds: Array = []            # [{origin, size}] of ship stages, for l
 var _boss_cell := Vector2i.ZERO
 var _wall_tex_cache: Dictionary = {}
 var _shop_tex_cache: Dictionary = {}
-var _prop_rng := RandomNumberGenerator.new()
+var _terrain_mat_cache: Dictionary = {}  # material name -> textured StandardMaterial3D
+var _terrain_tex_cache: Dictionary = {}  # material name -> Texture2D (override PNG or procedural)
 var _prev_stage_exit_world := Vector2i.ZERO
 var _shop_facings: Dictionary = {}   # shop cell -> approach facing
 var _shop_body_cells: Dictionary = {}  # cell behind a shop door -> true (solid building body)
 var _encounter_triggers_enabled := true
 var _exit_gate_cells: Dictionary = {}  # mandatory slot -> world cell of its `X` gate
 var _exit_gate_props: Dictionary = {}  # mandatory slot -> Node3D holding that gate's prop
+var _preview_stage_id := ""  # non-empty → _build_grid stamps only this stage (editor 3D preview)
 
 
 func build(encounters: Array[Dictionary]) -> void:
-	_prop_rng.seed = 20260704  # visual scatter only; fixed for a stable map
 	grid = _build_grid(encounters)
 	_warn_unreachable_encounters()
 
 	for cell in grid.tiles.keys():
 		_instance_tile(cell, grid.tiles[cell])
-	for cell in grid.tiles.keys():
-		_maybe_add_prop(cell, String(grid.zone_of.get(cell, "")))
 	for b in _forest_bounds:
 		_add_forest_backdrop(b["origin"], b["size"])
 	for b in _ship_bounds:
@@ -66,8 +66,33 @@ func build(encounters: Array[Dictionary]) -> void:
 ## Data-only grid build for the headless sim harness: produces the maze layout
 ## (tiles, encounter cells, spawn) without instancing any 3D geometry.
 func build_grid_only(encounters: Array[Dictionary]) -> void:
-	_prop_rng.seed = 20260704
 	grid = _build_grid(encounters)
+
+
+## Build one stage's geometry at the origin — no encounters, gates, or markers — for
+## the map editor's 3D render preview (walk a level to check rendering fast).
+func build_preview(stage_id: String) -> void:
+	_preview_stage_id = stage_id
+	build([])
+	_preview_stage_id = ""
+	# Only the run's first stage carries an `S`; any other spawns on a walkable cell.
+	if not grid.is_walkable(spawn_cell):
+		spawn_cell = _preview_spawn_fallback(stage_id)
+
+
+## A walkable start cell nearest the stage's centre (for stages with no `S`).
+func _preview_spawn_fallback(stage_id: String) -> Vector2i:
+	var centre := Vector2(StageLayout.size_local(Balance, stage_id)) * 0.5
+	var best := Vector2i.ZERO
+	var best_d := INF
+	for cell in grid.tiles.keys():
+		if not grid.is_walkable(cell):
+			continue
+		var d := Vector2(cell).distance_squared_to(centre)
+		if d < best_d:
+			best_d = d
+			best = cell
+	return best
 
 
 func zone_name_for_cell(cell: Vector2i) -> String:
@@ -180,11 +205,17 @@ func _build_grid(encounters: Array[Dictionary]):
 	var stage_origin := Vector2i.ZERO
 	var first_stage := true
 
-	for stage_id in StageLayout.stage_ids_in_order(Balance):
+	var stage_ids := StageLayout.stage_ids_in_order(Balance)
+	if _preview_stage_id != "":  # editor 3D preview: just this stage, at the origin
+		stage_ids = [_preview_stage_id]
+
+	for stage_id in stage_ids:
 		# Placement is author-driven: a stage's `world_pos` (set in the map editor's
 		# World View) is its origin in the shared grid. Stages with no `world_pos` yet
 		# fall back to legacy telescoping so the run still builds.
-		if StageLayout.has_world_pos(Balance, stage_id):
+		if _preview_stage_id != "":
+			stage_origin = Vector2i.ZERO
+		elif StageLayout.has_world_pos(Balance, stage_id):
 			stage_origin = StageLayout.world_pos_of(Balance, stage_id)
 		elif first_stage:
 			stage_origin = Vector2i.ZERO
@@ -254,6 +285,15 @@ func _stamp_stage(g, stage_id: String, origin: Vector2i,
 	# Surfable-water cells (walkable, gated by Surf in is_walkable).
 	for cell in StageLayout.surf_cells_local(Balance, stage_id):
 		g.surf_cells[StageLayout.local_to_world(cell, origin)] = true
+
+	# Roofed cells (interior terrain) — get a ceiling in _instance_tile.
+	for cell in StageLayout.roofed_cells_local(Balance, stage_id):
+		g.roofed_cells[StageLayout.local_to_world(cell, origin)] = true
+
+	# Per-cell building storeys (else the material default).
+	for cell in StageLayout.stories_local(Balance, stage_id):
+		g.stories_of[StageLayout.local_to_world(cell, origin)] = \
+				StageLayout.stories_local(Balance, stage_id)[cell]
 
 	# Gym anchors come from the grid ('_' floor, 'D' door); no-ops for non-gym stages.
 	# The shared "gym" zone drives arena rendering, so remember which stage owns each
@@ -354,16 +394,22 @@ func _stamp_one_shop(g, door: Vector2i, zone_id: String, window: int, kind: Stri
 	g.set_tile(door, WG.TileKind.SHOP_DOOR, zone_id)
 	g.tile_meta[door] = {"shop_window": window, "shop_kind": kind}
 
-	# The building body sits on the tile behind the door (opposite the approach), so
-	# make that tile solid — otherwise the mesh overhangs a walkable cell and you can
-	# walk through the shop. The approach is always the door's front, so this can't
-	# wall the door off. `_warn_unreachable_encounters` flags a body that seals a path.
+	# The ~2x2-tile building overhangs the door cell's neighbours: the cell directly
+	# behind it and the half-tiles to each side (and their back corners). Make that
+	# whole footprint solid so you can't walk under the overhang — but DON'T give the
+	# cells a barrier material. `_shop_body_cells` suppresses any prop and the shop
+	# mesh already covers them, so the ground still renders normally (no visible wall).
+	# Only plain floor (CORRIDOR) is converted, so encounters / doors / exits / the
+	# other shop behind a placement are left intact. The approach is the door's front,
+	# never part of the footprint, so this can't wall the door off.
 	var facing := _shop_approach_facing(g, door)
 	_shop_facings[door] = facing
-	var body: Vector2i = door - WG.FACING_DIR[facing]
-	if g.kind_at(body) != WG.TileKind.WALL:
-		g.set_tile(body, WG.TileKind.WALL, String(g.zone_of.get(body, zone_id)))
-		_shop_body_cells[body] = true
+	var f: Vector2i = WG.FACING_DIR[facing]
+	var p := Vector2i(-f.y, f.x)  # perpendicular: the building's width axis
+	for cell in [door - f, door + p, door - p, door - f + p, door - f - p]:
+		if g.kind_at(cell) == WG.TileKind.CORRIDOR:
+			g.set_tile(cell, WG.TileKind.WALL, String(g.zone_of.get(cell, zone_id)))
+			_shop_body_cells[cell] = true
 
 
 func _gate_block_cells(g, mandatory_slot: int, cells: Array) -> void:
@@ -378,34 +424,48 @@ func _instance_tile(cell: Vector2i, kind: int) -> void:
 	var pos := WG.world_pos(cell)
 	var mat_name := String(grid.material_of.get(cell, "grass"))
 
-	var floor_mesh := MeshInstance3D.new()
-	var floor_box := BoxMesh.new()
-	floor_box.size = Vector3(WG.TILE_SIZE, 0.1, WG.TILE_SIZE)
-	floor_mesh.mesh = floor_box
-	# Floor shows the ground rendered under this cell (grass under a tree, etc).
-	floor_mesh.material_override = _flat_material(
-			ThemePalette.color_of(String(grid.floor_material_of.get(cell, "grass"))))
-	floor_mesh.position = pos + Vector3(0, -0.05, 0)
-	add_child(floor_mesh)
+	# Deep-water cells skip the floor: their surface is the sunken water box (below), so
+	# land/docks read as raised above the water rather than the water sitting on top.
+	var is_deep_water := kind == WG.TileKind.WALL and mat_name == "water"
+	if not is_deep_water:
+		var floor_fmat := String(grid.floor_material_of.get(cell, "grass"))
+		# A solid skirt gives the tile real thickness, so you can't see under or through it
+		# at a shoreline (where water is now lower) or a map edge. Its sides are a darkened
+		# solid of the tile colour (soil/underside); its top is hidden by the textured plane.
+		var skirt := MeshInstance3D.new()
+		var skirt_box := BoxMesh.new()
+		skirt_box.size = Vector3(WG.TILE_SIZE, 0.4, WG.TILE_SIZE)
+		skirt.mesh = skirt_box
+		var skirt_mat := StandardMaterial3D.new()
+		skirt_mat.albedo_color = ThemePalette.color_of(floor_fmat).darkened(0.3)
+		skirt_mat.roughness = 1.0
+		skirt.material_override = skirt_mat
+		skirt.position = pos + Vector3(0, -0.2, 0)  # top at y=0, extends down to -0.4
+		add_child(skirt)
 
-	if zone_id == "gym":
-		_add_ceiling(pos, Color(0.3, 0.28, 0.26))
-	else:
-		match _stage_template(zone_id):
-			"cave_branches":
-				# Caves (Mt. Moon) get a rock roof so they read as enclosed, not open sky.
-				_add_ceiling(pos, Color(0.17, 0.15, 0.14))
-			"ship_interior":
-				# Ships are an enclosed deck: a wooden ceiling over the hull, but not
-				# over the surrounding sea cells that belong to the same stage grid.
-				if mat_name != "water":
-					_add_ceiling(pos, Color(0.30, 0.24, 0.17))
+		# Textured top, just above the skirt. A PlaneMesh maps the full texture across the
+		# tile. (A BoxMesh packs its 6 faces into a UV atlas, so each face samples only a
+		# ~1/6 crop — invisible on uniform procedural tiles, but it shows a wrong "snippet"
+		# of a structured imported texture.)
+		var floor_mesh := MeshInstance3D.new()
+		var floor_plane := PlaneMesh.new()
+		floor_plane.size = Vector2(WG.TILE_SIZE, WG.TILE_SIZE)
+		floor_mesh.mesh = floor_plane
+		# Floor shows the ground rendered under this cell (grass under a tree, etc).
+		floor_mesh.material_override = _terrain_material(floor_fmat)
+		floor_mesh.position = pos + Vector3(0, 0.005, 0)  # a hair above the skirt top
+		add_child(floor_mesh)
+
+	# A cell is roofed iff its terrain material is interior (category-driven, per cell)
+	# — no longer inferred from the stage template. The ceiling tints toward the floor.
+	if grid.roofed_cells.has(cell):
+		_add_ceiling(pos, ThemePalette.color_of(mat_name).darkened(0.5))
 
 	# Barrier cells become 3D props (tree / building / boulder / pillar / water…);
 	# walkable cells stay open so the props enclose the corridors (Phase 7 slice 2).
 	# Shop-body cells are solid too, but the shop building mesh covers them — no prop.
 	if kind == WG.TileKind.WALL and not _shop_body_cells.has(cell):
-		_place_barrier_prop(pos, mat_name)
+		_place_barrier_prop(pos, mat_name, null, int(grid.stories_of.get(cell, 0)))
 
 	if kind == WG.TileKind.SHOP_DOOR:
 		var shop_kind := String(grid.tile_meta.get(cell, {}).get("shop_kind", "center"))
@@ -465,7 +525,8 @@ func _stage_template(zone_id: String) -> String:
 ## A barrier cell rendered as a 3D prop, shaped + sized by its terrain material.
 ## `parent` (default: this builder) lets a caller own the resulting meshes so it
 ## can free them later — used by the exit gates, which vanish when they open.
-func _place_barrier_prop(pos: Vector3, material: String, parent: Node3D = null) -> void:
+func _place_barrier_prop(pos: Vector3, material: String, parent: Node3D = null,
+		stories: int = 0) -> void:
 	var h := ThemePalette.height_of(material) * WG.WALL_HEIGHT
 	var color := ThemePalette.color_of(material)
 	var emissive := ThemePalette.is_emissive(material)
@@ -473,38 +534,61 @@ func _place_barrier_prop(pos: Vector3, material: String, parent: Node3D = null) 
 	match ThemePalette.shape_of(material):
 		"tree":
 			_add_terrain_box(pos + Vector3(0, h * 0.24, 0), Vector3(0.5, h * 0.48, 0.5),
-					Color(0.30, 0.20, 0.11), false, parent)  # trunk
+					Color(0.30, 0.20, 0.11), false, parent)  # trunk (flat brown)
 			# Canopy is wider than a tile so neighbours overlap into a solid wall, and
 			# stacks two tiers so you can't see over or between the trees.
 			_add_terrain_box(pos + Vector3(0, h * 0.60, 0), Vector3(t * 1.2, h * 0.62, t * 1.2),
-					color.darkened(0.08), false, parent)     # lower canopy
+					color.darkened(0.08), false, parent, material)  # lower canopy
 			_add_terrain_box(pos + Vector3(0, h * 0.98, 0), Vector3(t * 1.05, h * 0.55, t * 1.05),
-					color, false, parent)                    # upper canopy
+					color, false, parent, material)          # upper canopy
 		"boulder":
 			_add_terrain_box(pos + Vector3(0, h * 0.5, 0), Vector3(t * 0.82, h, t * 0.82),
-					color, false, parent)
+					color, false, parent, material)
 		"pillar":
-			_add_terrain_box(pos + Vector3(0, h * 0.5, 0), Vector3(0.7, h, 0.7), color, false, parent)
-		"flat":  # water / lava — low pool covering the tile
-			_add_terrain_box(pos + Vector3(0, 0.12, 0), Vector3(t, 0.14, t), color, emissive, parent)
+			_add_terrain_box(pos + Vector3(0, h * 0.5, 0), Vector3(0.7, h, 0.7), color, false, parent, material)
+		"flat":  # water / lava pools
+			if material == "water":
+				# Deep water sits BELOW the walkable floor (surface at y = -0.12) so docks and
+				# land read as raised above it. A deep box (not a thin plane) so the drop at
+				# the shoreline is filled by the box's sides rather than showing through.
+				_add_terrain_box(pos + Vector3(0, -0.42, 0), Vector3(t, 0.6, t), color, emissive, parent, material)
+			else:  # lava — a low pool sitting on the surface
+				_add_terrain_box(pos + Vector3(0, 0.12, 0), Vector3(t, 0.14, t), color, emissive, parent, material)
 		_:  # block — wall / building / mountain / hedge / railing
-			_add_terrain_box(pos + Vector3(0, h * 0.5, 0), Vector3(t, h, t), color, emissive, parent)
+			if _is_building(material):
+				# Buildings stack by storey: one window row per storey (world-tiled), so
+				# height and floor-count follow the cell's `stories` (else the default).
+				var st: int = stories if stories > 0 else _default_stories(material)
+				var bh := float(st) * STORY_HEIGHT
+				_add_terrain_box(pos + Vector3(0, bh * 0.5, 0), Vector3(t * 1.06, bh, t * 1.06),
+						color, emissive, parent, material, st)
+			else:
+				# Slightly wider than a tile so orthogonal AND diagonal neighbours overlap
+				# into one solid wall (no corner pinholes/seam cracks), like tree canopies.
+				_add_terrain_box(pos + Vector3(0, h * 0.5, 0), Vector3(t * 1.06, h, t * 1.06),
+						color, emissive, parent, material)
 
 
+## `material_name` (when given) applies the cached, textured terrain material; else a
+## flat color is used (for decorative sub-parts like a tree trunk).
 func _add_terrain_box(center: Vector3, size: Vector3, color: Color, emissive: bool,
-		parent: Node3D = null) -> void:
+		parent: Node3D = null, material_name: String = "", stories: int = 0) -> void:
 	var mi := MeshInstance3D.new()
 	var box := BoxMesh.new()
 	box.size = size
 	mi.mesh = box
-	var mat := StandardMaterial3D.new()
-	mat.albedo_color = color
-	mat.roughness = 0.9
-	if emissive:
-		mat.emission_enabled = true
-		mat.emission = color
-		mat.emission_energy_multiplier = 0.7
-	mi.material_override = mat
+	if material_name != "":
+		mi.material_override = _building_material(material_name, stories) if stories > 0 \
+				else _terrain_material(material_name)
+	else:
+		var mat := StandardMaterial3D.new()
+		mat.albedo_color = color
+		mat.roughness = 0.9
+		if emissive:
+			mat.emission_enabled = true
+			mat.emission = color
+			mat.emission_energy_multiplier = 0.7
+		mi.material_override = mat
 	mi.position = center
 	if parent != null:
 		parent.add_child(mi)
@@ -643,20 +727,26 @@ func _build_shop_building(cell: Vector2i, pos: Vector3, shop_kind: String) -> vo
 	var roof_light := roof_color.lightened(0.22)
 	var facing := int(_shop_facings.get(cell, WG.Facing.SOUTH))
 
-	var push := Vector3(-WG.FACING_DIR[facing].x, 0, -WG.FACING_DIR[facing].y) * (WG.TILE_SIZE * 0.38)
+	# A civic landmark ~2 tiles wide and ~2 tiles deep: it spills half a tile into
+	# each side neighbour and runs two tiles back from the door cell. Height scales
+	# up with the footprint so it doesn't read as squat.
+	var bw := 6.0   # ~2 tiles wide (0.5 tile into each side neighbour)
+	var bd := 5.4   # spans the door cell + the one behind, without spilling into a 3rd
+	var bh := 2.2
+	var wall_t := 0.12
+	var front_z := -bd * 0.5
+	var back_z := bd * 0.5
+
+	# The facade sits one mat-depth behind the cell's front edge, so the welcome
+	# mat fills the space between the door and the road with no gap on either side.
+	var mat_depth := 0.5
+	var facade_z_in_cell := -WG.TILE_SIZE * 0.5 + mat_depth
+
+	var push := Vector3(-WG.FACING_DIR[facing].x, 0, -WG.FACING_DIR[facing].y) * (facade_z_in_cell + bd * 0.5)
 	var root := Node3D.new()
 	root.position = pos + push
 	root.rotation.y = WG.yaw_for_facing(facing)
 	add_child(root)
-
-	# Big enough footprint (roughly a 1x0.7 tile) to fit a door, a window and
-	# readable signage on the facade without cramming them together.
-	var bw := 2.8
-	var bd := 2.0
-	var bh := 2.0
-	var wall_t := 0.12
-	var front_z := -bd * 0.5
-	var back_z := bd * 0.5
 	var wall_mat := _flat_material(Color(0.95, 0.95, 0.96))
 	# Facade decals sit just outside the wall/jamb volume (which spans
 	# [front_z, front_z + wall_t]) so they're never hidden behind a jamb's
@@ -678,8 +768,8 @@ func _build_shop_building(cell: Vector2i, pos: Vector3, shop_kind: String) -> vo
 
 	# Jambs run flush from the inner face of the side walls to the door's
 	# edges, so there is no gap between the facade and the door opening.
-	var door_w := 0.62
-	var door_h := bh - 0.3
+	var door_w := 1.0
+	var door_h := bh - 0.6  # shorter, to leave room for a larger emblem above it
 	var door_top := 0.16 + door_h
 	var side_inner_x := bw * 0.5 - wall_t
 	var jamb_w := side_inner_x - door_w * 0.5
@@ -707,8 +797,9 @@ func _build_shop_building(cell: Vector2i, pos: Vector3, shop_kind: String) -> vo
 	# (mirrored between the Center and the Mart, like the reference art).
 	var window_x := -jamb_x if is_center else jamb_x
 	var sign_x := jamb_x if is_center else -jamb_x
-	_build_window(root, Vector3(window_x, 1.05, face_z))
-	_add_quad(root, Vector3(sign_x, 1.05, face_z), Vector2(0.62, 0.3),
+	var deco_y := bh * 0.5  # centre the decals on the shorter wall
+	_build_window(root, Vector3(window_x, deco_y, face_z), 0.95, 1.05)
+	_add_quad(root, Vector3(sign_x, deco_y, face_z), Vector2(1.15, 0.52),
 			_textured_material(_shop_text_sign_texture(is_center)))
 
 	# Colored fascia band at the roofline with the pokeball emblem, flush
@@ -716,8 +807,11 @@ func _build_shop_building(cell: Vector2i, pos: Vector3, shop_kind: String) -> vo
 	var band_h := 0.32
 	_add_box(root, Vector3(0, wall_top + band_h * 0.5, 0),
 			Vector3(bw, band_h, bd), _flat_material(roof_color))
-	_add_quad(root, Vector3(0, wall_top + band_h * 0.5, face_z),
-			Vector2(0.4, 0.4), _textured_material(_shop_emblem_texture(is_center)))
+	# Larger emblem, dropped to straddle the band/wall seam above the door (kept low
+	# enough that the bigger quad still clears the roof lip overhead).
+	var emblem_size := 0.55
+	_add_quad(root, Vector3(0, wall_top + band_h * 0.5 - 0.2, face_z),
+			Vector2(emblem_size, emblem_size), _textured_material(_shop_emblem_texture(is_center)))
 
 	# Thick overhanging roof: a flat slab behind a rounded front lip. The lip's
 	# rear tangent sits exactly at the wall face so it can never droop down in
@@ -751,22 +845,26 @@ func _build_shop_building(cell: Vector2i, pos: Vector3, shop_kind: String) -> vo
 	_add_box(root, Vector3(0, roof_y0 + 0.02, lip_center_z - radius * 0.75),
 			Vector3(roof_w - 0.12, 0.04, 0.04), _flat_material(roof_dark))
 
+	# Welcome mat, anchored to the door cell (not the pushed-back building) so it
+	# stays inside this square: its front edge is flush with the cell's front
+	# boundary (touching whatever's in front, e.g. a road) and its back edge meets
+	# the door, leaving no gap on either side.
 	var mat_anchor := Node3D.new()
 	mat_anchor.position = pos
 	mat_anchor.rotation.y = root.rotation.y
 	add_child(mat_anchor)
-	_add_box(mat_anchor, Vector3(0, 0.03, -WG.TILE_SIZE * 0.08), Vector3(0.9, 0.02, 0.62),
-			_flat_material(roof_light))
+	_add_box(mat_anchor, Vector3(0, 0.03, facade_z_in_cell - mat_depth * 0.5),
+			Vector3(1.2, 0.02, mat_depth), _flat_material(roof_light))
 
 
 ## A window pane: tinted blue glass with a light cross mullion on top.
 ## The mullion sits at a smaller z (further outward, toward the camera) so
 ## it draws in front of the glass instead of being hidden behind it.
-func _build_window(parent: Node3D, local_pos: Vector3) -> void:
-	_add_box(parent, local_pos, Vector3(0.5, 0.62, 0.02), _window_material())
+func _build_window(parent: Node3D, local_pos: Vector3, w := 0.5, h := 0.62) -> void:
+	_add_box(parent, local_pos, Vector3(w, h, 0.02), _window_material())
 	var frame := Color(0.93, 0.94, 0.96)
-	_add_box(parent, local_pos - Vector3(0, 0, 0.006), Vector3(0.5, 0.04, 0.01), _flat_material(frame))
-	_add_box(parent, local_pos - Vector3(0, 0, 0.006), Vector3(0.04, 0.62, 0.01), _flat_material(frame))
+	_add_box(parent, local_pos - Vector3(0, 0, 0.006), Vector3(w, 0.04, 0.01), _flat_material(frame))
+	_add_box(parent, local_pos - Vector3(0, 0, 0.006), Vector3(0.04, h, 0.01), _flat_material(frame))
 
 
 func _shop_approach_facing(g, cell: Vector2i) -> int:
@@ -862,15 +960,13 @@ func _shop_emblem_texture(is_center: bool) -> ImageTexture:
 	var cx := 20.0
 	var cy := 20.0
 	var r := 15.0
+	# Monochrome pokeball: the whole ball is the shop's colour (both halves the same),
+	# split by a white equatorial band, with a white centre button ringed in that same
+	# colour. A solid silhouette reads far more clearly at a distance than red/white halves.
 	PixelArt.filled_circle(img, Vector2(cx, cy), r, stripe)
-	# Bottom half of the pokeball is white; only the top half stays colored.
-	for y in range(int(cy), int(cy + r) + 1):
-		for x in range(int(cx - r), int(cx + r) + 1):
-			if Vector2(x + 0.5, y + 0.5).distance_to(Vector2(cx, cy)) <= r:
-				img.set_pixel(x, y, bg)
-	PixelArt.rect(img, Rect2i(int(cx - r), int(cy - 1), int(r * 2.0) + 1, 2), Color(0.16, 0.16, 0.18))
-	PixelArt.filled_circle(img, Vector2(cx, cy), 4.5, Color(0.16, 0.16, 0.18))
-	PixelArt.filled_circle(img, Vector2(cx, cy), 2.8, bg)
+	PixelArt.rect(img, Rect2i(int(cx - r), int(cy - 2), int(r * 2.0) + 1, 4), bg)  # white equator band
+	PixelArt.filled_circle(img, Vector2(cx, cy), 6.0, bg)      # white hub: keeps the band continuous around the button
+	PixelArt.filled_circle(img, Vector2(cx, cy), 3.5, stripe)  # coloured centre button
 	var tex := PixelArt.to_texture(img)
 	_shop_tex_cache[key] = tex
 	return tex
@@ -1053,75 +1149,6 @@ func _sign(pos: Vector3, text: String) -> void:
 	add_child(label)
 
 
-func _maybe_add_prop(cell: Vector2i, zone_id: String) -> void:
-	if zone_id == "" or zone_id == "gym":
-		return
-	if grid.kind_at(cell) == WG.TileKind.SHOP_DOOR:
-		return
-	for dir_idx in 4:
-		if grid.kind_at(cell + WG.FACING_DIR[dir_idx]) == WG.TileKind.SHOP_DOOR:
-			return
-	if (cell.x + cell.y) % 3 != 0:
-		return
-	var side := 1 if (cell.y % 2 == 0) else -1
-	var wall_cell := cell + Vector2i(side, 0)
-	if grid.kind_at(wall_cell) != WG.TileKind.WALL:
-		return
-	# The prop is offset into the neighbouring barrier cell, so don't plant a tree
-	# or boulder on top of a water/lava pool — it looks like it's growing out of it.
-	var wall_mat := String(grid.material_of.get(wall_cell, ""))
-	if wall_mat == "water" or wall_mat == "lava":
-		return
-	var pos := WG.world_pos(cell) + Vector3(side * (WG.TILE_SIZE * 0.5 + 2.5), 0, 0)
-	match zone_id:
-		"route_viridian":
-			_tree(pos, _prop_rng.randf_range(0.8, 1.1))
-		"viridian_forest":
-			_tree(pos, _prop_rng.randf_range(1.0, 1.4))
-		"pewter":
-			_boulder(pos)
-
-
-func _tree(pos: Vector3, scale: float) -> void:
-	var tree := Node3D.new()
-	tree.position = pos
-	tree.scale = Vector3(scale, scale, scale)
-	var trunk_mesh := CylinderMesh.new()
-	trunk_mesh.top_radius = 0.2
-	trunk_mesh.bottom_radius = 0.3
-	trunk_mesh.height = 2.0
-	var trunk := MeshInstance3D.new()
-	trunk.mesh = trunk_mesh
-	trunk.material_override = _flat_material(Color(0.45, 0.32, 0.2))
-	trunk.position = Vector3(0, 1.0, 0)
-	tree.add_child(trunk)
-	for level in 2:
-		var cone_mesh := CylinderMesh.new()
-		cone_mesh.top_radius = 0.0
-		cone_mesh.bottom_radius = 1.5 - level * 0.45
-		cone_mesh.height = 1.8
-		var cone := MeshInstance3D.new()
-		cone.mesh = cone_mesh
-		cone.material_override = _flat_material(Color(0.2, 0.45, 0.22).lightened(level * 0.08))
-		cone.position = Vector3(0, 2.4 + level * 1.1, 0)
-		tree.add_child(cone)
-	add_child(tree)
-
-
-func _boulder(pos: Vector3) -> void:
-	var mesh := SphereMesh.new()
-	var r := _prop_rng.randf_range(0.5, 1.1)
-	mesh.radius = r
-	mesh.height = r * 2.0
-	var rock := MeshInstance3D.new()
-	rock.mesh = mesh
-	rock.material_override = _flat_material(Color(0.45, 0.43, 0.4))
-	rock.position = pos + Vector3(0, r * 0.5, 0)
-	rock.scale = Vector3(1.0, 0.65, 0.85)
-	rock.rotation_degrees = Vector3(0, _prop_rng.randf_range(0, 360), 0)
-	add_child(rock)
-
-
 func _add_gym_lighting(boss_cell: Vector2i) -> void:
 	var base := WG.world_pos(boss_cell)
 	var wall_x := WG.TILE_SIZE * 0.5 - 0.08
@@ -1193,3 +1220,64 @@ func _flat_material(color: Color) -> StandardMaterial3D:
 	mat.albedo_color = color
 	mat.roughness = 0.95
 	return mat
+
+
+# --- Terrain textures (procedural placeholders; drop-in CC0 override) ---
+
+## Cached textured material for a terrain material name. Crisp nearest filter so the
+## pixel tiles read sharply; emissive materials (lava) glow with the same texture.
+func _terrain_material(name: String) -> StandardMaterial3D:
+	if _terrain_mat_cache.has(name):
+		return _terrain_mat_cache[name]
+	var mat := StandardMaterial3D.new()
+	mat.albedo_texture = _terrain_texture(name)
+	mat.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
+	mat.roughness = 0.9
+	if ThemePalette.is_emissive(name):
+		mat.emission_enabled = true
+		mat.emission_texture = mat.albedo_texture
+		mat.emission_energy_multiplier = 0.7
+	_terrain_mat_cache[name] = mat
+	return mat
+
+
+## Height of one building storey (world units). A storey ≈ the wall height.
+const STORY_HEIGHT := 3.0
+
+
+func _is_building(material: String) -> bool:
+	return ThemePalette.is_building_material(material)
+
+
+## Storeys when a building cell carries none (safety net for hand-edited cells) — the
+## material's starting floor count. Painted/migrated cells all carry explicit `stories`.
+func _default_stories(material: String) -> int:
+	return ThemePalette.floors_of(material)
+
+
+## A building's material tiled vertically once per storey — a single-storey window
+## texture repeated `stories` times up the facade. Cached per (material, storeys).
+func _building_material(material: String, stories: int) -> StandardMaterial3D:
+	var key := "%s@%d" % [material, stories]
+	if _terrain_mat_cache.has(key):
+		return _terrain_mat_cache[key]
+	var mat := _terrain_material(material).duplicate() as StandardMaterial3D
+	# BoxMesh packs its 6 faces into a 3×2 UV atlas, so each side face natively spans only
+	# 1/3 of the texture across (U) and 1/2 up (V). Undo that — U×3 gives one full window
+	# panel across each face; V×2×stories gives one full window row per storey up the
+	# facade. Texture repeat wraps the atlas offset away, so panels come out clean.
+	mat.uv1_scale = Vector3(3.0, float(stories) * 2.0, 1)
+	_terrain_mat_cache[key] = mat
+	return mat
+
+
+## A CC0/authored PNG at art/terrain/<name>.png if present, else a procedural tileable
+## pixel texture. Drop a real texture in to override any material with no code change.
+func _terrain_texture(name: String) -> Texture2D:
+	if _terrain_tex_cache.has(name):
+		return _terrain_tex_cache[name]
+	# Build from the image (override PNG read off disk, else procedural) rather than
+	# load()-ing the resource, so runtime-authored overrides work without a reimport.
+	var tex := ImageTexture.create_from_image(TerrainTex.image_for(name))
+	_terrain_tex_cache[name] = tex
+	return tex
