@@ -102,4 +102,16 @@ static func build(card_id: String, enemy_type: String, starter_id: String,
 	effect.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	vbox.add_child(effect)
 
+	var desc := String(card.get("description", ""))
+	if desc != "":
+		var flavor := Label.new()
+		flavor.text = desc
+		flavor.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		flavor.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		flavor.add_theme_font_size_override("font_size", maxi(8, int(10.0 * scale)))
+		flavor.modulate = Color(0.82, 0.82, 0.86, 0.78)
+		flavor.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		flavor.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		vbox.add_child(flavor)
+
 	return button

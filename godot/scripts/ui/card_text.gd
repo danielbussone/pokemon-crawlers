@@ -29,6 +29,8 @@ static func summary(card: Dictionary, enemy_type: String, bal) -> String:
 				parts.append(String(eff.get("condition", "")).capitalize())
 			"draw":
 				parts.append("Draw %d" % int(eff.get("magnitude", 0)))
+			"shuffle_hand":
+				parts.append("Shuffle hand")
 	return ", ".join(parts)
 
 

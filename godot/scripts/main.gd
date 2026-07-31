@@ -60,6 +60,13 @@ func _ready() -> void:
 		add_child(layer)
 		layer.add_child(editor)
 		return
+	if OS.get_cmdline_user_args().has("--cardeditor"):
+		# Dev card editor: author/tune data/balance/cards.json + art/cards/.
+		var card_ed := preload("res://scripts/tools/card_editor.gd").new()
+		var card_layer := CanvasLayer.new()
+		add_child(card_layer)
+		card_layer.add_child(card_ed)
+		return
 	_build_environment()
 	# Single-stage 3D preview (dev): render just one level so rendering changes can be
 	# checked without walking the whole map. `-- --preview=<stage_id>` (map editor button).
